@@ -15,13 +15,14 @@ def plot_brain_connection_figure(
     rh_surfgii_file: str = None,
     niigz_file: str = None,
     nodes_name: iter = None,
+    nodes_size: int | float = 5,
     nodes_color: iter = None,
     output_file: str = None,
     scale_metheod: str = "",
     line_width: int | float = 10,
 ):
     """绘制大脑连接图，保存在指定的html文件中
-    
+
     如果不指定surface文件和图集nii文件，默认绘制NMT2空间上猕猴大脑连接图，图集包括个101脑区/半脑（88个皮层上 + 13个皮层下）
 
     Args:
@@ -85,7 +86,7 @@ def plot_brain_connection_figure(
         color="white",
         opacity=0.1,
         flatshading=True,
-        lighting=dict(ambient=0.7, diffuse=0.3),
+        lighting={"ambient": 0.7, "diffuse": 0.3},
         name="Left Hemisphere",
     )
     # 右半球
@@ -99,7 +100,7 @@ def plot_brain_connection_figure(
         color="white",
         opacity=0.1,
         flatshading=True,
-        lighting=dict(ambient=0.7, diffuse=0.3),
+        lighting={"ambient": 0.7, "diffuse": 0.3},
         name="Right Hemisphere",
     )
     fig = go.Figure(data=[mesh_L, mesh_R])  # 同时添加两个Mesh
@@ -132,13 +133,13 @@ def plot_brain_connection_figure(
             y=centroids_real[:, 1],
             z=centroids_real[:, 2],
             mode="markers+text",
-            marker=dict(
-                size=8,  # 球体大小
-                color=nodes_color,  # 根据ROI标签分配颜色
-                colorscale="Rainbow",  # 颜色映射方案
-                opacity=0.8,
-                line=dict(width=2, color="black"),  # 球体边框
-            ),
+            marker={
+                "size": nodes_size,  # 球体大小
+                "color": nodes_color,  # 根据ROI标签分配颜色
+                "colorscale": "Rainbow",  # 颜色映射方案
+                "opacity": 0.8,
+                "line": {"width": 2, "color": "black"},  # 球体边框
+            },
             text=[f"{name}" for name in nodes_name],  # 悬停显示标签
             hoverinfo="text+x+y+z",
             showlegend=False,  # 显示在图例中
@@ -210,9 +211,10 @@ def plot_brain_connection_figure(
                         y=connection_line[:, 1],
                         z=connection_line[:, 2],
                         mode="lines",
-                        line=dict(
-                            color=each_line_color, width=each_line_width  # 动态设置线宽
-                        ),
+                        line={
+                            "color": each_line_color,
+                            "width": each_line_width,  # 动态设置线宽
+                        },
                         hoverinfo="none",
                         name=f"{nodes_name[i]}-{nodes_name[j]}",
                     )
@@ -220,23 +222,23 @@ def plot_brain_connection_figure(
 
     # 原质心球体代码保持不变（建议调整颜色增强对比度）
     fig.update_traces(
-        selector=dict(mode="markers"),  # 仅更新质心球体
-        marker=dict(
-            size=10,  # 增大球体尺寸
-            colorscale="Viridis",  # 改用高对比度色阶
-            line=dict(width=3, color="black"),
-        ),
+        selector={"mode": "markers"},  # 仅更新质心球体
+        marker={
+            "size": 10,  # 增大球体尺寸
+            "colorscale": "Viridis",  # 改用高对比度色阶
+            "line": {"width": 3, "color": "black"},
+        },
     )
     # 设置布局
     fig.update_layout(
         title="Connection",
-        scene=dict(
-            xaxis=dict(showbackground=False, visible=False),
-            yaxis=dict(showbackground=False, visible=False),
-            zaxis=dict(showbackground=False, visible=False),
-            aspectmode="data",  # 保持坐标轴比例一致
-        ),
-        margin=dict(l=0, r=0, b=0, t=30),
+        scene={
+            "xaxis": {"showbackground": False, "visible": False},
+            "yaxis": {"showbackground": False, "visible": False},
+            "zaxis": {"showbackground": False, "visible": False},
+            "aspectmode": "data",  # 保持坐标轴比例一致
+        },
+        margin={"l": 0, "r": 0, "b": 0, "t": 30},
     )
     # 显示或保存为HTML
     fig.write_html(output_file)  # 导出为交互式网页
@@ -250,7 +252,7 @@ def main():
     rh_surfgii_file = r"D:\Desktop\BG.R.midthickness.32k_fs_LR.surf.gii"
     niigz_file = r"D:\Desktop\macaque_Interoceptive_processing_network.nii.gz"
     output_file = "d:/desktop/rm_rjx.html"
-    plot_macaque_brain_connection_figure(
+    plot_brain_connection_figure(
         connectome,
         lh_surfgii_file=lh_surfgii_file,
         rh_surfgii_file=rh_surfgii_file,

@@ -8,3 +8,7 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Examples
+examples/example_figures/*
+!examples/example_figures/.gitkeep

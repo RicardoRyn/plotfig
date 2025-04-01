@@ -47,7 +47,7 @@ def plot_symmetric_circle_figure(
     if node_colors is None:
         node_colors = ["#ff8f8f"] * count_half
     labels = labels + [i + " " for i in labels[::-1]]
-    node_colors = node_colors + [i for i in node_colors[::-1]]
+    node_colors = node_colors + list(node_colors[::-1])
     node_angles = mne.viz.circular_layout(
         labels, labels, group_boundaries=[0, len(labels) / 2]
     )
@@ -63,7 +63,7 @@ def plot_symmetric_circle_figure(
     connectome_lower = np.concatenate((data_down_left, data_down_right), axis=1)
     connectome = np.concatenate((connectome_upper, connectome_lower), axis=0)
     # 画图
-    fig, ax = plt.subplots(figsize=figsize, subplot_kw=dict(polar=True))
+    fig, ax = plt.subplots(figsize=figsize, subplot_kw={"polar": True})
     fig.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)
     plot_connectivity_circle(
         connectome,
@@ -157,7 +157,7 @@ def plot_asymmetric_circle_figure(
         node_colors = ["#ff8f8f"] * count
     node_angles = mne.viz.circular_layout(labels, labels)
     # 画图
-    fig, ax = plt.subplots(figsize=figsize, subplot_kw=dict(polar=True))
+    fig, ax = plt.subplots(figsize=figsize, subplot_kw={"polar": True})
     fig.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)
     plot_connectivity_circle(
         connectome,

@@ -2,6 +2,7 @@
 name = "plotfig"
 version = "0.0.6"
 description = "Scientific plotting package for Cognitive neuroscience"
+keywords = ["neuroscience", "plotting", "visualization"]
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
@@ -19,16 +20,23 @@ dependencies = [
     "surfplot>=0.2.0",
 ]
 
+[dependency-groups]
+dev = [
+    "joblib>=1.4.2",
+]
+
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["plotfig*"]  # 包含主包及其子包
+[tool.setuptools]
+package-dir = {"plotfig" = "src/plotfig"}
+packages = ["plotfig"]
+include-package-data = true
 
 [tool.setuptools.package-data]
 plotfig = [
     "data/atlas_tables/**/*",
     "data/neurodata/**/*"
 ]
+

@@ -37,8 +37,6 @@ def plot_one_group_bar_figure(
     asterisk_fontsize=10,
     asterisk_color="k",
     line_color="0.5",
-    multicorrect_bonferroni=False,
-    multicorrect_fdr=False,
     **kwargs,
 ):
     # # 设置部分默认值
@@ -104,13 +102,14 @@ def plot_one_group_bar_figure(
     if y_max_tick_to_one:
         ax.set_yticks([i for i in ax.get_yticks() if i <= y_max_tick_to_value])
     # y轴设置科学计数法
-    if math_text:
-        if np.min(data[i]) < 0.1 or np.max(data[i]) > 100:  # y轴设置科学计数法
-            formatter = ScalarFormatter(useMathText=True)
-            formatter.set_powerlimits(
-                (-2, 2)
-            )  # <=-2也就是小于等于0.01，>=2，也就是大于等于100，会写成科学计数法
-            ax.yaxis.set_major_formatter(formatter)
+    if (
+        math_text and np.min(data[i]) < 0.1 or np.max(data[i]) > 100
+    ):  # y轴设置科学计数法
+        formatter = ScalarFormatter(useMathText=True)
+        formatter.set_powerlimits(
+            (-2, 2)
+        )  # <=-2也就是小于等于0.01，>=2，也就是大于等于100，会写成科学计数法
+        ax.yaxis.set_major_formatter(formatter)
     # 设置y轴tick保留1位小数，会与“y轴设置科学计数法”冲突
     if one_decimal_place:
         if math_text:
@@ -153,7 +152,6 @@ def plot_one_group_bar_figure(
         else:
             ax.set_ylim(ax_min, ax_max)
     ############################################## 标星号 ############################################
-    p_list_fdr = []
     if statistic:
         t_count = 0
         p_list_index = 0
@@ -215,28 +213,8 @@ def plot_one_group_bar_figure(
                     ) = (res.statistic, res.pvalue)
                 else:
                     print("没有该统计方法，请重新输入！！！")
-                if multicorrect_bonferroni == True:
-                    globals()["t_" + str(i1) + "_" + str(i2)] = (
-                        eval("t_" + str(i1) + "_" + str(i2))
-                        * (len(labels_name) * (len(labels_name) - 1))
-                        / 2
-                    )  # 多重比较校正，直接将p值乘以比较次数bonferroni校正
-                if multicorrect_fdr == True:
-                    p_list_fdr.append(eval("t_" + str(i1) + "_" + str(i2)))
                 if eval("t_" + str(i1) + "_" + str(i2)) <= 0.05:
                     t_count += 1
-                    # print('{} 方法，{} 和 {} 之间显著，s = {:.4f}，p = {:.4f}'.format(test_method, labels_name[i1], labels_name[i2], eval('s_' + str(i1) + '_' + str(i2)), eval('t_' + str(i1) + '_' + str(i2))))
-        if multicorrect_fdr == True:
-            _, p_list_fdr_corr = multitest.fdrcorrection(
-                p_list_fdr, alpha=0.05, method="i", is_sorted=False
-            )
-            p_list_fdr_corr_index = 0
-            for i1 in range(len(labels_name)):
-                for i2 in range(i1 + 1, len(labels_name)):
-                    globals()["t_" + str(i1) + "_" + str(i2)] = p_list_fdr_corr[
-                        p_list_fdr_corr_index
-                    ]
-                    p_list_fdr_corr_index += 1
         lines_interval = ax_max_y_max_value / (t_count + 1)
         star_line_interval = lines_interval / 5
         count = 1
@@ -247,12 +225,12 @@ def plot_one_group_bar_figure(
                         "",
                         xy=(i1 + 0.05, y_max_value + count * lines_interval),
                         xytext=(i2 - 0.05, y_max_value + count * lines_interval),
-                        arrowprops=dict(
-                            edgecolor=line_color,
-                            width=0.5,
-                            headwidth=0.1,
-                            headlength=0.1,
-                        ),
+                        arrowprops={
+                            "edgecolor": line_color,
+                            "width": 0.5,
+                            "headwidth": 0.1,
+                            "headlength": 0.1,
+                        },
                     )
                     if 0.01 < eval("t_" + str(i1) + "_" + str(i2)) <= 0.05:
                         ax.text(
@@ -317,7 +295,6 @@ def plot_one_group_violin_figure(
     p_list=None,
     test_method="ttest_ind",
     asterisk_fontsize=10,
-    multicorrect=False,
     **kwargs,
 ):
     # 设置部分默认值
@@ -385,13 +362,12 @@ def plot_one_group_violin_figure(
         ax.set_yticks([i for i in ax.get_yticks() if i <= y_max_tick_to_value])
         ax.set_yticks([i for i in [0, 0.2, 0.4, 0.6, 0.8, 1] if i <= 1])
     # y轴设置科学计数法
-    if math_text:
-        if np.min(data[i]) < 1 or np.max(data[i]) > 10:  # y轴设置科学计数法
-            formatter = ScalarFormatter(useMathText=True)
-            formatter.set_powerlimits(
-                (-1, 1)
-            )  # <=-2也就是小于等于0.01，>=2，也就是大于等于100，会写成科学计数法
-            ax.yaxis.set_major_formatter(formatter)
+    if math_text and np.min(data[i]) < 1 or np.max(data[i]) > 10:  # y轴设置科学计数法
+        formatter = ScalarFormatter(useMathText=True)
+        formatter.set_powerlimits(
+            (-1, 1)
+        )  # <=-2也就是小于等于0.01，>=2，也就是大于等于100，会写成科学计数法
+        ax.yaxis.set_major_formatter(formatter)
     # 设置y轴tick保留1位小数，会与“y轴设置科学计数法”冲突
     if one_decimal_place:
         if math_text:
@@ -493,12 +469,6 @@ def plot_one_group_violin_figure(
                     ) = (res.statistic, res.pvalue)
                 else:
                     print("没有该统计方法，请重新输入！！！")
-                if multicorrect == True:
-                    globals()["t_" + str(i1) + "_" + str(i2)] = (
-                        eval("t_" + str(i1) + "_" + str(i2))
-                        * (len(labels_name) * (len(labels_name) - 1))
-                        / 2
-                    )  # 多重比较校正，直接将p值乘以比较次数的bonferroni校正
                 if eval("t_" + str(i1) + "_" + str(i2)) <= 0.05:
                     t_count += 1
                     # print('{} 方法，{} 和 {} 之间显著，s = {:.4f}，p = {:.4f}'.format(test_method, labels_name[i1], labels_name[i2], eval('s_' + str(i1) + '_' + str(i2)), eval('t_' + str(i1) + '_' + str(i2))))
@@ -513,9 +483,12 @@ def plot_one_group_violin_figure(
                         "",
                         xy=(i1 + 0.05, y_max_value + count * lines_interval),
                         xytext=(i2 - 0.05, y_max_value + count * lines_interval),
-                        arrowprops=dict(
-                            edgecolor="0.5", width=0.5, headwidth=0.1, headlength=0.1
-                        ),
+                        arrowprops={
+                            "edgecolor": "0.5",
+                            "width": 0.5,
+                            "headwidth": 0.1,
+                            "headlength": 0.1,
+                        },
                     )
                     if 0.01 < eval("t_" + str(i1) + "_" + str(i2)) <= 0.05:
                         ax.text(
@@ -557,8 +530,9 @@ def plot_correlation_figure(
     ax=None,
     stats_method="pearson",
     ci=False,
-    dots_color='steelblue',
-    line_color='r',
+    dots_color="steelblue",
+    dots_size=1,
+    line_color="r",
     title_name="",
     title_fontsize=10,
     title_pad=10,
@@ -583,7 +557,6 @@ def plot_correlation_figure(
     y_one_decimal_place=False,
     y_percentage=False,
     asterisk_fontsize=10,
-    summary=False,
 ):
     # 设置部分默认值
     if ax is None:
@@ -597,20 +570,27 @@ def plot_correlation_figure(
     x_seq = np.linspace(A.min(), A.max(), 100)
     y_pred = slope * x_seq + intercept
     # 计算置信区间
-    n = len(A)                                   # 样本量
-    dof = n - 2                                  # 自由度
-    t = stats.t.ppf(1 - 0.05/2, dof)           # 95%置信水平的t值
-    x_mean = np.mean(A)                        # x的均值
-    residuals = B - (slope * A + intercept)      # 残差
+    n = len(A)  # 样本量
+    dof = n - 2  # 自由度
+    t = stats.t.ppf(1 - 0.05 / 2, dof)  # 95%置信水平的t值
+    x_mean = np.mean(A)  # x的均值
+    residuals = B - (slope * A + intercept)  # 残差
     s_err = np.sqrt(np.sum(residuals**2) / dof)  # 残差标准误
-    SSxx = np.sum((A - x_mean)**2)             # x的离均差平方和
+    SSxx = np.sum((A - x_mean) ** 2)  # x的离均差平方和
     # 计算每个点的置信区间半宽
-    conf_interval = t * s_err * np.sqrt(1/n + (x_seq - x_mean)**2/SSxx)
+    conf_interval = t * s_err * np.sqrt(1 / n + (x_seq - x_mean) ** 2 / SSxx)
     # 画图
-    ax.scatter(A, B, c=dots_color, alpha=0.8, label='AAA')
-    ax.plot(x_seq, y_pred, line_color, lw=2, label='BBB')
+    ax.scatter(A, B, c=dots_color, s=dots_size, alpha=0.8, label="AAA")
+    ax.plot(x_seq, y_pred, line_color, lw=2, label="BBB")
     if ci:
-        ax.fill_between(x_seq, y_pred - conf_interval, y_pred + conf_interval, color='salmon', alpha=0.3, label='95% CI')
+        ax.fill_between(
+            x_seq,
+            y_pred - conf_interval,
+            y_pred + conf_interval,
+            color="salmon",
+            alpha=0.3,
+            label="95% CI",
+        )
     ############################################### ax ###############################################
     ax.spines[["top", "right"]].set_visible(False)  # 去掉上边和右边的spine
     ############################################## title #############################################
@@ -629,13 +609,12 @@ def plot_correlation_figure(
     if x_max_tick_to_one:
         ax.set_xticks([i for i in ax.get_xticks() if i <= x_max_tick_to_value])
     # x轴设置科学计数法
-    if x_math_text:
-        if np.min(data1) < 0.01 or np.max(data1) > 100:  # x轴设置科学计数法
-            formatter = ScalarFormatter(useMathText=True)
-            formatter.set_powerlimits(
-                (-2, 2)
-            )  # <=-2也就是小于等于0.01，>=2，也就是大于等于100，会写成科学计数法
-            ax.xaxis.set_major_formatter(formatter)
+    if x_math_text and np.min(data1) < 0.01 or np.max(data1) > 100:  # x轴设置科学计数法
+        formatter = ScalarFormatter(useMathText=True)
+        formatter.set_powerlimits(
+            (-2, 2)
+        )  # <=-2也就是小于等于0.01，>=2，也就是大于等于100，会写成科学计数法
+        ax.xaxis.set_major_formatter(formatter)
     # 设置x轴tick保留1位小数，会与“x轴设置科学计数法”冲突
     if x_one_decimal_place:
         if x_math_text:
@@ -671,13 +650,12 @@ def plot_correlation_figure(
     if y_max_tick_to_one:
         ax.set_yticks([i for i in ax.get_yticks() if i <= y_max_tick_to_value])
     # y轴设置科学计数法
-    if y_math_text:
-        if np.min(data1) < 0.01 or np.max(data1) > 100:  # y轴设置科学计数法
-            formatter = ScalarFormatter(useMathText=True)
-            formatter.set_powerlimits(
-                (-2, 2)
-            )  # <=-2也就是小于等于0.01，>=2，也就是大于等于100，会写成科学计数法
-            ax.yaxis.set_major_formatter(formatter)
+    if y_math_text and np.min(data1) < 0.01 or np.max(data1) > 100:  # y轴设置科学计数法
+        formatter = ScalarFormatter(useMathText=True)
+        formatter.set_powerlimits(
+            (-2, 2)
+        )  # <=-2也就是小于等于0.01，>=2，也就是大于等于100，会写成科学计数法
+        ax.yaxis.set_major_formatter(formatter)
     # 设置y轴tick保留1位小数，会与“y轴设置科学计数法”冲突
     if y_one_decimal_place:
         if y_math_text:
