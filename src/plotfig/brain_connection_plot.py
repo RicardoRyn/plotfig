@@ -8,37 +8,41 @@ import plotly.graph_objects as go
 import matplotlib.colors as mcolors
 import matplotlib.cm as cm
 
+from typing import List
+from pathlib import Path
+import numpy.typing as npt
+
 
 def plot_brain_connection_figure(
-    connectome: np.ndarray,
-    lh_surfgii_file: str = None,
-    rh_surfgii_file: str = None,
-    niigz_file: str = None,
-    nodes_name: iter = None,
-    nodes_size: int | float = 5,
-    nodes_color: iter = None,
-    output_file: str = None,
+    connectome: npt.NDArray,
+    lh_surfgii_file: str | Path | None = None,
+    rh_surfgii_file: str | Path | None = None,
+    niigz_file: str | Path | None = None,
+    nodes_name: List[str] | None = None,
+    nodes_size: float = 5,
+    nodes_color: List[str] | None = None,
+    output_file: str | Path | None = None,
     scale_metheod: str = "",
-    line_width: int | float = 10,
-):
+    line_width: float = 10,
+) -> None:
     """绘制大脑连接图，保存在指定的html文件中
 
-    如果不指定surface文件和图集nii文件，默认绘制NMT2空间上猕猴大脑连接图，图集包括个101脑区/半脑（88个皮层上 + 13个皮层下）
-
     Args:
-        connectome (np.ndarray): 连接矩阵.
-        lh_surfgii_file (str, optional): 左脑surf.gii文件. Defaults to None.
-        rh_surfgii_file (str, optional): 右脑surf.gii文件. Defaults to None.
-        niigz_file (str, optional): 图集nii文件. Defaults to None.
-        nodes_name (iter, optional): 节点名称. Defaults to None.
-        nodes_color (iter, optional): 节点颜色. Defaults to None.
-        output_file (str, optional): 保存的完整路径及文件名. Defaults to None.
-        scale_metheod (str, optional): 边scale方式. Defaults to "". 包括"width, color, width_color, color_width"
-        line_width (int | float, optional): 边粗细. Defaults to 10.
+        connectome (npt.NDArray): 连接矩阵
+        lh_surfgii_file (str | Path | None, optional): 左脑surf.gii文件. Defaults to None.
+        rh_surfgii_file (str | Path | None, optional): 右脑surf.gii文件. Defaults to None.
+        niigz_file (str | Path | None, optional): 图集nii文件. Defaults to None.
+        nodes_name (List[str] | None, optional): 节点名称. Defaults to None.
+        nodes_size (float, optional): 节点大小. Defaults to 5.
+        nodes_color (List[str] | None, optional): 节点颜色. Defaults to None.
+        output_file (str | Path | None, optional): 保存的完整路径及文件名. Defaults to None.
+        scale_metheod (str, optional): 连接scale的形式. Defaults to "".
+        line_width (float, optional): 连接粗细. Defaults to 10.
 
     Raises:
         ValueError: 参数值错误
     """
+
     nodes_num = connectome.shape[0]
     # 默认参数
     current_dir = op.dirname(__file__)
