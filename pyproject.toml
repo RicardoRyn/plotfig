@@ -40,3 +40,7 @@ plotfig = [
     "data/neurodata/**/*"
 ]
 
+[tool.ruff]
+exclude = [
+  "examples/example.ipynb"
+]
