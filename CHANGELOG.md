@@ -1,10 +1,16 @@
 # 更新记录 (CHANGELOG)
 
+## [2025-04-22] - v0.1.0
+
+### 新增
+
+- 使用`uv`以及`commitizen`进行项目、版本管理。发布`plotfig v0.1.0`。
+
 ## [2025-04-21] - v0.0.7
 
 ### 新增
 
-- 新增`plot_chimpanzee_brain_figure`函数（默认图集为`BNA`），[参考文献](https://doi.org/10.1016/j.xinn.2024.100755)。
+- 新增`plot_chimpanzee_brain_figure`函数（默认图集为`BNA`），[参考文献](https://www.cell.com/the-innovation/fulltext/S2666-6758(24)00193-0)。
 - 新增`plot_chimpanzee_hemi_brain_figure`函数（默认图集为`BNA`）
 
 ### 修复
@@ -20,7 +26,6 @@
 ### 优化
 
 - 更换猕猴surface文件。将原来的`SC_06018.?.*.32k_fs_LR.surf.gii`文件替换为`civm.?.*.32k_fs_LR.surf.gii`文件。来源于猕猴BNA模板。
-
 
 ## [2025-03-9] - v0.0.5
 
@@ -79,9 +84,27 @@
 - `plot_v1_macaque_hemi_brain_figure`函数将在稍后几个版本中移除
 
 ### 优化
+
 - 优化了猕猴脑图的绘制策略，不再依赖`mne`包，但需要更新本地Python库中的`neuromaps`中的代码。
 
 ## [2024-1-1] - v0.0.0
 
 ### 新增
+
 - plotfig包
+
+## 0.1.0 (2025-04-22)
+
+### Feat
+
+- **brain_surface_plot文件为主**: 增加函数绘制黑猩猩BNA图集图
+- **brain_connection_plot.py**: add brain_connection_plot.py
+
+### Fix
+
+- **brain_surface_plot.py**: 修复0值透明bug
+
+### Refactor
+
+- migrate project to src layout
+- **dependency-and-env**: use uv and remove neuromaps
