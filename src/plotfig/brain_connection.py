@@ -8,9 +8,10 @@ import plotly.graph_objects as go
 import matplotlib.colors as mcolors
 import matplotlib.cm as cm
 
-from typing import List
 from pathlib import Path
 import numpy.typing as npt
+
+Num = int | float
 
 
 def plot_brain_connection_figure(
@@ -18,12 +19,12 @@ def plot_brain_connection_figure(
     lh_surfgii_file: str | Path | None = None,
     rh_surfgii_file: str | Path | None = None,
     niigz_file: str | Path | None = None,
-    nodes_name: List[str] | None = None,
-    nodes_size: float = 5,
-    nodes_color: List[str] | None = None,
+    nodes_name: list[str] | None = None,
+    nodes_size: Num = 5,
+    nodes_color: list[str] | None = None,
     output_file: str | Path | None = None,
-    scale_metheod: str = "",
-    line_width: float = 10,
+    scale_method: str = "",
+    line_width: Num = 10,
 ) -> None:
     """绘制大脑连接图，保存在指定的html文件中
 
@@ -33,14 +34,14 @@ def plot_brain_connection_figure(
         rh_surfgii_file (str | Path | None, optional): 右脑surf.gii文件. Defaults to None.
         niigz_file (str | Path | None, optional): 图集nii文件. Defaults to None.
         nodes_name (List[str] | None, optional): 节点名称. Defaults to None.
-        nodes_size (float, optional): 节点大小. Defaults to 5.
+        nodes_size (Num, optional): 节点大小. Defaults to 5.
         nodes_color (List[str] | None, optional): 节点颜色. Defaults to None.
         output_file (str | Path | None, optional): 保存的完整路径及文件名. Defaults to None.
-        scale_metheod (str, optional): 连接scale的形式. Defaults to "".
-        line_width (float, optional): 连接粗细. Defaults to 10.
+        scale_method (str, optional): 连接scale的形式. Defaults to "".
+        line_width (Num, optional): 连接粗细. Defaults to 10.
 
     Raises:
-        ValueError: 参数值错误
+        ValueError: 参数参数取值不合法时抛出.
     """
 
     nodes_num = connectome.shape[0]
@@ -164,7 +165,7 @@ def plot_brain_connection_figure(
                 if value == 0:
                     continue
 
-                match scale_metheod:
+                match scale_method:
                     case "width":
                         if value > 0:
                             each_line_color = "#ff0000"
@@ -262,7 +263,7 @@ def main():
         rh_surfgii_file=rh_surfgii_file,
         niigz_file=niigz_file,
         output_file=output_file,
-        scale_metheod="color_width",
+        scale_method="color_width",
         line_width=20,
     )
 
