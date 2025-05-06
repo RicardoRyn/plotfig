@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GIFTI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="http://brainvis.wustl.edu/caret6/xml_schemas/GIFTI_Caret.xsd"
+       Version="1"
+       NumberOfDataArrays="1">
+   <MetaData>
+      <MD>
+         <Name><![CDATA[AnatomicalStructurePrimary]]></Name>
+         <Value><![CDATA[CortexLeft]]></Value>
+      </MD>
+      <MD>
+         <Name><![CDATA[ParentProvenance]]></Name>
+         <Value><![CDATA[lh_d99.shape.gii:
+/home/nhp/workbench/bin_linux64/../exe_linux64/wb_command -metric-mask /media/nhp/DATA2/monkey_data/KIZ1/subj_01/MRtrix_results/rm_rjx1_lh_dilate10.shape.gii /media/nhp/DATA2/monkey_data/KIZ1/subj_01/MRtrix_results/rm_rjx1_lh_filled_rmislands_dilate3_erode3.shape.gii /media/nhp/DATA2/monkey_data/KIZ1/subj_01/MRtrix_results/lh_D99_atlas_v2.0_NMT2_cortex.shape.gii
+
+]]></Value>
+      </MD>
+      <MD>
+         <Name><![CDATA[ProgramProvenance]]></Name>
+         <Value><![CDATA[Connectome Workbench
+Type: Command Line Application
+Version: 2.0.1
+Qt Compiled Version: 5.7.0
+Qt Runtime Version: 5.7.0
+Commit: 150de12f4f4b94b39bec6d9133ad2e7019d2d3ef
+Commit Date: 2024-10-15 17:38:41 -0500
+Compiler: g++ (/usr/bin)
+Compiler Version: 4.8.4
+Compiled Debug: NO
+Operating System: Linux
+Compiled with OpenMP: YES
+]]></Value>
+      </MD>
+      <MD>
+         <Name><![CDATA[Provenance]]></Name>
+         <Value><![CDATA[/home/nhp/workbench/bin_linux64/../exe_linux64/wb_command -metric-label-import lh_d99.shape.gii D99_LUT.txt lh_d99.label.gii]]></Value>
+      </MD>
+      <MD>
+         <Name><![CDATA[WorkingDirectory]]></Name>
+         <Value><![CDATA[/home/nhp/nhp_sambashare]]></Value>
+      </MD>
+   </MetaData>
+   <LabelTable>
+      <Label Key="0" Red="1" Green="1" Blue="1" Alpha="0"><![CDATA[???]]></Label>
+      <Label Key="1" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_8Bm]]></Label>
+      <Label Key="2" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_11l]]></Label>
+      <Label Key="3" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_14r]]></Label>
+      <Label Key="4" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_v23a]]></Label>
+      <Label Key="5" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_Ia]]></Label>
+      <Label Key="6" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_13b]]></Label>
+      <Label Key="7" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_36c]]></Label>
+      <Label Key="8" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_24a']]></Label>
+      <Label Key="9" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_10mc]]></Label>
+      <Label Key="10" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_CPB]]></Label>
+      <Label Key="11" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_29]]></Label>
+      <Label Key="12" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_v23b]]></Label>
+      <Label Key="13" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_13l]]></Label>
+      <Label Key="14" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_V4]]></Label>
+      <Label Key="15" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_31]]></Label>
+      <Label Key="16" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_Ig]]></Label>
+      <Label Key="17" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_ML]]></Label>
+      <Label Key="18" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_23a]]></Label>
+      <Label Key="19" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_ER]]></Label>
+      <Label Key="20" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_10o]]></Label>
+      <Label Key="21" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_VIP]]></Label>
+      <Label Key="22" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_LIPv]]></Label>
+      <Label Key="23" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_8Bs]]></Label>
+      <Label Key="24" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_V1]]></Label>
+      <Label Key="25" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_G]]></Label>
+      <Label Key="26" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_9d]]></Label>
+      <Label Key="27" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_7op]]></Label>
+      <Label Key="28" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_V4t]]></Label>
+      <Label Key="29" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_46f]]></Label>
+      <Label Key="30" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_PE]]></Label>
+      <Label Key="31" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TEav]]></Label>
+      <Label Key="32" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_32]]></Label>
+      <Label Key="33" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_AL]]></Label>
+      <Label Key="34" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_10mr]]></Label>
+      <Label Key="35" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_24b]]></Label>
+      <Label Key="36" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_1/2]]></Label>
+      <Label Key="37" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_8Av]]></Label>
+      <Label Key="38" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_ECL]]></Label>
+      <Label Key="39" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_FST]]></Label>
+      <Label Key="40" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_12m]]></Label>
+      <Label Key="41" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_V6Av]]></Label>
+      <Label Key="42" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_8Bd]]></Label>
+      <Label Key="43" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TGvd]]></Label>
+      <Label Key="44" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_V3d]]></Label>
+      <Label Key="45" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_F1]]></Label>
+      <Label Key="46" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_Iam]]></Label>
+      <Label Key="47" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_SII]]></Label>
+      <Label Key="48" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_23b]]></Label>
+      <Label Key="49" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_13m]]></Label>
+      <Label Key="50" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_9m]]></Label>
+      <Label Key="51" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_EI]]></Label>
+      <Label Key="52" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_RPB]]></Label>
+      <Label Key="53" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_13a]]></Label>
+      <Label Key="54" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_AONd/m]]></Label>
+      <Label Key="55" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_F3]]></Label>
+      <Label Key="56" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_R]]></Label>
+      <Label Key="57" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_V6]]></Label>
+      <Label Key="58" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TFO]]></Label>
+      <Label Key="59" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_V4v]]></Label>
+      <Label Key="60" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_46v]]></Label>
+      <Label Key="61" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_PEc]]></Label>
+      <Label Key="62" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TGdd]]></Label>
+      <Label Key="63" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_35]]></Label>
+      <Label Key="64" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_A1]]></Label>
+      <Label Key="65" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_Ial]]></Label>
+      <Label Key="66" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_7m]]></Label>
+      <Label Key="67" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_v23b_question]]></Label>
+      <Label Key="68" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_23c]]></Label>
+      <Label Key="69" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_EC]]></Label>
+      <Label Key="70" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_Id]]></Label>
+      <Label Key="71" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_MIP]]></Label>
+      <Label Key="72" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_PIP]]></Label>
+      <Label Key="73" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_PFG/PF]]></Label>
+      <Label Key="74" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TEpd]]></Label>
+      <Label Key="75" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_V3v]]></Label>
+      <Label Key="76" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_44]]></Label>
+      <Label Key="77" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_MT]]></Label>
+      <Label Key="78" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TEm]]></Label>
+      <Label Key="79" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_Tpt]]></Label>
+      <Label Key="80" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_24c]]></Label>
+      <Label Key="81" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_MST]]></Label>
+      <Label Key="82" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_RM]]></Label>
+      <Label Key="83" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_STGr]]></Label>
+      <Label Key="84" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_Pi]]></Label>
+      <Label Key="85" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_F6]]></Label>
+      <Label Key="86" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_DP]]></Label>
+      <Label Key="87" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_12r]]></Label>
+      <Label Key="88" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_PrCO]]></Label>
+      <Label Key="89" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_PEci]]></Label>
+      <Label Key="90" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TGdg]]></Label>
+      <Label Key="91" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_AIP]]></Label>
+      <Label Key="92" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_36p]]></Label>
+      <Label Key="93" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_LOP]]></Label>
+      <Label Key="94" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_11m]]></Label>
+      <Label Key="95" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_RTp]]></Label>
+      <Label Key="96" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_AONl]]></Label>
+      <Label Key="97" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_25]]></Label>
+      <Label Key="98" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_Pir]]></Label>
+      <Label Key="99" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_Iapm]]></Label>
+      <Label Key="100" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_RT]]></Label>
+      <Label Key="101" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_Opt/PG]]></Label>
+      <Label Key="102" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TEpv]]></Label>
+      <Label Key="103" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_V3A]]></Label>
+      <Label Key="104" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_45a]]></Label>
+      <Label Key="105" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TEO]]></Label>
+      <Label Key="106" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_F7]]></Label>
+      <Label Key="107" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_46d]]></Label>
+      <Label Key="108" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_Iai]]></Label>
+      <Label Key="109" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_6Va/6Vb]]></Label>
+      <Label Key="110" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_LIPd]]></Label>
+      <Label Key="111" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_V2]]></Label>
+      <Label Key="112" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_36r]]></Label>
+      <Label Key="113" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_12l]]></Label>
+      <Label Key="114" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_PEa]]></Label>
+      <Label Key="115" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TGsts]]></Label>
+      <Label Key="116" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_RTM]]></Label>
+      <Label Key="117" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_3a/b]]></Label>
+      <Label Key="118" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TGa]]></Label>
+      <Label Key="119" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_V6Ad]]></Label>
+      <Label Key="120" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TF]]></Label>
+      <Label Key="121" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_45b]]></Label>
+      <Label Key="122" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TEad]]></Label>
+      <Label Key="123" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_PGa]]></Label>
+      <Label Key="124" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_F4]]></Label>
+      <Label Key="125" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_8Ad]]></Label>
+      <Label Key="126" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_RTL]]></Label>
+      <Label Key="127" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_12o]]></Label>
+      <Label Key="128" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_CM]]></Label>
+      <Label Key="129" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TAa]]></Label>
+      <Label Key="130" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_F2]]></Label>
+      <Label Key="131" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TGvg]]></Label>
+      <Label Key="132" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_CL]]></Label>
+      <Label Key="133" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TPO]]></Label>
+      <Label Key="134" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TEa]]></Label>
+      <Label Key="135" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_IPa]]></Label>
+      <Label Key="136" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_ELr]]></Label>
+      <Label Key="137" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_ELc]]></Label>
+      <Label Key="138" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_V2_question]]></Label>
+      <Label Key="139" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_V2_or_v23b_question]]></Label>
+      <Label Key="140" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_30]]></Label>
+      <Label Key="141" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_24b']]></Label>
+      <Label Key="142" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_24a]]></Label>
+      <Label Key="143" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_24c']]></Label>
+      <Label Key="144" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_14c]]></Label>
+      <Label Key="145" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TTv]]></Label>
+      <Label Key="146" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_EO]]></Label>
+      <Label Key="147" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_TH]]></Label>
+      <Label Key="148" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_Iapl]]></Label>
+      <Label Key="149" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[lh_Ri]]></Label>
+      <Label Key="150" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_8Bm]]></Label>
+      <Label Key="151" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_11l]]></Label>
+      <Label Key="152" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_14r]]></Label>
+      <Label Key="153" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_v23a]]></Label>
+      <Label Key="154" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_Ia]]></Label>
+      <Label Key="155" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_13b]]></Label>
+      <Label Key="156" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_36c]]></Label>
+      <Label Key="157" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_24a']]></Label>
+      <Label Key="158" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_10mc]]></Label>
+      <Label Key="159" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_CPB]]></Label>
+      <Label Key="160" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_29]]></Label>
+      <Label Key="161" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_v23b]]></Label>
+      <Label Key="162" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_13l]]></Label>
+      <Label Key="163" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_V4]]></Label>
+      <Label Key="164" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_31]]></Label>
+      <Label Key="165" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_Ig]]></Label>
+      <Label Key="166" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_ML]]></Label>
+      <Label Key="167" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_23a]]></Label>
+      <Label Key="168" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_ER]]></Label>
+      <Label Key="169" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_10o]]></Label>
+      <Label Key="170" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_VIP]]></Label>
+      <Label Key="171" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_LIPv]]></Label>
+      <Label Key="172" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_8Bs]]></Label>
+      <Label Key="173" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_V1]]></Label>
+      <Label Key="174" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_G]]></Label>
+      <Label Key="175" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_9d]]></Label>
+      <Label Key="176" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_7op]]></Label>
+      <Label Key="177" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_V4t]]></Label>
+      <Label Key="178" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_46f]]></Label>
+      <Label Key="179" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_PE]]></Label>
+      <Label Key="180" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TEav]]></Label>
+      <Label Key="181" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_32]]></Label>
+      <Label Key="182" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_AL]]></Label>
+      <Label Key="183" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_10mr]]></Label>
+      <Label Key="184" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_24b]]></Label>
+      <Label Key="185" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_1/2]]></Label>
+      <Label Key="186" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_8Av]]></Label>
+      <Label Key="187" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_ECL]]></Label>
+      <Label Key="188" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_FST]]></Label>
+      <Label Key="189" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_12m]]></Label>
+      <Label Key="190" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_V6Av]]></Label>
+      <Label Key="191" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_8Bd]]></Label>
+      <Label Key="192" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TGvd]]></Label>
+      <Label Key="193" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_V3d]]></Label>
+      <Label Key="194" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_F1]]></Label>
+      <Label Key="195" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_Iam]]></Label>
+      <Label Key="196" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_SII]]></Label>
+      <Label Key="197" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_23b]]></Label>
+      <Label Key="198" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_13m]]></Label>
+      <Label Key="199" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_9m]]></Label>
+      <Label Key="200" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_EI]]></Label>
+      <Label Key="201" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_RPB]]></Label>
+      <Label Key="202" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_13a]]></Label>
+      <Label Key="203" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_AONd/m]]></Label>
+      <Label Key="204" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_F3]]></Label>
+      <Label Key="205" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_R]]></Label>
+      <Label Key="206" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_V6]]></Label>
+      <Label Key="207" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TFO]]></Label>
+      <Label Key="208" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_V4v]]></Label>
+      <Label Key="209" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_46v]]></Label>
+      <Label Key="210" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_PEc]]></Label>
+      <Label Key="211" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TGdd]]></Label>
+      <Label Key="212" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_35]]></Label>
+      <Label Key="213" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_A1]]></Label>
+      <Label Key="214" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_Ial]]></Label>
+      <Label Key="215" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_7m]]></Label>
+      <Label Key="216" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_v23b_question]]></Label>
+      <Label Key="217" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_23c]]></Label>
+      <Label Key="218" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_EC]]></Label>
+      <Label Key="219" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_Id]]></Label>
+      <Label Key="220" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_MIP]]></Label>
+      <Label Key="221" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_PIP]]></Label>
+      <Label Key="222" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_PFG/PF]]></Label>
+      <Label Key="223" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TEpd]]></Label>
+      <Label Key="224" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_V3v]]></Label>
+      <Label Key="225" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_44]]></Label>
+      <Label Key="226" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_MT]]></Label>
+      <Label Key="227" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TEm]]></Label>
+      <Label Key="228" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_Tpt]]></Label>
+      <Label Key="229" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_24c]]></Label>
+      <Label Key="230" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_MST]]></Label>
+      <Label Key="231" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_RM]]></Label>
+      <Label Key="232" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_STGr]]></Label>
+      <Label Key="233" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_Pi]]></Label>
+      <Label Key="234" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_F6]]></Label>
+      <Label Key="235" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_DP]]></Label>
+      <Label Key="236" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_12r]]></Label>
+      <Label Key="237" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_PrCO]]></Label>
+      <Label Key="238" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_PEci]]></Label>
+      <Label Key="239" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TGdg]]></Label>
+      <Label Key="240" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_AIP]]></Label>
+      <Label Key="241" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_36p]]></Label>
+      <Label Key="242" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_LOP]]></Label>
+      <Label Key="243" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_11m]]></Label>
+      <Label Key="244" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_RTp]]></Label>
+      <Label Key="245" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_AONl]]></Label>
+      <Label Key="246" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_25]]></Label>
+      <Label Key="247" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_Pir]]></Label>
+      <Label Key="248" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_Iapm]]></Label>
+      <Label Key="249" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_RT]]></Label>
+      <Label Key="250" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_Opt/PG]]></Label>
+      <Label Key="251" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TEpv]]></Label>
+      <Label Key="252" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_V3A]]></Label>
+      <Label Key="253" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_45a]]></Label>
+      <Label Key="254" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TEO]]></Label>
+      <Label Key="255" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_F7]]></Label>
+      <Label Key="256" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_46d]]></Label>
+      <Label Key="257" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_Iai]]></Label>
+      <Label Key="258" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_6Va/6Vb]]></Label>
+      <Label Key="259" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_LIPd]]></Label>
+      <Label Key="260" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_V2]]></Label>
+      <Label Key="261" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_36r]]></Label>
+      <Label Key="262" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_12l]]></Label>
+      <Label Key="263" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_PEa]]></Label>
+      <Label Key="264" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TGsts]]></Label>
+      <Label Key="265" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_RTM]]></Label>
+      <Label Key="266" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_3a/b]]></Label>
+      <Label Key="267" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TGa]]></Label>
+      <Label Key="268" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_V6Ad]]></Label>
+      <Label Key="269" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TF]]></Label>
+      <Label Key="270" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_45b]]></Label>
+      <Label Key="271" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TEad]]></Label>
+      <Label Key="272" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_PGa]]></Label>
+      <Label Key="273" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_F4]]></Label>
+      <Label Key="274" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_8Ad]]></Label>
+      <Label Key="275" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_RTL]]></Label>
+      <Label Key="276" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_12o]]></Label>
+      <Label Key="277" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_CM]]></Label>
+      <Label Key="278" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TAa]]></Label>
+      <Label Key="279" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_F2]]></Label>
+      <Label Key="280" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TGvg]]></Label>
+      <Label Key="281" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_CL]]></Label>
+      <Label Key="282" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TPO]]></Label>
+      <Label Key="283" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TEa]]></Label>
+      <Label Key="284" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_IPa]]></Label>
+      <Label Key="285" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_ELr]]></Label>
+      <Label Key="286" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_ELc]]></Label>
+      <Label Key="287" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_V2_question]]></Label>
+      <Label Key="288" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_V2_or_v23b_question]]></Label>
+      <Label Key="289" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_30]]></Label>
+      <Label Key="290" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_24b']]></Label>
+      <Label Key="291" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_24a]]></Label>
+      <Label Key="292" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_24c']]></Label>
+      <Label Key="293" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_14c]]></Label>
+      <Label Key="294" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TTv]]></Label>
+      <Label Key="295" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_EO]]></Label>
+      <Label Key="296" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_TH]]></Label>
+      <Label Key="297" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_Iapl]]></Label>
+      <Label Key="298" Red="0.784314" Green="0.784314" Blue="0.784314" Alpha="1"><![CDATA[rh_Ri]]></Label>
+   </LabelTable>
+<DataArray Intent="NIFTI_INTENT_LABEL"
+           DataType="NIFTI_TYPE_INT32"
+           ArrayIndexingOrder="RowMajorOrder"
+           Dimensionality="1"
+           Dim0="32492"
+           Encoding="GZipBase64Binary"
+           Endian="LittleEndian"
+           ExternalFileName=""
+           ExternalFileOffset="0">
+   <MetaData>
+   </MetaData>
+   <Data>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</Data>
+</DataArray>
+</GIFTI>
