@@ -420,6 +420,16 @@ def plot_macaque_brain_figure(
             "atlases/macaque_BNA/R.charm5.label.gii",
         )
         df = pd.read_csv(op.join(current_dir, "data/atlas_tables", "macaque_bna.csv"))
+    elif atlas == "d99":
+        lh_atlas_dir = op.join(
+            neuromaps_data_dir,
+            "atlases/macaque_D99/L.d99.label.gii",
+        )
+        rh_atlas_dir = op.join(
+            neuromaps_data_dir,
+            "atlases/macaque_D99/R.d99.label.gii",
+        )
+        df = pd.read_csv(op.join(current_dir, "data/atlas_tables", "macaque_d99.csv"))
     # 获取文件Underlay
     lh = op.join(
         neuromaps_data_dir, f"surfaces/macaque_BNA/civm.L.{surf}.32k_fs_LR.surf.gii"
@@ -625,6 +635,16 @@ def plot_macaque_hemi_brain_figure(
             "atlases/macaque_BNA/R.charm5.label.gii",
         )
         df = pd.read_csv(op.join(current_dir, "data/atlas_tables", "macaque_bna.csv"))
+    elif atlas == "d99":
+        lh_atlas_dir = op.join(
+            neuromaps_data_dir,
+            "atlases/macaque_D99/L.d99.label.gii",
+        )
+        rh_atlas_dir = op.join(
+            neuromaps_data_dir,
+            "atlases/macaque_D99/R.d99.label.gii",
+        )
+        df = pd.read_csv(op.join(current_dir, "data/atlas_tables", "macaque_d99.csv"))
     # 获取文件Underlay
     lh = op.join(
         neuromaps_data_dir, f"surfaces/macaque_BNA/civm.L.{surf}.32k_fs_LR.surf.gii"
