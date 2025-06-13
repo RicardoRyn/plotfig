@@ -24,6 +24,7 @@ def plot_matrix_figure(
     title_name="",
     title_fontsize=15,
     title_pad=20,
+    diag_border=False,
     **imshow_kwargs,
 ):
     ax = ax or plt.gca()
@@ -34,6 +35,9 @@ def plot_matrix_figure(
         data, cmap=cmap, vmin=vmin, vmax=vmax, aspect=aspect, **imshow_kwargs
     )
     ax.set_title(title_name, fontsize=title_fontsize, pad=title_pad)
+    if diag_border:
+        for i in range(data.shape[0]):
+            ax.add_patch(plt.Rectangle((i-0.5, i-0.5), 1, 1, fill=False, edgecolor='black', lw=0.5))
 
     if col_labels_name is not None:
         ax.set_xticks(np.arange(data.shape[1]))

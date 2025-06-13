@@ -13,7 +13,7 @@ def plot_correlation_figure(
     data1,
     data2,
     ax=None,
-    stats_method="pearson",
+    stats_method="spearman",
     ci=False,
     dots_color="steelblue",
     dots_size=1,
@@ -129,9 +129,13 @@ def plot_correlation_figure(
     if stats_method == "spearman":
         s, p = stats.spearmanr(A, B)
         label = r"$\rho$"
-    else:
+    elif stats_method == "pearson":
         s, p = stats.pearsonr(A, B)
         label = "r"
+    else:
+        print(f"没有统计方法 {stats_method}，请检查拼写。更换为默认的 spearman 方法。")
+        s, p = stats.spearmanr(A, B)
+        label = r"$\rho$"
 
     asterisk = " ***" if p < 0.001 else " **" if p < 0.01 else " *" if p < 0.05 else ""
     x_start, x_end = ax.get_xlim()

@@ -48,6 +48,7 @@ def plot_brain_connection_figure(
     # 默认参数
     current_dir = op.dirname(__file__)
     neuromaps_data_dir = op.join(current_dir, "data/neurodata")
+
     if lh_surfgii_file is None:
         lh_surfgii_file = op.join(
             neuromaps_data_dir, "surfaces/macaque_NMT2/L.mid_surface.surf.gii"
