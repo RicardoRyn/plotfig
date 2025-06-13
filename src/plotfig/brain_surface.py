@@ -209,7 +209,7 @@ def plot_human_brain_figure(
                     cbar.ax.xaxis.set_major_formatter(formatter)
             cbar.set_ticks([vmin, vmax])
             ########################################### rjx_colorbar ###############################################
-        return fig, p
+        return fig
     return lh_parc, rh_parc
 
 
