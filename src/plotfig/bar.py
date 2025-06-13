@@ -1,11 +1,11 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter, ScalarFormatter
-from scipy import stats
-
 from typing import Any
+
+import matplotlib.pyplot as plt
+import numpy as np
 import numpy.typing as npt
 from matplotlib.axes import Axes
+from matplotlib.ticker import FuncFormatter, ScalarFormatter
+from scipy import stats
 
 # 类型别名
 Num = int | float  # 可同时接受int和float的类型
@@ -117,8 +117,8 @@ def annotate_significance(
         y = y_base + count * interval
         ax.annotate(
             "",
-            xy=(i + 0.05, y),
-            xytext=(j - 0.05, y),
+            xy=(i, y),
+            xytext=(j, y),
             arrowprops=dict(
                 edgecolor=line_color, width=0.5, headwidth=0.1, headlength=0.1
             ),
@@ -395,6 +395,146 @@ def plot_one_group_violin_figure(
                     comparisons.append((i, j, p))
 
         if comparisons:
+            y_max = ax.get_ylim()[1]
+            interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
+            annotate_significance(
+                ax,
+                comparisons,
+                np.max(all_values),
+                interval,
+                line_color=kwargs.get("line_color", "0.5"),
+                star_offset=interval / 5,
+                fontsize=kwargs.get("asterisk_fontsize", 10),
+                color=kwargs.get("asterisk_color", "k"),
+            )
+
+
+def plot_multi_group_bar_figure(
+    data: list[list[NumArray]],
+    ax: plt.Axes | None = None,
+    bar_width: Num = 0.2,
+    bar_gap: Num = 0.1,
+    bar_color: list[str] | None = None,
+    errorbar_type: str = "se",
+    dots_color: str = "gray",
+    dots_size: int = 35,
+    group_labels: list[str] | None = None,
+    bar_labels: list[str] | None = None,
+    title_name: str = "",
+    y_label_name: str = "",
+    legend_position: tuple[Num, Num] = (1.2, 1),
+    statistic: bool = False,
+    test_method: str = "external",
+    p_list: list[list[Num]] | None = None,
+    legend:  bool = True,
+    **kwargs: Any,
+) -> None:
+    """绘制多组柱状图
+
+    Args:
+        data: 数据列表，每个元素是一个数据组列表
+        ax: matplotlib轴对象(可选)
+        bar_width: 柱子宽度(默认0.2)
+        bar_gap: 组内柱子间距(默认0.1)
+        bar_color: 颜色列表(可选)
+        errorbar_type: 误差线类型('se'或'sd')(默认'se')
+        dots_color: 散点颜色(默认'gray')
+        dots_size: 散点大小(默认35)
+        group_labels: 组标签列表(可选)
+        bar_labels: 柱子标签列表(可选)
+        title_name: 图表标题(默认"")
+        y_label_name: y轴标签(默认"")
+        legend_position: 图例位置(默认(1.2, 1))
+        statistic: 是否进行统计检验(默认False)
+        test_method: 统计方法('ttest_ind','ttest_rel','mannwhitneyu'或'external')(默认'external')
+        p_list: 外部提供的p值列表(当test_method='external'时使用)
+        **kwargs: 其他可选参数:
+            - title_fontsize: 标题字体大小
+            - title_pad: 标题与图的间距
+            - x_tick_fontsize: x轴刻度标签字体大小
+            - x_tick_rotation: x轴刻度标签旋转角度
+            - y_tick_fontsize: y轴刻度标签字体大小
+            - y_tick_rotation: y轴刻度标签旋转角度
+            - line_color: 显著性连线颜色
+            - asterisk_fontsize: 星号字体大小
+            - asterisk_color: 星号颜色
+            - 以及其他y轴设置选项(参见set_yaxis函数)
+    """
+
+    # 动态参数
+    if ax is None:
+        ax = plt.gca()
+    n_groups = len(data)
+    if group_labels is None:
+        group_labels = [f"Group {i+1}" for i in range(n_groups)]
+    # 把所有子列表展开成一个大列表
+    all_values = [x for sublist1 in data for sublist2 in sublist1 for x in sublist2]
+
+    x_positions_all = []
+    for index_group, group_data in enumerate(data):
+        n_bars = len(group_data)
+        if bar_labels is None:
+            bar_labels = [f"Bar {i+1}" for i in range(n_bars)]
+        if bar_color is None:
+            bar_color = ["gray"] * n_bars
+
+        x_positions = np.arange(n_bars) * (bar_width + bar_gap) + bar_width/2 + index_group - (n_bars * bar_width + (n_bars - 1) * bar_gap)/2
+        x_positions_all.append(x_positions)
+
+        # 计算均值、标准差、标准误
+        means = [compute_summary(group_data[i])[0] for i in range(n_bars)]
+        sds = [compute_summary(group_data[i])[1] for i in range(n_bars)]
+        ses = [compute_summary(group_data[i])[2] for i in range(n_bars)]
+        if errorbar_type == "sd":
+            error_values = sds
+        elif errorbar_type == "se":
+            error_values = ses
+        # 绘制柱子
+        bars = ax.bar(x_positions, means, width=bar_width, color=bar_color, alpha=1, edgecolor="k")
+        ax.errorbar(
+            x_positions,
+            means,
+            error_values,
+            fmt="none",
+            linewidth=1,
+            capsize=3,
+            color="black",
+        )
+        # 绘制散点
+        for index_bar, dot in enumerate(group_data):
+            dot_x_pos = np.random.normal(x_positions[index_bar], scale=bar_width/7, size=len(dot))
+            add_scatter(ax, dot_x_pos, dot, dots_color, dots_size=dots_size)
+    if legend:
+        ax.legend(bars, bar_labels, bbox_to_anchor=legend_position)
+    # x轴
+    ax.set_xticks(np.arange(n_groups))
+    ax.set_xticklabels(
+        group_labels,
+        fontsize=kwargs.get("x_tick_fontsize", 10),
+        rotation=kwargs.get("x_tick_rotation", 0),
+    )
+    # 美化
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.set_title(
+        title_name,
+        fontsize=kwargs.get("title_fontsize", 10),
+        pad=kwargs.get("title_pad", 20),
+    )
+    ax.set_ylabel(y_label_name, fontsize=kwargs.get("y_label_fontsize", 10))
+    set_yaxis(ax, all_values, kwargs)
+    # 添加统计显著性标记
+    if statistic:
+        for index_group, group_data in enumerate(data):
+            x_positions = x_positions_all[index_group]
+            comparisons = []
+            idx = 0
+            for i in range(len(group_data)):
+                for j in range(i + 1, len(group_data)):
+                    if test_method == "external":
+                        p = p_list[index_group][idx]
+                        idx += 1
+                    if p <= 0.05:
+                        comparisons.append((x_positions[i], x_positions[j], p))
             y_max = ax.get_ylim()[1]
             interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
             annotate_significance(

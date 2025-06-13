@@ -16,6 +16,7 @@ def plot_human_brain_figure(
     vmax=None,
     plot=True,
     cmap="Reds",
+    as_outline=False,
     colorbar=True,
     colorbar_location="right",
     colorbar_label_name="",
@@ -136,7 +137,8 @@ def plot_human_brain_figure(
             cmap=cmap,
             color_range=(vmin, vmax),
             cbar_label=colorbar_label_name,
-            zero_transparent=False
+            zero_transparent=False,
+            as_outline=as_outline
         )
         fig = p.build(cbar_kws=colorbar_kws)
         fig.suptitle(title_name, fontsize=title_fontsize, y=title_y)
@@ -207,7 +209,7 @@ def plot_human_brain_figure(
                     cbar.ax.xaxis.set_major_formatter(formatter)
             cbar.set_ticks([vmin, vmax])
             ########################################### rjx_colorbar ###############################################
-        return fig
+        return fig, p
     return lh_parc, rh_parc
 
 
