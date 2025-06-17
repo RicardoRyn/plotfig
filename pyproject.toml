@@ -22,6 +22,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "joblib>=1.4.2",
+    "sphinx>=8.2.3",
 ]
 
 [build-system]

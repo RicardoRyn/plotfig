@@ -142,6 +142,7 @@ def plot_one_group_bar_figure(
     width: Num = 0.5,
     colors: list[str] | None = None,
     dots_size: Num = 35,
+    dots_color: list[list[str]] | None = None,
     title_name: str = "",
     x_label_name: str = "",
     y_label_name: str = "",
@@ -222,7 +223,11 @@ def plot_one_group_bar_figure(
 
     # 绘制散点
     for i, d in enumerate(data):
-        add_scatter(ax, scatter_positions[i], d, colors[i], dots_size)
+        if dots_color is None:
+            add_scatter(ax, scatter_positions[i], d, ["gray"] * len(d), dots_size)
+        else:
+            add_scatter(ax, scatter_positions[i], d, dots_color[i], dots_size)
+
 
     # 美化
     ax.spines[["top", "right"]].set_visible(False)
