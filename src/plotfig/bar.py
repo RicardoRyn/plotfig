@@ -417,11 +417,11 @@ def plot_multi_group_bar_figure(
     bar_labels: list[str] | None = None,
     title_name: str = "",
     y_label_name: str = "",
-    legend_position: tuple[Num, Num] = (1.2, 1),
     statistic: bool = False,
     test_method: str = "external",
     p_list: list[list[Num]] | None = None,
     legend: bool = True,
+    legend_position: tuple[Num, Num] = (1.2, 1),
     **kwargs: Any,
 ) -> None:
     """绘制多组柱状图，包含散点和误差条。
@@ -439,11 +439,11 @@ def plot_multi_group_bar_figure(
         bar_labels (list[str] | None, optional): 每个柱子的标签名称。默认为 None，使用 "Bar i" 作为标签。
         title_name (str, optional): 图表的标题。默认为空字符串。
         y_label_name (str, optional): Y 轴的标签。默认为空字符串。
-        legend_position (tuple[Num, Num], optional): 图例的位置。默认为 (1.2, 1)。
         statistic (bool, optional): 是否进行统计检验并标注显著性标记。默认为 False。
         test_method (str, optional): 统计检验的方法，支持 "external"（外部提供 p 值）和其他方法。默认为 "external"。
         p_list (list[list[Num]] | None, optional): 外部提供的 p 值列表，用于统计检验。默认为 None。
         legend (bool, optional): 是否显示图例。默认为 True。
+        legend_position (tuple[Num, Num], optional): 图例的位置。默认为 (1.2, 1)。
         **kwargs (Any): 其他可选参数，用于进一步定制图表样式。
 
     Returns:
@@ -515,7 +515,7 @@ def plot_multi_group_bar_figure(
     ax.spines[["top", "right"]].set_visible(False)
     ax.set_title(
         title_name,
-        fontsize=kwargs.get("title_fontsize", 10),
+        fontsize=kwargs.get("title_fontsize", 15),
         pad=kwargs.get("title_pad", 20),
     )
     ax.set_ylabel(y_label_name, fontsize=kwargs.get("y_label_fontsize", 10))
