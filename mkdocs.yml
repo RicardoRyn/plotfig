@@ -36,9 +36,10 @@ theme:
 # Plugins
 plugins:
   - search:
-      separator: '[\s\u200b\-_,:!=\[\]()]"`/]+|\.(?!\d)|&[lg]t;|(?!)(?=[A-Z][a-z])'
+      separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
   - minify:
       minify_html: true
+  - mkdocs-jupyter
 
 # Additional configuration
 extra:
