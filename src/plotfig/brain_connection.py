@@ -13,6 +13,8 @@ import numpy.typing as npt
 
 Num = int | float
 
+__all__ = ["plot_brain_connection_figure"]
+
 
 def plot_brain_connection_figure(
     connectome: npt.NDArray,
@@ -253,20 +255,7 @@ def plot_brain_connection_figure(
 
 
 def main():
-    connectome = pd.read_csv(r"d:/desktop/BG.csv", header=None, index_col=None).values
-    lh_surfgii_file = r"D:\Desktop\BG.L.midthickness.32k_fs_LR.surf.gii"
-    rh_surfgii_file = r"D:\Desktop\BG.R.midthickness.32k_fs_LR.surf.gii"
-    niigz_file = r"D:\Desktop\macaque_Interoceptive_processing_network.nii.gz"
-    output_file = "d:/desktop/rm_rjx.html"
-    plot_brain_connection_figure(
-        connectome,
-        lh_surfgii_file=lh_surfgii_file,
-        rh_surfgii_file=rh_surfgii_file,
-        niigz_file=niigz_file,
-        output_file=output_file,
-        scale_method="color_width",
-        line_width=20,
-    )
+    pass
 
 
 if __name__ == "__main__":

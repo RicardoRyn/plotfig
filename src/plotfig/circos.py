@@ -6,8 +6,9 @@ from mne_connectivity.viz import plot_connectivity_circle
 import numpy.typing as npt
 from typing import Tuple
 
-
 Num = int | float
+
+__all__ = ["plot_symmetric_circle_figure", "plot_asymmetric_circle_figure"]
 
 
 def plot_symmetric_circle_figure(
@@ -186,7 +187,7 @@ def plot_asymmetric_circle_figure(
     manual_colorbar_draw_border: bool = True,
     manual_colorbar_tickline: bool = False,
     manual_colorbar_nticks: bool = False,
-):
+) -> plt.Figure:
     """绘制类circos连接图
 
     Args:
