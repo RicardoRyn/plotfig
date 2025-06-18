@@ -21,8 +21,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "joblib>=1.4.2",
-    "sphinx>=8.2.3",
+    "mkdocs-material>=9.6.14",
+    "mkdocs-minify-plugin>=0.8.0",
+    "mkdocstrings[python]>=0.29.1",
 ]
 
 [build-system]

@@ -11,6 +11,12 @@ from scipy import stats
 Num = int | float  # 可同时接受int和float的类型
 NumArray = list[Num] | npt.NDArray[np.float64]  # 数字数组类型
 
+__all__ = [
+    "plot_one_group_bar_figure",
+    "plot_one_group_violin_figure",
+    "plot_multi_group_bar_figure",
+]
+
 
 def compute_summary(data: NumArray) -> tuple[float, float, float]:
     """计算均值、标准差、标准误"""
@@ -152,37 +158,29 @@ def plot_one_group_bar_figure(
     errorbar_type: str = "se",
     **kwargs: Any,
 ) -> None:
-    """绘制单组柱状图
+    """绘制单组柱状图，包含散点和误差条。
 
     Args:
-        data: 数据列表，每个元素是一个数据组
-        ax: matplotlib轴对象(可选)
-        labels_name: x轴标签列表(可选)
-        width: 柱状图宽度(默认0.5)
-        colors: 颜色列表(可选)
-        dots_size: 点图大小(默认35)
-        title_name: 图表标题(默认"")
-        x_label_name: x轴标签(默认"")
-        y_label_name: y轴标签(默认"")
-        statistic: 是否进行统计检验(默认False)
-        test_method: 统计方法('ttest_ind','ttest_rel','mannwhitneyu'或'external')(默认'ttest_ind')
-        p_list: 外部提供的p值列表(当test_method='external'时使用)
-        errorbar_type: 误差线类型('se'或'sd')(默认'se')
-        **kwargs: 其他可选参数:
-            - title_fontsize: 标题字体大小
-            - title_pad: 标题与图的间距
-            - x_label_fontsize: x轴标签字体大小
-            - y_label_fontsize: y轴标签字体大小
-            - x_label_ha: x轴标签水平对齐方式
-            - x_tick_fontsize: x轴刻度标签字体大小
-            - x_tick_rotation: x轴刻度标签旋转角度
-            - y_tick_fontsize: y轴刻度标签字体大小
-            - y_tick_rotation: y轴刻度标签旋转角度
-            - line_color: 显著性连线颜色
-            - asterisk_fontsize: 星号字体大小
-            - asterisk_color: 星号颜色
-            - 以及其他y轴设置选项(参见set_yaxis函数)
+        data (list[NumArray]): 包含多个数据集的列表，每个数据集是一个数字数组。
+        ax (Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前的 Axes。
+        labels_name (list[str] | None, optional): 每个数据集的标签名称。默认为 None，使用索引作为标签。
+        width (Num, optional): 柱子的宽度。默认为 0.5。
+        colors (list[str] | None, optional): 每个柱子的颜色。默认为 None，使用灰色。
+        dots_size (Num, optional): 散点的大小。默认为 35。
+        dots_color (list[list[str]] | None, optional): 每个数据集中散点的颜色。默认为 None，使用灰色。
+        title_name (str, optional): 图表的标题。默认为空字符串。
+        x_label_name (str, optional): X 轴的标签。默认为空字符串。
+        y_label_name (str, optional): Y 轴的标签。默认为空字符串。
+        statistic (bool, optional): 是否进行统计检验并标注显著性标记。默认为 False。
+        test_method (str, optional): 统计检验的方法，支持 "ttest_ind"、"ttest_rel" 和 "mannwhitneyu"。默认为 "ttest_ind"。
+        p_list (list[float] | None, optional): 外部提供的 p 值列表，用于统计检验。默认为 None。
+        errorbar_type (str, optional): 误差条类型，支持 "sd"（标准差）和 "se"（标准误）。默认为 "se"。
+        **kwargs (Any): 其他可选参数，用于进一步定制图表样式。
+
+    Returns:
+        None
     """
+
     if ax is None:
         ax = plt.gca()
     if labels_name is None:
@@ -227,7 +225,6 @@ def plot_one_group_bar_figure(
             add_scatter(ax, scatter_positions[i], d, ["gray"] * len(d), dots_size)
         else:
             add_scatter(ax, scatter_positions[i], d, dots_color[i], dots_size)
-
 
     # 美化
     ax.spines[["top", "right"]].set_visible(False)
@@ -301,37 +298,30 @@ def plot_one_group_violin_figure(
     show_extrema: bool = True,
     **kwargs: Any,
 ) -> None:
-    """绘制单组小提琴图
+    """绘制单组小提琴图，包含散点和统计显著性标记。
 
     Args:
-        data: 数据列表，每个元素是一个数据组
-        ax: matplotlib轴对象(可选)
-        labels_name: x轴标签列表(可选)
-        width: 柱状图宽度(默认0.5)
-        colors: 颜色列表(可选)
-        dots_size: 点图大小(默认35)
-        title_name: 图表标题(默认"")
-        x_label_name: x轴标签(默认"")
-        y_label_name: y轴标签(默认"")
-        statistic: 是否进行统计检验(默认False)
-        test_method: 统计方法('ttest_ind','ttest_rel','mannwhitneyu'或'external')(默认'ttest_ind')
-        p_list: 外部提供的p值列表(当test_method='external'时使用)
-        errorbar_type: 误差线类型('se'或'sd')(默认'se')
-        **kwargs: 其他可选参数:
-            - title_fontsize: 标题字体大小
-            - title_pad: 标题与图的间距
-            - x_label_fontsize: x轴标签字体大小
-            - y_label_fontsize: y轴标签字体大小
-            - x_label_ha: x轴标签水平对齐方式
-            - x_tick_fontsize: x轴刻度标签字体大小
-            - x_tick_rotation: x轴刻度标签旋转角度
-            - y_tick_fontsize: y轴刻度标签字体大小
-            - y_tick_rotation: y轴刻度标签旋转角度
-            - line_color: 显著性连线颜色
-            - asterisk_fontsize: 星号字体大小
-            - asterisk_color: 星号颜色
-            - 以及其他y轴设置选项(参见set_yaxis函数)
+        data (list[NumArray]): 包含多个数据集的列表，每个数据集是一个数字数组。
+        ax (Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前的 Axes。
+        labels_name (list[str] | None, optional): 每个数据集的标签名称。默认为 None，使用索引作为标签。
+        width (Num, optional): 小提琴图的宽度。默认为 0.8。
+        colors (list[str] | None, optional): 每个小提琴图的颜色。默认为 None，使用灰色。
+        show_dots (bool, optional): 是否显示散点。默认为 False。
+        dots_size (Num, optional): 散点的大小。默认为 35。
+        title_name (str, optional): 图表的标题。默认为空字符串。
+        x_label_name (str, optional): X 轴的标签。默认为空字符串。
+        y_label_name (str, optional): Y 轴的标签。默认为空字符串。
+        statistic (bool, optional): 是否进行统计检验并标注显著性标记。默认为 False。
+        test_method (str, optional): 统计检验的方法，支持 "ttest_ind"、"ttest_rel" 和 "mannwhitneyu"。默认为 "ttest_ind"。
+        p_list (list[float] | None, optional): 外部提供的 p 值列表，用于统计检验。默认为 None。
+        show_means (bool, optional): 是否显示均值线。默认为 False。
+        show_extrema (bool, optional): 是否显示极值线。默认为 True。
+        **kwargs (Any): 其他可选参数，用于进一步定制图表样式。
+
+    Returns:
+        None
     """
+
     ax = ax or plt.gca()
     labels_name = labels_name or [str(i) for i in range(len(data))]
     colors = colors or ["gray"] * len(data)
@@ -427,43 +417,37 @@ def plot_multi_group_bar_figure(
     bar_labels: list[str] | None = None,
     title_name: str = "",
     y_label_name: str = "",
-    legend_position: tuple[Num, Num] = (1.2, 1),
     statistic: bool = False,
     test_method: str = "external",
     p_list: list[list[Num]] | None = None,
-    legend:  bool = True,
+    legend: bool = True,
+    legend_position: tuple[Num, Num] = (1.2, 1),
     **kwargs: Any,
 ) -> None:
-    """绘制多组柱状图
+    """绘制多组柱状图，包含散点和误差条。
 
     Args:
-        data: 数据列表，每个元素是一个数据组列表
-        ax: matplotlib轴对象(可选)
-        bar_width: 柱子宽度(默认0.2)
-        bar_gap: 组内柱子间距(默认0.1)
-        bar_color: 颜色列表(可选)
-        errorbar_type: 误差线类型('se'或'sd')(默认'se')
-        dots_color: 散点颜色(默认'gray')
-        dots_size: 散点大小(默认35)
-        group_labels: 组标签列表(可选)
-        bar_labels: 柱子标签列表(可选)
-        title_name: 图表标题(默认"")
-        y_label_name: y轴标签(默认"")
-        legend_position: 图例位置(默认(1.2, 1))
-        statistic: 是否进行统计检验(默认False)
-        test_method: 统计方法('ttest_ind','ttest_rel','mannwhitneyu'或'external')(默认'external')
-        p_list: 外部提供的p值列表(当test_method='external'时使用)
-        **kwargs: 其他可选参数:
-            - title_fontsize: 标题字体大小
-            - title_pad: 标题与图的间距
-            - x_tick_fontsize: x轴刻度标签字体大小
-            - x_tick_rotation: x轴刻度标签旋转角度
-            - y_tick_fontsize: y轴刻度标签字体大小
-            - y_tick_rotation: y轴刻度标签旋转角度
-            - line_color: 显著性连线颜色
-            - asterisk_fontsize: 星号字体大小
-            - asterisk_color: 星号颜色
-            - 以及其他y轴设置选项(参见set_yaxis函数)
+        data (list[list[NumArray]]): 包含多个组的数据，每组是一个数据集列表，每个数据集是一个数字数组。
+        ax (plt.Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前的 Axes。
+        bar_width (Num, optional): 每个柱子的宽度。默认为 0.2。
+        bar_gap (Num, optional): 柱子之间的间隙。默认为 0.1。
+        bar_color (list[str] | None, optional): 每个柱子的颜色。默认为 None，使用灰色。
+        errorbar_type (str, optional): 误差条类型，支持 "sd"（标准差）和 "se"（标准误）。默认为 "se"。
+        dots_color (str, optional): 散点的颜色。默认为 "gray"。
+        dots_size (int, optional): 散点的大小。默认为 35。
+        group_labels (list[str] | None, optional): 每组的标签名称。默认为 None，使用 "Group i" 作为标签。
+        bar_labels (list[str] | None, optional): 每个柱子的标签名称。默认为 None，使用 "Bar i" 作为标签。
+        title_name (str, optional): 图表的标题。默认为空字符串。
+        y_label_name (str, optional): Y 轴的标签。默认为空字符串。
+        statistic (bool, optional): 是否进行统计检验并标注显著性标记。默认为 False。
+        test_method (str, optional): 统计检验的方法，支持 "external"（外部提供 p 值）和其他方法。默认为 "external"。
+        p_list (list[list[Num]] | None, optional): 外部提供的 p 值列表，用于统计检验。默认为 None。
+        legend (bool, optional): 是否显示图例。默认为 True。
+        legend_position (tuple[Num, Num], optional): 图例的位置。默认为 (1.2, 1)。
+        **kwargs (Any): 其他可选参数，用于进一步定制图表样式。
+
+    Returns:
+        None
     """
 
     # 动态参数
@@ -471,7 +455,7 @@ def plot_multi_group_bar_figure(
         ax = plt.gca()
     n_groups = len(data)
     if group_labels is None:
-        group_labels = [f"Group {i+1}" for i in range(n_groups)]
+        group_labels = [f"Group {i + 1}" for i in range(n_groups)]
     # 把所有子列表展开成一个大列表
     all_values = [x for sublist1 in data for sublist2 in sublist1 for x in sublist2]
 
@@ -479,11 +463,16 @@ def plot_multi_group_bar_figure(
     for index_group, group_data in enumerate(data):
         n_bars = len(group_data)
         if bar_labels is None:
-            bar_labels = [f"Bar {i+1}" for i in range(n_bars)]
+            bar_labels = [f"Bar {i + 1}" for i in range(n_bars)]
         if bar_color is None:
             bar_color = ["gray"] * n_bars
 
-        x_positions = np.arange(n_bars) * (bar_width + bar_gap) + bar_width/2 + index_group - (n_bars * bar_width + (n_bars - 1) * bar_gap)/2
+        x_positions = (
+            np.arange(n_bars) * (bar_width + bar_gap)
+            + bar_width / 2
+            + index_group
+            - (n_bars * bar_width + (n_bars - 1) * bar_gap) / 2
+        )
         x_positions_all.append(x_positions)
 
         # 计算均值、标准差、标准误
@@ -495,7 +484,9 @@ def plot_multi_group_bar_figure(
         elif errorbar_type == "se":
             error_values = ses
         # 绘制柱子
-        bars = ax.bar(x_positions, means, width=bar_width, color=bar_color, alpha=1, edgecolor="k")
+        bars = ax.bar(
+            x_positions, means, width=bar_width, color=bar_color, alpha=1, edgecolor="k"
+        )
         ax.errorbar(
             x_positions,
             means,
@@ -507,7 +498,9 @@ def plot_multi_group_bar_figure(
         )
         # 绘制散点
         for index_bar, dot in enumerate(group_data):
-            dot_x_pos = np.random.normal(x_positions[index_bar], scale=bar_width/7, size=len(dot))
+            dot_x_pos = np.random.normal(
+                x_positions[index_bar], scale=bar_width / 7, size=len(dot)
+            )
             add_scatter(ax, dot_x_pos, dot, dots_color, dots_size=dots_size)
     if legend:
         ax.legend(bars, bar_labels, bbox_to_anchor=legend_position)
@@ -522,7 +515,7 @@ def plot_multi_group_bar_figure(
     ax.spines[["top", "right"]].set_visible(False)
     ax.set_title(
         title_name,
-        fontsize=kwargs.get("title_fontsize", 10),
+        fontsize=kwargs.get("title_fontsize", 15),
         pad=kwargs.get("title_pad", 20),
     )
     ax.set_ylabel(y_label_name, fontsize=kwargs.get("y_label_fontsize", 10))
@@ -555,53 +548,7 @@ def plot_multi_group_bar_figure(
 
 
 def main():
-    """测试绘图函数的功能"""
-    from pathlib import Path
-
-    # 测试数据
-    np.random.seed(42)
-    data = np.array(
-        [
-            0.00001 * np.random.normal(0, 1, 100),
-            0.00001 * np.random.normal(0, 1, 100),
-            0.00001 * np.random.normal(0, 1, 100),
-        ]
-    )
-    # 测试函数
-    fig, ax = plt.subplots(1, 1, figsize=(3, 3))
-    plot_one_group_violin_figure(
-        data,
-        ax=ax,
-        labels_name=["AAA", "BBB", "CCC"],
-        width=0.3,
-        colors=["red", "blue", "green"],
-        show_dots=True,
-        dots_size=10,
-        title_name="this is a title_name",
-        x_label_name="x_label_name",
-        y_label_name="y_label_name",
-        statistic=True,
-        test_method="external",
-        p_list=[1, 0.01, 0.001],
-        errorbar_type="sd",
-        title_fontsize=7,
-        title_pad=2,
-        x_label_fontsize=7,
-        y_label_fontsize=7,
-        x_label_ha="right",
-        x_tick_fontsize=7,
-        x_tick_rotation=30,
-        y_tick_fontsize=7,
-        y_tick_rotation=30,
-        line_color="red",
-        asterisk_fontsize=7,
-        asterisk_color="red",
-    )
-    # 测试输出
-    save_dir = Path(__file__).parent / "tests_output"
-    save_dir.mkdir(exist_ok=True)  # 自动创建这个目录（如果没有）
-    save_path = save_dir / "test.png"
-    fig.savefig(save_path, dpi=300, bbox_inches="tight")
+    pass
 
 
 if __name__ == "__main__":
