@@ -1,13 +1,26 @@
-# Welcome to MkDocs
+# plotfig
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+`plotfig`是一个用于认知神经领域科研绘图的python包。
+![plotfig](https://imgur.com/3CEDdxc.png)
 
-## Commands
+## 功能
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+主要包括图的种类：
+1. 单组bar图
+1. 单组小提琴图
+1. 矩阵图
+1. 点线相关图
+1. 脑图
+   1. 人类Glasser脑区图
+   1. 人类BNA脑区图
+   1. 猕猴CHARM5脑区图
+   1. 猕猴CHARM6脑区图
+   1. 猕猴BNA脑区图
+1. 圈状图（circos图）
+   1. 对称circos图
+   1. 不对称circos图
+1. 大脑连接图
+   1. 猕猴大脑连接图
 
 ## Project layout
 
