@@ -108,3 +108,8 @@ nav:
   - 柱状图:
     - 单组柱状图: single_group_bar.ipynb
     - 多组柱状图: multi_groups_bar.ipynb
+  - 相关图: correlation.ipynb
+  - 矩阵图: matrix.ipynb
+  - 连线图: circos.ipynb
+  - 脑区图: brain_surface.ipynb
+  - 脑连接图: brain_connectivity.ipynb
