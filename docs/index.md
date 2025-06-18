@@ -1,24 +1,28 @@
 # plotfig
 
-`plotfig`是一个用于认知神经领域科研绘图的python包。[^1]
+`plotfig` 是一个面向认知神经科学研究者的 Python 绘图工具包。[^1]
+封装了 `matplotlib` 的各种 API，简化了复杂绘图流程。
+可扩展，容 `matplotlib` 与 `seaborn`。
 
-[Github]网页看这里。
-
+希望它能让你专注于数据本身而不是琐碎的图形参数调试🥵。
 
 ![plotfig](./plotfig.png)
 
-## 功能
+# 功能
 
-主要包括图的种类：
-
-1. bar图
-2. 矩阵图
-3. 相关图
-4. 脑图
-5. 圈状图（circos图）
-6. 大脑连接图
-
-[^1]:
-    还没想好要引用什么，先写在这里怕自己忘了怎么写😨。
-
-[GitHub]: https://github.com/ricardoryn/plotfig
+画图种类：
+1. 单组柱状/小提琴图
+1. 多组柱状图
+1. 相关图
+1. 矩阵图
+1. 脑区图
+   1. 人类Glasser脑区图
+   1. 人类BNA脑区图
+   1. 猕猴CHARM 5-level脑区图
+   1. 猕猴CHARM 6-level脑区图
+   1. 猕猴BNA脑区图
+1. 连线图（circos图）
+   1. 对称circos图
+   1. 不对
+   2. 称circos图
+2. 脑连接图
