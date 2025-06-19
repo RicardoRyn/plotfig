@@ -40,6 +40,20 @@ plugins:
   - minify:
       minify_html: true
   - mkdocs-jupyter
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_root_heading: true
+            show_source: true
+            show_signature: true
+            show_signature_annotations: false
+            docstring_style: google
+            merge_init_into_class: true
+            separate_signature: true
+            filters:
+              - "!^_"   # 隐藏所有以 _ 开头的名称
 
 # Additional configuration
 extra:
@@ -106,10 +120,11 @@ nav:
   - 主页: index.md
   - 安装: installation.md
   - 柱状图:
-    - 单组柱状图: single_group_bar.ipynb
-    - 多组柱状图: multi_groups_bar.ipynb
-  - 相关图: correlation.ipynb
-  - 矩阵图: matrix.ipynb
-  - 连线图: circos.ipynb
-  - 脑区图: brain_surface.ipynb
-  - 脑连接图: brain_connectivity.ipynb
+    - 单组柱状图: usage/single_group_bar.md
+    - 多组柱状图: usage/multi_groups_bar.md
+  - 相关图: usage/correlation.md
+  - 矩阵图: usage/matrix.md
+  - 连线图: usage/circos.md
+  - 脑区图: usage/brain_surface.md
+  - 脑连接图: usage/brain_connectivity.md
+  - API: api/index.md

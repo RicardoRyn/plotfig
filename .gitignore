@@ -9,13 +9,9 @@ wheels/
 # Virtual environments
 .venv
 
-# tests
-tests/
-**/tests_output/
-
-# Examples
-examples/example_figures/*
-!examples/example_figures/.gitkeep
-
 # backup
 *.bak
+
+# example figures
+notebooks/figures/*
+!notebooks/figures/.gitkeep
