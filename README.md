@@ -8,7 +8,7 @@
 
 [使用教程](https://ricardoryn.github.io/plotfig/)。
 
-![plotfig](./docs/plotfig.png)
+![plotfig](./docs/assets/plotfig.png)
 
 # 功能
 
