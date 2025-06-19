@@ -24,5 +24,6 @@ jobs:
           path: .cache 
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material mkdocs-jupyter pymdown-extensions mkdocs-minify-plugin mkdocstrings[python]
-      - run: mkdocs gh-deploy --force
+      - run: pip install uv
+      - run: uv sync --dev
+      - run: uv run mkdocs gh-deploy --force
