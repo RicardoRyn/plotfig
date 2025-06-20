@@ -262,7 +262,7 @@ def plot_human_brain_figure(
                 )
                 if vmax < 0.001 or vmax > 1000:  # y轴设置科学计数法
                     cbar.ax.xaxis.set_major_formatter(formatter)
-            cbar.set_ticks([vmin, vmax])
+                cbar.set_ticks(np.linspace(vmin, vmax, rjx_colorbar_nticks))
             ########################################### rjx_colorbar ###############################################
         return fig
     return lh_parc, rh_parc

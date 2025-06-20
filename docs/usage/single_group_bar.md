@@ -133,7 +133,7 @@ plot_one_group_bar_figure(
 当x轴上的名字过长时，可以使用旋转。
 
 
-```python
+```python hl_lines="31-32 42-43 53-54"
 import numpy as np
 import matplotlib.pyplot as plt
 from plotfig import *
