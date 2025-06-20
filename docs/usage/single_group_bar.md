@@ -133,7 +133,7 @@ plot_one_group_bar_figure(
 当x轴上的名字过长时，可以使用旋转。
 
 
-```python hl_lines="31-32 42-43 53-54"
+```python
 import numpy as np
 import matplotlib.pyplot as plt
 from plotfig import *
@@ -496,6 +496,7 @@ plot_one_group_bar_figure(
 
 `plotfig`可以快速为bar间比较进行统计。
 目前支持的统计方法有：
+
 1. 独立样本t检验：`ttest_ind`
 2. 配对样本t检验：`ttest_rel`
 3. Mann-Whitney U检验：`mannwhitneyu`
