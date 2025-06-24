@@ -31,7 +31,24 @@ theme:
     - search.highlight
     - search.share  # 用于增强搜索功能中的“共享”体验
     - search.suggest
-    # - toc.follow
+    - toc.follow
+  palette:
+    # Dark Mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Dark mode
+      primary: green
+      accent: deep purple
+    # Light Mode
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Light mode
+      primary: blue
+      accent: deep orange 
+  icon:
+    logo: material/brain
 
 # Plugins
 plugins:
