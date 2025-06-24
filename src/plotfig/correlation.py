@@ -42,6 +42,7 @@ def plot_correlation_figure(
     y_max_tick_to_value: float | None = None,
     y_format: str = "normal",  # 支持 "normal", "sci", "1f", "percent"
     asterisk_fontsize: int = 10,
+    show_p_value: bool = False,
 ) -> None:
     """
     绘制两个数据集之间的相关性图，支持线性回归、置信区间和统计方法（Spearman 或 Pearson）。
@@ -73,6 +74,7 @@ def plot_correlation_figure(
         y_max_tick_to_value (float | None, optional): 设置 Y 轴最大显示刻度值。默认为 None。
         y_format (str, optional): Y 轴格式化方式，支持 "normal", "sci", "1f", "percent"。默认为 "normal"。
         asterisk_fontsize (int, optional): 显著性星号字体大小。默认为 10。
+        show_p_value (bool, optional): 是否显示 p 值。默认为 True。
 
     Returns:
         None
@@ -177,7 +179,10 @@ def plot_correlation_figure(
         s, p = stats.spearmanr(A, B)
         label = r"$\rho$"
 
-    asterisk = " ***" if p < 0.001 else " **" if p < 0.01 else " *" if p < 0.05 else ""
+    if show_p_value:
+        asterisk = f" p={p:.4f}"
+    else:
+        asterisk = " ***" if p < 0.001 else " **" if p < 0.01 else " *" if p < 0.05 else ""
     x_start, x_end = ax.get_xlim()
     y_start, y_end = ax.get_ylim()
     ax.text(
