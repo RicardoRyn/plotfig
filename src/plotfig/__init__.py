@@ -14,7 +14,7 @@ from .brain_surface import (
     plot_chimpanzee_brain_figure,
     plot_chimpanzee_hemi_brain_figure,
 )
-from .brain_connection import plot_brain_connection_figure
+from .brain_connection import plot_brain_connection_figure, save_brain_connection_frames
 
 from importlib.metadata import version, PackageNotFoundError
 
@@ -33,6 +33,7 @@ __all__ = [
     "plot_symmetric_circle_figure",
     "plot_asymmetric_circle_figure",
     "plot_brain_connection_figure",
+    "save_brain_connection_frames"
 ]
 
 try:

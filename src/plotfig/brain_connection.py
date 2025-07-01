@@ -1,26 +1,31 @@
+import os
 import os.path as op
 import datetime
 import numpy as np
-import pandas as pd
 import nibabel as nib
 from scipy.ndimage import center_of_mass
 import plotly.graph_objects as go
+import plotly.io as pio
 import matplotlib.colors as mcolors
 import matplotlib.cm as cm
+from tqdm import tqdm
 
 from pathlib import Path
 import numpy.typing as npt
 
 Num = int | float
 
-__all__ = ["plot_brain_connection_figure"]
+__all__ = [
+    "plot_brain_connection_figure",
+    "save_brain_connection_frames",
+]
 
 
 def plot_brain_connection_figure(
     connectome: npt.NDArray,
-    lh_surfgii_file: str | Path | None = None,
-    rh_surfgii_file: str | Path | None = None,
-    niigz_file: str | Path | None = None,
+    lh_surfgii_file: str | Path,
+    rh_surfgii_file: str | Path,
+    niigz_file: str | Path,
     nodes_name: list[str] | None = None,
     nodes_size: Num = 5,
     nodes_color: list[str] | None = None,
@@ -32,9 +37,9 @@ def plot_brain_connection_figure(
 
     Args:
         connectome (npt.NDArray): 连接矩阵
-        lh_surfgii_file (str | Path | None, optional): 左脑surf.gii文件. Defaults to None.
-        rh_surfgii_file (str | Path | None, optional): 右脑surf.gii文件. Defaults to None.
-        niigz_file (str | Path | None, optional): 图集nii文件. Defaults to None.
+        lh_surfgii_file (str | Path): 左脑surf.gii文件.
+        rh_surfgii_file (str | Path): 右脑surf.gii文件.
+        niigz_file (str | Path): 图集nii文件.
         nodes_name (List[str] | None, optional): 节点名称. Defaults to None.
         nodes_size (Num, optional): 节点大小. Defaults to 5.
         nodes_color (List[str] | None, optional): 节点颜色. Defaults to None.
@@ -45,32 +50,10 @@ def plot_brain_connection_figure(
     Raises:
         ValueError: 参数参数取值不合法时抛出.
     """
-
     nodes_num = connectome.shape[0]
     # 默认参数
-    current_dir = op.dirname(__file__)
-    neuromaps_data_dir = op.join(current_dir, "data/neurodata")
-
-    if lh_surfgii_file is None:
-        lh_surfgii_file = op.join(
-            neuromaps_data_dir, "surfaces/macaque_NMT2/L.mid_surface.surf.gii"
-        )
-    if rh_surfgii_file is None:
-        rh_surfgii_file = op.join(
-            neuromaps_data_dir, "surfaces/macaque_NMT2/R.mid_surface.surf.gii"
-        )
-    if niigz_file is None:
-        niigz_file = op.join(
-            neuromaps_data_dir,
-            "volumes/macaque_NMT2/CHARM5_add_13_sgms_asym.nii.gz",
-        )
-        df = pd.read_csv(
-            op.join(current_dir, "data/atlas_tables/macaque_charm5_add_13_sgms.csv")
-        )
-        nodes_name = df["ROIs_name"].values
-    else:
-        if nodes_name is None:
-            nodes_name = [f"ROI-{i}" for i in range(nodes_num)]
+    if nodes_name is None:
+        nodes_name = [f"ROI-{i}" for i in range(nodes_num)]
     if nodes_color is None:
         nodes_color = ["white"] * len(nodes_name)
     if output_file is None:
@@ -251,7 +234,33 @@ def plot_brain_connection_figure(
     # 显示或保存为HTML
     fig.write_html(output_file)  # 导出为交互式网页
 
-    return
+    return fig
+
+
+def save_brain_connection_frames(
+    fig: go.Figure,
+    output_dir: str,
+    n_frames: int = 36
+) -> None:
+    """
+    生成不同角度的静态图片帧，用于制作旋转大脑连接图的 GIF 或视频。
+
+    Args:
+        fig (go.Figure): Plotly 的 Figure 对象，包含大脑表面和连接图。
+        output_dir (str): 图片保存的文件夹路径，会自动创建文件夹。
+        n_frames (int, optional): 旋转帧的数量。默认 36，即每 10 度一帧。
+    """
+    os.makedirs(output_dir, exist_ok=True)
+    angles = np.linspace(0, 360, n_frames, endpoint=False)
+    for i, angle in tqdm(enumerate(angles), total=len(angles)):
+        camera = dict(
+            eye=dict(
+                x=2 * np.cos(np.radians(angle)), y=2 * np.sin(np.radians(angle)), z=0.7
+            )
+        )
+        fig.update_layout(scene_camera=camera)
+        pio.write_image(fig, f"{output_dir}/frame_{i:03d}.png", width=800, height=800)
+    print(f"保存了 {n_frames} 张图片在 {output_dir}")
 
 
 def main():
