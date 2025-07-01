@@ -9,7 +9,6 @@ import plotly.io as pio
 import matplotlib.colors as mcolors
 import matplotlib.cm as cm
 from tqdm import tqdm
-
 from pathlib import Path
 import numpy.typing as npt
 
@@ -20,6 +19,133 @@ __all__ = [
     "save_brain_connection_frames",
 ]
 
+def _load_surface(file: str | Path):
+    '''加载 .surf.gii 文件，提取顶点和面'''
+    gii = nib.load(file)
+    vertices = gii.darrays[0].data
+    faces = gii.darrays[1].data
+    return vertices, faces
+
+def _create_mesh(vertices, faces, name):
+    '''	创建 plotly 的 Mesh3d 图层'''
+    return go.Mesh3d(
+        x=vertices[:, 0],
+        y=vertices[:, 1],
+        z=vertices[:, 2],
+        i=faces[:, 0],
+        j=faces[:, 1],
+        k=faces[:, 2],
+        color="white",
+        opacity=0.1,
+        flatshading=True,
+        lighting={"ambient": 0.7, "diffuse": 0.3},
+        name=name,
+    )
+
+def _get_node_indices(connectome, show_all_nodes):
+    '''	判断哪些节点需要显示'''
+    if not show_all_nodes:
+        row_is_zero = np.any(connectome != 0, axis=1)
+        return np.where(row_is_zero)[0]
+    else:
+        return np.arange(connectome.shape[0])
+
+def _get_centroids_real(niigz_file: str | Path):
+    '''读取 NIfTI 图集并计算ROI质心'''
+    img = nib.load(niigz_file)
+    atlas_data = img.get_fdata()
+    affine = img.affine
+
+    roi_labels = np.unique(atlas_data)
+    roi_labels = roi_labels[roi_labels != 0]
+
+    centroids_voxel = [center_of_mass((atlas_data == label).astype(int)) for label in roi_labels]
+    centroids_real = [np.dot(affine, [*coord, 1])[:3] for coord in centroids_voxel]
+    return np.array(centroids_real)
+
+def _add_nodes_to_fig(fig, centroids_real, node_indices, nodes_name, nodes_size, nodes_color):
+    '''将节点（球）添加到图中'''
+    for i in node_indices:
+        fig.add_trace(
+            go.Scatter3d(
+                x=[centroids_real[i, 0]],
+                y=[centroids_real[i, 1]],
+                z=[centroids_real[i, 2]],
+                mode="markers+text",
+                marker={
+                    "size": nodes_size[i],
+                    "color": nodes_color,
+                    "colorscale": "Rainbow",
+                    "opacity": 0.8,
+                    "line": {"width": 2, "color": "black"},
+                },
+                text=[nodes_name[i]],
+                hoverinfo="text+x+y+z",
+                showlegend=False,
+            )
+        )
+
+def _add_edges_to_fig(fig, connectome, centroids_real, nodes_name, scale_method, line_width):
+    '''将连接线绘制到图中'''
+    nodes_num = connectome.shape[0]
+    if np.all(connectome == 0):
+        return
+
+    max_strength = np.abs(connectome[connectome != 0]).max()
+
+    for i in range(nodes_num):
+        for j in range(i + 1, nodes_num):
+            value = connectome[i, j]
+            if value == 0:
+                continue
+
+            match scale_method:
+                case "width":
+                    each_line_color = "#ff0000" if value > 0 else "#0000ff"
+                    each_line_width = abs(value / max_strength) * line_width
+                case "color":
+                    norm_value = value / max_strength
+                    each_line_color = mcolors.to_hex(cm.bwr(mcolors.Normalize(vmin=-1, vmax=1)(norm_value)))
+                    each_line_width = line_width
+                case "width_color" | "color_width":
+                    norm_value = value / max_strength
+                    each_line_width = abs(norm_value) * line_width
+                    each_line_color = mcolors.to_hex(cm.bwr(mcolors.Normalize(vmin=-1, vmax=1)(norm_value)))
+                case "":
+                    each_line_color = "#ff0000" if value > 0 else "#0000ff"
+                    each_line_width = line_width
+                case _:
+                    raise ValueError("scale_method must be '', 'width', 'color', 'width_color', or 'color_width'")
+
+            connection_line = np.array([centroids_real[i], centroids_real[j], [None] * 3])
+            fig.add_trace(
+                go.Scatter3d(
+                    x=connection_line[:, 0],
+                    y=connection_line[:, 1],
+                    z=connection_line[:, 2],
+                    mode="lines",
+                    line={"color": each_line_color, "width": each_line_width},
+                    hoverinfo="none",
+                    name=f"{nodes_name[i]}-{nodes_name[j]}",
+                )
+            )
+
+def _finalize_figure(fig):
+    '''调整图形布局与视觉样式'''
+    fig.update_traces(
+        selector={"mode": "markers"},
+        marker={"size": 10, "colorscale": "Viridis", "line": {"width": 3, "color": "black"}},
+    )
+    fig.update_layout(
+        title="Connection",
+        scene={
+            "xaxis": {"showbackground": False, "visible": False},
+            "yaxis": {"showbackground": False, "visible": False},
+            "zaxis": {"showbackground": False, "visible": False},
+            "aspectmode": "data",
+        },
+        margin={"l": 0, "r": 0, "b": 0, "t": 30},
+    )
 
 def plot_brain_connection_figure(
     connectome: npt.NDArray,
@@ -27,11 +153,12 @@ def plot_brain_connection_figure(
     rh_surfgii_file: str | Path,
     niigz_file: str | Path,
     nodes_name: list[str] | None = None,
-    nodes_size: Num = 5,
+    nodes_size=None,
     nodes_color: list[str] | None = None,
     output_file: str | Path | None = None,
     scale_method: str = "",
     line_width: Num = 10,
+    show_all_nodes: bool = False,
 ) -> None:
     """绘制大脑连接图，保存在指定的html文件中
 
@@ -51,189 +178,31 @@ def plot_brain_connection_figure(
         ValueError: 参数参数取值不合法时抛出.
     """
     nodes_num = connectome.shape[0]
-    # 默认参数
     if nodes_name is None:
         nodes_name = [f"ROI-{i}" for i in range(nodes_num)]
     if nodes_color is None:
-        nodes_color = ["white"] * len(nodes_name)
+        nodes_color = ["white"] * nodes_num
+    if nodes_size is None:
+        nodes_size = [5] * nodes_num
     if output_file is None:
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         output_file = op.join(f"./{timestamp}.html")
-        print(f"由于没有指定保存路径，将默认保存为当前目录下 {timestamp}.html 文件中")
+        print(f"未指定保存路径，默认保存为：{output_file}")
 
-    # 加载suface文件
-    vertices_L = nib.load(lh_surfgii_file).darrays[0].data
-    faces_L = nib.load(lh_surfgii_file).darrays[1].data
-    vertices_R = nib.load(rh_surfgii_file).darrays[0].data
-    faces_R = nib.load(rh_surfgii_file).darrays[1].data
-    # 左半球
-    mesh_L = go.Mesh3d(
-        x=vertices_L[:, 0],
-        y=vertices_L[:, 1],
-        z=vertices_L[:, 2],
-        i=faces_L[:, 0],
-        j=faces_L[:, 1],
-        k=faces_L[:, 2],
-        color="white",
-        opacity=0.1,
-        flatshading=True,
-        lighting={"ambient": 0.7, "diffuse": 0.3},
-        name="Left Hemisphere",
-    )
-    # 右半球
-    mesh_R = go.Mesh3d(
-        x=vertices_R[:, 0],
-        y=vertices_R[:, 1],
-        z=vertices_R[:, 2],
-        i=faces_R[:, 0],
-        j=faces_R[:, 1],
-        k=faces_R[:, 2],
-        color="white",
-        opacity=0.1,
-        flatshading=True,
-        lighting={"ambient": 0.7, "diffuse": 0.3},
-        name="Right Hemisphere",
-    )
-    fig = go.Figure(data=[mesh_L, mesh_R])  # 同时添加两个Mesh
+    node_indices = _get_node_indices(connectome, show_all_nodes)
+    vertices_L, faces_L = _load_surface(lh_surfgii_file)
+    vertices_R, faces_R = _load_surface(rh_surfgii_file)
 
-    # 读取图集文件并提取ROI质心
-    atlas_data = nib.load(niigz_file).get_fdata()
-    affine = nib.load(niigz_file).affine
-    # 获取所有ROI标签（排除背景0）
-    roi_labels = np.unique(atlas_data)
-    roi_labels = roi_labels[roi_labels != 0]
-    # 计算每个ROI的质心（体素坐标系）
-    centroids_voxel = []
-    for label in roi_labels:
-        mask = (atlas_data == label).astype(int)
-        com = center_of_mass(mask)  # 这是一个xyz坐标
-        centroids_voxel.append(com)
-    # 将质心从体素坐标转换为真实空间坐标
-    centroids_real = []
-    for coord in centroids_voxel:
-        # 转换为齐次坐标并应用仿射变换
-        voxel_homogeneous = np.array([coord[0], coord[1], coord[2], 1])
-        real_coord = np.dot(affine, voxel_homogeneous)[:3]
-        centroids_real.append(real_coord)
-    centroids_real = np.array(centroids_real)
+    mesh_L = _create_mesh(vertices_L, faces_L, "Left Hemisphere")
+    mesh_R = _create_mesh(vertices_R, faces_R, "Right Hemisphere")
+    fig = go.Figure(data=[mesh_L, mesh_R])
 
-    # 绘制节点
-    fig.add_trace(
-        go.Scatter3d(
-            x=centroids_real[:, 0],
-            y=centroids_real[:, 1],
-            z=centroids_real[:, 2],
-            mode="markers+text",
-            marker={
-                "size": nodes_size,  # 球体大小
-                "color": nodes_color,  # 根据ROI标签分配颜色
-                "colorscale": "Rainbow",  # 颜色映射方案
-                "opacity": 0.8,
-                "line": {"width": 2, "color": "black"},  # 球体边框
-            },
-            text=[f"{name}" for name in nodes_name],  # 悬停显示标签
-            hoverinfo="text+x+y+z",
-            showlegend=False,  # 显示在图例中
-        )
-    )
+    centroids_real = _get_centroids_real(niigz_file)
+    _add_nodes_to_fig(fig, centroids_real, node_indices, nodes_name, nodes_size, nodes_color)
+    _add_edges_to_fig(fig, connectome, centroids_real, nodes_name, scale_method, line_width)
+    _finalize_figure(fig)
 
-    # 计算最大连接强度
-    if np.all(connectome == 0):
-        pass
-    else:
-        connectome_without_0 = connectome.ravel()[(connectome.ravel() != 0)]
-        max_strength = np.abs(connectome_without_0).max()
-        # min_strength = np.abs(connectome_without_0).min()
-
-        for i in range(nodes_num):
-            for j in range(i + 1, nodes_num):
-                value = connectome[i, j]
-                if value == 0:
-                    continue
-
-                match scale_method:
-                    case "width":
-                        if value > 0:
-                            each_line_color = "#ff0000"
-                            each_line_width = (value / max_strength) * line_width
-                        elif value < 0:
-                            each_line_color = "#0000ff"
-                            each_line_width = (-value / max_strength) * line_width
-                    case "color":
-                        value = value / max_strength  # 缩放到[-1, 1]
-                        each_line_width = line_width
-                        each_line_color = mcolors.to_hex(
-                            cm.bwr(mcolors.Normalize(vmin=-1, vmax=1)(value))
-                        )
-                        # each_line_color = eval(f"mcolors.to_hex(cm.{cmap}(mcolors.Normalize(vmin=-1, vmax=1)(value)))")
-                    case "width_color" | "color_width":
-                        value = value / max_strength  # 缩放到[-1, 1]
-                        if value > 0:
-                            each_line_width = value * line_width
-                        elif value < 0:
-                            each_line_width = -value * line_width
-                        each_line_color = mcolors.to_hex(
-                            cm.bwr(mcolors.Normalize(vmin=-1, vmax=1)(value))
-                        )
-                        # each_line_color = eval(f"mcolors.to_hex(cm.{cmap}(mcolors.Normalize(vmin=-1, vmax=1)(value)))")
-                    case "":
-                        each_line_width = line_width
-                        if value > 0:
-                            each_line_color = "#ff0000"
-                        elif value < 0:
-                            each_line_color = "#0000ff"
-                    case _:
-                        raise ValueError(
-                            "参数 scale_method 必须是 '', 'width', 'color', 'width_color' 或 'color_width'"
-                        )
-
-                # 创建单个线段的坐标数据（包含None分隔符）
-                connection_line = np.array(
-                    [
-                        centroids_real[i],
-                        centroids_real[j],
-                        [None] * 3,  # 添加分隔符确保线段独立
-                    ]
-                )
-                # 添加单独trace
-                fig.add_trace(
-                    go.Scatter3d(
-                        x=connection_line[:, 0],
-                        y=connection_line[:, 1],
-                        z=connection_line[:, 2],
-                        mode="lines",
-                        line={
-                            "color": each_line_color,
-                            "width": each_line_width,  # 动态设置线宽
-                        },
-                        hoverinfo="none",
-                        name=f"{nodes_name[i]}-{nodes_name[j]}",
-                    )
-                )
-
-    # 原质心球体代码保持不变（建议调整颜色增强对比度）
-    fig.update_traces(
-        selector={"mode": "markers"},  # 仅更新质心球体
-        marker={
-            "size": 10,  # 增大球体尺寸
-            "colorscale": "Viridis",  # 改用高对比度色阶
-            "line": {"width": 3, "color": "black"},
-        },
-    )
-    # 设置布局
-    fig.update_layout(
-        title="Connection",
-        scene={
-            "xaxis": {"showbackground": False, "visible": False},
-            "yaxis": {"showbackground": False, "visible": False},
-            "zaxis": {"showbackground": False, "visible": False},
-            "aspectmode": "data",  # 保持坐标轴比例一致
-        },
-        margin={"l": 0, "r": 0, "b": 0, "t": 30},
-    )
-    # 显示或保存为HTML
-    fig.write_html(output_file)  # 导出为交互式网页
-
+    fig.write_html(output_file)
     return fig
 
 

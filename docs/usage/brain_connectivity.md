@@ -20,7 +20,7 @@ matrix = (matrix + matrix.T) / 2  # 矩阵对称
 
 connectome = matrix
 
-output_file = "./test.html"
+output_file = "./figures/brain_connection.html"
 
 lh_surfgii_file = r"e:\6_Self\plot_self_brain_connectivity\103818.L.midthickness.32k_fs_LR.surf.gii"
 rh_surfgii_file = r"e:\6_Self\plot_self_brain_connectivity\103818.R.midthickness.32k_fs_LR.surf.gii"
