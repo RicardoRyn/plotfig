@@ -17,21 +17,21 @@ theme:
   name: material
   features:
     - announce.dismiss  # 允许用户关闭顶部公告栏
-    - content.action.edit  # 编辑此页
-    - content.action.view  # 预览此页
+    # - content.action.edit  # 编辑此页
+    # - content.action.view  # 预览此页
     - content.code.annotate  # 给文档中的代码块增加“注释”或“标注”功能
     - content.code.copy  # 复制代码块
     - content.tooltips  # 文档中的某些元素（通常是文本或代码里的特定标记）可以显示悬浮提示框
     - navigation.footer  # 添加页脚，能够导航到上/下一章
     - navigation.indexes  # 让 index.md 出现在目录中，而不是只作为首页隐藏起来
     - navigation.sections  # 侧边栏的导航菜单会根据文档目录结构自动分成不同章节
-    - navigation.tabs # 用来把文档导航栏以 “标签页（Tabs）” 的形式展示
+    # - navigation.tabs # 用来把文档导航栏以 “标签页（Tabs）” 的形式展示
     - navigation.top  # 让网站的导航栏固定显示在页面的最顶部（顶栏固定）
     - navigation.tracking  # 实现导航栏中“当前位置高亮跟踪”功能
-    - search.highlight
+    - search.highlight  # 搜索关键词高亮
     - search.share  # 用于增强搜索功能中的“共享”体验
-    - search.suggest
-    - toc.follow
+    - search.suggest  # 搜索建议
+    - toc.follow  # 目录自动跟随滚动
   palette:
     # Dark Mode
     - scheme: slate
