@@ -15,3 +15,7 @@ wheels/
 # example figures
 notebooks/figures/*
 !notebooks/figures/.gitkeep
+
+# test figures
+tests/figures/*
+!tests/figures/.gitkeep
