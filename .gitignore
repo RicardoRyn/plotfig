@@ -12,9 +12,8 @@ wheels/
 # backup
 *.bak
 
-# example figures
-notebooks/figures/*
-!notebooks/figures/.gitkeep
+# notebooks
+notebooks/
 
 # test figures
 tests/figures/*

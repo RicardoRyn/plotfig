@@ -5,6 +5,7 @@ import numpy as np
 import numpy.typing as npt
 from matplotlib.axes import Axes
 from matplotlib.ticker import FuncFormatter, ScalarFormatter
+from matplotlib.colors import LinearSegmentedColormap
 from scipy import stats
 
 # 类型别名
@@ -156,6 +157,10 @@ def plot_one_group_bar_figure(
     test_method: str = "ttest_ind",
     p_list: list[float] | None = None,
     errorbar_type: str = "se",
+    use_gradient_color: bool = False,
+    colors_start = None,
+    colors_end = None,
+    edgecolor: str | None = None,
     **kwargs: Any,
 ) -> None:
     """绘制单组柱状图，包含散点和误差条。
@@ -208,7 +213,22 @@ def plot_one_group_bar_figure(
         error_values = ses
 
     # 绘制柱子
-    ax.bar(x_positions, means, width=width, color=colors, alpha=1, edgecolor="k")
+    if use_gradient_color:
+        if colors_start is None:  # 默认颜色
+            colors_start = ['#e38a48'] * len(x_positions)  # 左边颜色
+        if colors_end is None:  # 默认颜色
+            colors_end = ['#4573a5'] * len(x_positions)  # 右边颜色
+        for x, h, c1, c2 in zip(x_positions, means, colors_start, colors_end):
+            # 生成线性渐变 colormap
+            cmap = LinearSegmentedColormap.from_list("grad_cmap", [c1, "white", c2])
+            gradient = np.linspace(0, 1, 100).reshape(1, -1)  # 横向渐变
+            # 计算渐变矩形位置：跟bar完全对齐
+            extent = [x - width/2, x + width/2, 0, h]
+            # 叠加渐变矩形（imshow）
+            ax.imshow(gradient, aspect='auto', cmap=cmap, extent=extent, zorder=0)
+    else :
+        ax.bar(x_positions, means, width=width, color=colors, alpha=1, edgecolor=edgecolor)
+
     ax.errorbar(
         x_positions,
         means,
@@ -227,6 +247,7 @@ def plot_one_group_bar_figure(
             add_scatter(ax, scatter_positions[i], d, dots_color[i], dots_size)
 
     # 美化
+    ax.set_xlim(min(x_positions) - 0.5, max(x_positions) + 0.5)
     ax.spines[["top", "right"]].set_visible(False)
     ax.set_title(
         title_name,
