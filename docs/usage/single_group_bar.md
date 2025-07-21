@@ -44,8 +44,6 @@ fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
 plot_one_group_bar_figure([ax1_bar1, ax1_bar2], ax=axes.flatten()[0])
 plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes.flatten()[1])
-
-
 ```
 
 
@@ -78,8 +76,6 @@ plot_one_group_bar_figure([ax1_bar1, ax1_bar2], ax=axes[0,0], labels_name=["A", 
 plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes[0,1], labels_name=["C", "D"])
 plot_one_group_bar_figure([ax3_bar1, ax3_bar2], ax=axes[1,0], labels_name=["E", "F"])
 plot_one_group_bar_figure([ax4_bar1, ax4_bar2], ax=axes[1,1], labels_name=["G", "H"])
-
-
 ```
 
 
@@ -116,8 +112,9 @@ plot_one_group_bar_figure(
     title_fontsize=15,
     width=0.5,
     dots_size=15,
-    colors=["#1f77b4", "#ff7f0e"],
+    colors=["#4573a5", "orange"],
     errorbar_type="sd",
+    edgecolor="r",
 )
 
 ```
@@ -125,6 +122,47 @@ plot_one_group_bar_figure(
 
     
 ![png](single_group_bar_files/single_group_bar_11_0.png)
+    
+
+
+`plot_one_group_bar_figure` 允许将bar作为渐变色， 适合用来展示不同对象之间的关系结果。
+
+假设我们计算了“人-黑猩猩，人-猕猴，黑猩猩-猕猴”同源的20个脑区之间的结构连接 Spearman 相关性。可以考虑使用这种展示方法。
+
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from plotfig import *
+
+
+human_color = "#e38a48"
+chimp_color = "#919191"
+macaque_color = "#4573a5"
+
+np.random.seed(42)
+human_chimp = np.random.normal(7, 1, 20)
+human_macaque = np.random.normal(7, 1, 20)
+chimp_macaque = np.random.normal(7, 1, 20)
+
+fig, ax = plt.subplots(figsize=(5,5))
+plot_one_group_bar_figure(
+    [human_chimp, human_macaque, chimp_macaque],
+    ax=ax,
+    labels_name=["Human-Chimp", "Human-Macaque", "Chimp-Macaque"],
+    y_label_name="Spearman correlation",
+    width=0.7,
+    errorbar_type="sd",
+    use_gradient_color=True,
+    colors_start= [human_color, human_color, chimp_color],
+    colors_end= [chimp_color, macaque_color, macaque_color]
+)
+
+```
+
+
+    
+![png](single_group_bar_files/single_group_bar_13_0.png)
     
 
 
@@ -154,7 +192,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="名字过长",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
 )
 plot_one_group_bar_figure(
     [data1, data2],
@@ -163,7 +200,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="锚定中间旋转",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
     x_tick_rotation=45,
     x_label_ha="center",  # 锚定中间旋转（默认）
 )
@@ -174,7 +210,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="锚定左边旋转",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
     x_tick_rotation=45,
     x_label_ha="left",  # 锚定左边旋转
 )
@@ -185,7 +220,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="锚定右边旋转",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
     x_tick_rotation=45,
     x_label_ha="right",  # 锚定右边旋转
 )
@@ -193,7 +227,7 @@ plot_one_group_bar_figure(
 
 
     
-![png](single_group_bar_files/single_group_bar_14_0.png)
+![png](single_group_bar_files/single_group_bar_16_0.png)
     
 
 
@@ -224,7 +258,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="黄金比例显示",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
 )
 plot_one_group_bar_figure(
     [data1, data2],
@@ -233,7 +266,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="手动设置y轴",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
     y_lim_range=(2, 6)  # 设置y轴范围
 )
 
@@ -241,7 +273,7 @@ plot_one_group_bar_figure(
 
 
     
-![png](single_group_bar_files/single_group_bar_17_0.png)
+![png](single_group_bar_files/single_group_bar_19_0.png)
     
 
 
@@ -269,7 +301,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="黄金比例显示",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
 )
 plot_one_group_bar_figure(
     [data1, data2],
@@ -278,7 +309,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="不显示负值",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
     ax_min_is_0=True,  # 不显示负值
 )
 
@@ -286,7 +316,7 @@ plot_one_group_bar_figure(
 
 
     
-![png](single_group_bar_files/single_group_bar_19_0.png)
+![png](single_group_bar_files/single_group_bar_21_0.png)
     
 
 
@@ -314,7 +344,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="黄金比例显示",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
 )
 plot_one_group_bar_figure(
     [data1, data2],
@@ -323,7 +352,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="y轴最大刻度取1",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
     y_max_tick_to_one=True,  # y轴最大刻度取1
 )
 
@@ -331,7 +359,7 @@ plot_one_group_bar_figure(
 
 
     
-![png](single_group_bar_files/single_group_bar_21_0.png)
+![png](single_group_bar_files/single_group_bar_23_0.png)
     
 
 
@@ -361,7 +389,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="科学计数法",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
 )  # 默认y轴使用科学计数法
 plot_one_group_bar_figure(
     [data1, data2],
@@ -370,7 +397,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="无科学计数法",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
     math_text=False,  # 手动关闭科学计数法
 )
 plot_one_group_bar_figure(
@@ -380,7 +406,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="科学计数法",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
 )  # 默认y轴使用科学计数法
 plot_one_group_bar_figure(
     [data3, data4],
@@ -389,14 +414,13 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="无科学计数法",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
     math_text=False,  # 手动关闭科学计数法
 )
 ```
 
 
     
-![png](single_group_bar_files/single_group_bar_23_0.png)
+![png](single_group_bar_files/single_group_bar_25_0.png)
     
 
 
@@ -424,7 +448,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="常规显示",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
 )
 plot_one_group_bar_figure(
     [data1, data2],
@@ -433,7 +456,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="显示百分比",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
     math_text=False,
     percentage=True,
 )
@@ -442,7 +464,7 @@ plot_one_group_bar_figure(
 
 
     
-![png](single_group_bar_files/single_group_bar_25_0.png)
+![png](single_group_bar_files/single_group_bar_27_0.png)
     
 
 
@@ -462,7 +484,8 @@ plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
 
 data1 = np.random.normal(0.5,  0.1, 10)
 data2 = np.random.normal(0.5, 0.1, 9)
-dots_color = [["gray"]*10, ["red"]*4+["blue"]*5]
+dots_color1 = [["blue"]*10, ["red"]*9]
+dots_color2 = [["green"]*5+["pink"]*5, ["orange"]*4+["purple"]*5]
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
@@ -471,24 +494,25 @@ plot_one_group_bar_figure(
     ax=axes[0],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="散点无颜色",
+    title_name="散点统一颜色",
     title_fontsize=15,
+    dots_color=dots_color1,  # 散点颜色
 )
 plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[1],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="散点分配颜色",
+    title_name="散点各自分配颜色",
     title_fontsize=15,
-    dots_color=dots_color,  # 散点颜色
+    dots_color=dots_color2,  # 散点颜色
 )
 
 ```
 
 
     
-![png](single_group_bar_files/single_group_bar_28_0.png)
+![png](single_group_bar_files/single_group_bar_30_0.png)
     
 
 
@@ -533,7 +557,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="独立样本t检验",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
     statistic=True, 
     test_method="ttest_ind"
 )
@@ -544,7 +567,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="配对样本t检验",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
     statistic=True, 
     test_method="ttest_rel"
 )
@@ -555,7 +577,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="Mann-Whitney U检验",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
     statistic=True, 
     test_method="mannwhitneyu"
 )
@@ -566,7 +587,6 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="外部检验",
     title_fontsize=15,
-    colors=["#1f77b4", "#ff7f0e"],
     statistic=True, 
     test_method="external",
     p_list=[0.01],
@@ -575,7 +595,7 @@ plot_one_group_bar_figure(
 
 
     
-![png](single_group_bar_files/single_group_bar_31_0.png)
+![png](single_group_bar_files/single_group_bar_33_0.png)
     
 
 
@@ -615,6 +635,6 @@ plot_one_group_bar_figure(
 
 
     
-![png](single_group_bar_files/single_group_bar_33_0.png)
+![png](single_group_bar_files/single_group_bar_35_0.png)
     
 

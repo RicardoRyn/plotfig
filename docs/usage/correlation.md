@@ -27,7 +27,7 @@ plot_correlation_figure(data1,data2)
 
 ## 参数设置
 
-全部参数见[`plotfig.correlation`](../api/#plotfig.correlation)的API 文档。
+全部参数见[`plotfig.correlation`](../api/index.md/#plotfig.correlation)的API 文档。
 
 
 ```python
@@ -60,5 +60,43 @@ plot_correlation_figure(
 
     
 ![png](correlation_files/correlation_5_0.png)
+    
+
+
+利用 `hexbin=True` 。我们可以展示大量散点分布的密度，而不需要绘制所有的散点。
+
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from plotfig import *
+
+np.random.seed(42)
+n = 100_000
+data1 = np.random.standard_normal(n)
+data2 = 2.0 + 3.0 * data1 + 4.0 * np.random.standard_normal(n)
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7, 3), layout="constrained")
+plot_correlation_figure(
+    data1,
+    data2,
+    ax=ax1
+)
+
+hb = plot_correlation_figure(
+    data1,
+    data2,
+    ax=ax2,
+    hexbin=True,
+    hexbin_cmap="Reds",
+    hexbin_gridsize=30
+)
+cb = fig.colorbar(hb, ax=ax2, label='counts')
+
+```
+
+
+    
+![png](correlation_files/correlation_7_0.png)
     
 
