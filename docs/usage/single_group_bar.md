@@ -2,8 +2,7 @@
 
 ## 快速出图
 
-柱状图（Bar Chart）是一种常见的数据可视化工具，适用于比较不同类别的数据。
-`plotfig` 基于强大的 `matplotlib` 开发，简化了画图流程，使得多组数据的对比更加直观。
+柱状图（bar图）是一种常见的数据可视化工具，适用于比较不同类别的数据。`plotfig` 基于强大的 `matplotlib` 开发，简化了画图流程，使得多组数据的对比更加直观。
 
 例如，我们有3组数据 （分别有9个样本、10个样本、11个样本）通过柱状图展示它们之间的差异。
 
@@ -21,13 +20,13 @@ plot_one_group_bar_figure([data1, data2, data3])
 
 
     
-![png](single_group_bar_files/single_group_bar_2_0.png)
+![png](single_group_bar_files/single_group_bar_3_0.png)
     
 
 
 ## 多子图
 
-我们可以在外部创建`figure`和`axes`，完成多子图的绘制。
+利用 `matplotlib` 我们可以在外部创建 `figure` 和 `axes`，完成多子图的绘制。
 
 
 ```python
@@ -48,7 +47,7 @@ plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes.flatten()[1])
 
 
     
-![png](single_group_bar_files/single_group_bar_5_0.png)
+![png](single_group_bar_files/single_group_bar_6_0.png)
     
 
 
@@ -80,7 +79,7 @@ plot_one_group_bar_figure([ax4_bar1, ax4_bar2], ax=axes[1,1], labels_name=["G", 
 
 
     
-![png](single_group_bar_files/single_group_bar_7_0.png)
+![png](single_group_bar_files/single_group_bar_8_0.png)
     
 
 
@@ -116,12 +115,11 @@ plot_one_group_bar_figure(
     errorbar_type="sd",
     edgecolor="r",
 )
-
 ```
 
 
     
-![png](single_group_bar_files/single_group_bar_11_0.png)
+![png](single_group_bar_files/single_group_bar_12_0.png)
     
 
 
@@ -157,12 +155,11 @@ plot_one_group_bar_figure(
     colors_start= [human_color, human_color, chimp_color],
     colors_end= [chimp_color, macaque_color, macaque_color]
 )
-
 ```
 
 
     
-![png](single_group_bar_files/single_group_bar_13_0.png)
+![png](single_group_bar_files/single_group_bar_14_0.png)
     
 
 
@@ -227,7 +224,7 @@ plot_one_group_bar_figure(
 
 
     
-![png](single_group_bar_files/single_group_bar_16_0.png)
+![png](single_group_bar_files/single_group_bar_17_0.png)
     
 
 
@@ -268,12 +265,11 @@ plot_one_group_bar_figure(
     title_fontsize=15,
     y_lim_range=(2, 6)  # 设置y轴范围
 )
-
 ```
 
 
     
-![png](single_group_bar_files/single_group_bar_19_0.png)
+![png](single_group_bar_files/single_group_bar_20_0.png)
     
 
 
@@ -311,12 +307,11 @@ plot_one_group_bar_figure(
     title_fontsize=15,
     ax_min_is_0=True,  # 不显示负值
 )
-
 ```
 
 
     
-![png](single_group_bar_files/single_group_bar_21_0.png)
+![png](single_group_bar_files/single_group_bar_22_0.png)
     
 
 
@@ -354,12 +349,11 @@ plot_one_group_bar_figure(
     title_fontsize=15,
     y_max_tick_to_one=True,  # y轴最大刻度取1
 )
-
 ```
 
 
     
-![png](single_group_bar_files/single_group_bar_23_0.png)
+![png](single_group_bar_files/single_group_bar_24_0.png)
     
 
 
@@ -420,7 +414,7 @@ plot_one_group_bar_figure(
 
 
     
-![png](single_group_bar_files/single_group_bar_25_0.png)
+![png](single_group_bar_files/single_group_bar_26_0.png)
     
 
 
@@ -459,12 +453,11 @@ plot_one_group_bar_figure(
     math_text=False,
     percentage=True,
 )
-
 ```
 
 
     
-![png](single_group_bar_files/single_group_bar_27_0.png)
+![png](single_group_bar_files/single_group_bar_28_0.png)
     
 
 
@@ -507,12 +500,11 @@ plot_one_group_bar_figure(
     title_fontsize=15,
     dots_color=dots_color2,  # 散点颜色
 )
-
 ```
 
 
     
-![png](single_group_bar_files/single_group_bar_30_0.png)
+![png](single_group_bar_files/single_group_bar_31_0.png)
     
 
 
@@ -595,7 +587,7 @@ plot_one_group_bar_figure(
 
 
     
-![png](single_group_bar_files/single_group_bar_33_0.png)
+![png](single_group_bar_files/single_group_bar_34_0.png)
     
 
 
@@ -630,11 +622,10 @@ plot_one_group_bar_figure(
     test_method="external",
     p_list=p_list,
 )
-
 ```
 
 
     
-![png](single_group_bar_files/single_group_bar_35_0.png)
+![png](single_group_bar_files/single_group_bar_36_0.png)
     
 
