@@ -6,6 +6,7 @@ from matplotlib.ticker import (
     MultipleLocator,
     FormatStrFormatter,
 )
+from matplotlib.colors import LinearSegmentedColormap
 from scipy import stats
 
 from typing import TypeAlias
@@ -43,6 +44,9 @@ def plot_correlation_figure(
     y_format: str = "normal",  # 支持 "normal", "sci", "1f", "percent"
     asterisk_fontsize: int = 10,
     show_p_value: bool = False,
+    hexbin: bool = False,
+    hexbin_cmap: bool = None,
+    hexbin_gridsize:int = 50,
 ) -> None:
     """
     绘制两个数据集之间的相关性图，支持线性回归、置信区间和统计方法（Spearman 或 Pearson）。
@@ -121,8 +125,13 @@ def plot_correlation_figure(
     x_seq = np.linspace(A.min(), A.max(), 100)
     y_pred = slope * x_seq + intercept
 
-    ax.scatter(A, B, c=dots_color, s=dots_size, alpha=0.8)
-    ax.plot(x_seq, y_pred, line_color, lw=2)
+    if hexbin:
+        if hexbin_cmap is None:
+            hexbin_cmap = LinearSegmentedColormap.from_list('custom', ['#ffffff', '#4573a5'])
+        hb = ax.hexbin(A, B, gridsize=hexbin_gridsize, cmap=hexbin_cmap)
+    else:
+        ax.scatter(A, B, c=dots_color, s=dots_size, alpha=0.8)
+    ax.plot(x_seq, y_pred, line_color, lw=1)
 
     if ci:
         n = len(A)
@@ -192,6 +201,8 @@ def plot_correlation_figure(
         va="center",
         fontsize=asterisk_fontsize,
     )
+    if hexbin:
+        return hb
     return
 
 
