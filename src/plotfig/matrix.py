@@ -112,7 +112,7 @@ def plot_matrix_figure(
             [cax.get_position().x0, ax_pos.y0, cax.get_position().width, ax_pos.height]
         )
 
-    return im
+    return
 
 
 def main():
