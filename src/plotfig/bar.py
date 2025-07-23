@@ -16,7 +16,7 @@ NumArray = list[Num] | npt.NDArray[np.float64]  # 数字数组类型
 __all__ = [
     "plot_one_group_bar_figure",
     "plot_one_group_violin_figure",
-    "plot_one_group_violin_gradient_figure",
+    "plot_one_group_violin_figure_old",
     "plot_multi_group_bar_figure",
 ]
 
@@ -150,39 +150,43 @@ def plot_one_group_bar_figure(
     labels_name: list[str] | None = None,
     width: Num = 0.5,
     colors: list[str] | None = None,
+    edgecolor: str | None = None,
+    gradient_color: bool = False,
+    colors_start=None,
+    colors_end=None,
     dots_size: Num = 35,
     dots_color: list[list[str]] | None = None,
     title_name: str = "",
     x_label_name: str = "",
     y_label_name: str = "",
+    errorbar_type: str = "sd",
     statistic: bool = False,
     test_method: str = "ttest_ind",
     p_list: list[float] | None = None,
-    errorbar_type: str = "se",
-    gradient_color: bool = False,
-    colors_start = None,
-    colors_end = None,
-    edgecolor: str | None = None,
     **kwargs: Any,
 ) -> None:
-    """绘制单组柱状图，包含散点和误差条。
+    """绘制单组柱状图，包含散点、误差条和统计显著性标记。
 
     Args:
         data (list[NumArray]): 包含多个数据集的列表，每个数据集是一个数字数组。
-        ax (Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前的 Axes。
-        labels_name (list[str] | None, optional): 每个数据集的标签名称。默认为 None，使用索引作为标签。
+        ax (Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前 Axes。
+        labels_name (list[str] | None, optional): 每个数据集对应的标签。默认为 None，使用索引作为标签。
         width (Num, optional): 柱子的宽度。默认为 0.5。
-        colors (list[str] | None, optional): 每个柱子的颜色。默认为 None，使用灰色。
-        dots_size (Num, optional): 散点的大小。默认为 35。
-        dots_color (list[list[str]] | None, optional): 每个数据集中散点的颜色。默认为 None，使用灰色。
-        title_name (str, optional): 图表的标题。默认为空字符串。
+        colors (list[str] | None, optional): 每个柱子的颜色列表。若为 None，使用默认灰色。
+        edgecolor (str | None, optional): 柱子的边缘颜色。默认为 None，即不特别设置。
+        gradient_color (bool, optional): 是否为柱子启用渐变色填充。默认为 False。
+        colors_start (list[str] | None, optional): 渐变色的起始颜色列表。用于 gradient_color=True。
+        colors_end (list[str] | None, optional): 渐变色的结束颜色列表。用于 gradient_color=True。
+        dots_size (Num, optional): 每个散点的大小。默认为 35。
+        dots_color (list[list[str]] | None, optional): 每组数据中每个散点的颜色（二维列表）。默认为 None，使用灰色。
+        title_name (str, optional): 图表的标题文字。默认为空字符串。
         x_label_name (str, optional): X 轴的标签。默认为空字符串。
         y_label_name (str, optional): Y 轴的标签。默认为空字符串。
-        statistic (bool, optional): 是否进行统计检验并标注显著性标记。默认为 False。
-        test_method (str, optional): 统计检验的方法，支持 "ttest_ind"、"ttest_rel" 和 "mannwhitneyu"。默认为 "ttest_ind"。
-        p_list (list[float] | None, optional): 外部提供的 p 值列表，用于统计检验。默认为 None。
-        errorbar_type (str, optional): 误差条类型，支持 "sd"（标准差）和 "se"（标准误）。默认为 "se"。
-        **kwargs (Any): 其他可选参数，用于进一步定制图表样式。
+        errorbar_type (str, optional): 误差条类型。支持 "sd"（标准差）或 "se"（标准误）。默认为 "sd"。
+        statistic (bool, optional): 是否进行统计检验并在柱状图上标记显著性。默认为 False。
+        test_method (str, optional): 统计检验方法。支持 "ttest_ind"、"ttest_rel" 或 "mannwhitneyu"。默认为 "ttest_ind"。
+        p_list (list[float] | None, optional): 提供的 p 值列表。若为 None，将自动计算。
+        **kwargs (Any): 其他 matplotlib 参数，用于进一步定制图表样式。
 
     Returns:
         None
@@ -305,29 +309,55 @@ def plot_one_group_bar_figure(
 
 
 def plot_one_group_violin_figure(
-    data,
-    ax=None,
-    width=0.8,
-    colors=None,
+    data: list[NumArray],
+    ax: Axes | None = None,
+    width: Num = 0.8,
+    colors: list[str] | None = None,
     gradient_color: bool = False,
-    colors_start=None,
-    colors_end=None,
-    labels_name=None,
-    title_name="",
-    title_pad=10,
-    x_label_name="",
-    y_label_name="",
-    show_dots=False,
+    colors_start: list[str] | None = None,
+    colors_end: list[str] | None = None,
+    labels_name: list[str] | None = None,
+    x_label_name: str = "",
+    y_label_name: str = "",
+    title_name: str = "",
+    title_pad: Num = 10,
+    show_dots: bool = False,
     dots_size: Num = 35,
-    statistic=False,
+    statistic: bool = False,
     test_method: str = "ttest_ind",
     p_list: list[float] | None = None,
     **kwargs: Any,
-):
-    """小提琴图的渐变色版本"""
+) -> None:
+    """绘制单组小提琴图，可选散点叠加、渐变填色和统计显著性标注。
+
+    Args:
+        data (list[NumArray]): 包含多个数据集的列表，每个数据集是一个数值数组。
+        ax (Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前 Axes。
+        width (Num, optional): 小提琴图的总宽度。默认为 0.8。
+        colors (list[str] | None, optional): 每个小提琴的颜色。若为 None，使用默认灰色。
+        gradient_color (bool, optional): 是否启用渐变色填充。默认为 False。
+        colors_start (list[str] | None, optional): 渐变起始颜色列表，对应每组数据。
+        colors_end (list[str] | None, optional): 渐变结束颜色列表，对应每组数据。
+        labels_name (list[str] | None, optional): 每个数据集的标签名称。默认为 None，使用索引作为标签。
+        x_label_name (str, optional): X 轴的标签。默认为空字符串。
+        y_label_name (str, optional): Y 轴的标签。默认为空字符串。
+        title_name (str, optional): 图表标题。默认为空字符串。
+        title_pad (Num, optional): 标题与图之间的垂直距离。默认为 10。
+        show_dots (bool, optional): 是否在小提琴图上叠加散点。默认为 False。
+        dots_size (Num, optional): 散点大小。默认为 35。
+        statistic (bool, optional): 是否进行统计检验并标注显著性。默认为 False。
+        test_method (str, optional): 统计检验方法。支持 "ttest_ind"、"ttest_rel"、"mannwhitneyu"。默认为 "ttest_ind"。
+        p_list (list[float] | None, optional): 外部提供的 p 值列表。默认为 None，自动计算。
+        **kwargs (Any): 其他 matplotlib 参数，用于进一步定制图表样式。
+
+    Returns:
+        None
+    """
+
     ax = ax or plt.gca()
     labels_name = labels_name or [str(i) for i in range(len(data))]
     colors = colors or ["gray"] * len(data)
+
     def draw_gradient_violin(ax, data, pos, width=width, c1="red", c2="blue"):
         # KDE估计
         kde = stats.gaussian_kde(data)
@@ -460,19 +490,19 @@ def plot_one_group_violin_figure(
 def plot_one_group_violin_figure_old(
     data: list[NumArray],
     ax: Axes | None = None,
-    labels_name: list[str] | None = None,
     width: Num = 0.8,
+    show_extrema: bool = True,
     colors: list[str] | None = None,
-    show_dots: bool = False,
-    dots_size: Num = 35,
-    title_name: str = "",
+    labels_name: list[str] | None = None,
     x_label_name: str = "",
     y_label_name: str = "",
+    title_name: str = "",
+    title_pad: Num = 10,
+    show_dots: bool = False,
+    dots_size: Num = 35,
     statistic: bool = False,
     test_method: str = "ttest_ind",
     p_list: list[float] | None = None,
-    show_extrema: bool = True,
-    title_pad: Num = 10,
     **kwargs: Any,
 ) -> None:
     """绘制单组小提琴图，包含散点和统计显著性标记。
@@ -480,19 +510,19 @@ def plot_one_group_violin_figure_old(
     Args:
         data (list[NumArray]): 包含多个数据集的列表，每个数据集是一个数字数组。
         ax (Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前的 Axes。
-        labels_name (list[str] | None, optional): 每个数据集的标签名称。默认为 None，使用索引作为标签。
         width (Num, optional): 小提琴图的宽度。默认为 0.8。
+        show_extrema (bool, optional): 是否显示极值线。默认为 True。
         colors (list[str] | None, optional): 每个小提琴图的颜色。默认为 None，使用灰色。
-        show_dots (bool, optional): 是否显示散点。默认为 False。
-        dots_size (Num, optional): 散点的大小。默认为 35。
-        title_name (str, optional): 图表的标题。默认为空字符串。
+        labels_name (list[str] | None, optional): 每个数据集的标签名称。默认为 None，使用索引作为标签。
         x_label_name (str, optional): X 轴的标签。默认为空字符串。
         y_label_name (str, optional): Y 轴的标签。默认为空字符串。
+        title_name (str, optional): 图表的标题。默认为空字符串。
+        title_pad (Num, optional): 标题与图之间的垂直距离。默认为 10。
+        show_dots (bool, optional): 是否显示散点。默认为 False。
+        dots_size (Num, optional): 散点的大小。默认为 35。
         statistic (bool, optional): 是否进行统计检验并标注显著性标记。默认为 False。
         test_method (str, optional): 统计检验的方法，支持 "ttest_ind"、"ttest_rel" 和 "mannwhitneyu"。默认为 "ttest_ind"。
         p_list (list[float] | None, optional): 外部提供的 p 值列表，用于统计检验。默认为 None。
-        show_means (bool, optional): 是否显示均值线。默认为 False。
-        show_extrema (bool, optional): 是否显示极值线。默认为 True。
         **kwargs (Any): 其他可选参数，用于进一步定制图表样式。
 
     Returns:
@@ -512,7 +542,6 @@ def plot_one_group_violin_figure_old(
         widths=width,
         showextrema=show_extrema,
     )
-    
     # 添加 box 元素
     for i, d in enumerate(data):
         # 计算统计量
@@ -529,7 +558,6 @@ def plot_one_group_violin_figure_old(
         ))
         # 添加白色中位数点
         ax.plot(i, median, 'o', color='white', markersize=3, zorder=3)
-    
 
     # 设置小提琴颜色（修改默认样式）
     for pc, color in zip(parts["bodies"], colors):
@@ -599,14 +627,14 @@ def plot_one_group_violin_figure_old(
 def plot_multi_group_bar_figure(
     data: list[list[NumArray]],
     ax: plt.Axes | None = None,
+    group_labels: list[str] | None = None,
+    bar_labels: list[str] | None = None,
     bar_width: Num = 0.2,
     bar_gap: Num = 0.1,
     bar_color: list[str] | None = None,
-    errorbar_type: str = "se",
+    errorbar_type: str = "sd",
     dots_color: str = "gray",
     dots_size: int = 35,
-    group_labels: list[str] | None = None,
-    bar_labels: list[str] | None = None,
     title_name: str = "",
     x_label_name: str = "",
     y_label_name: str = "",
@@ -617,26 +645,28 @@ def plot_multi_group_bar_figure(
     legend_position: tuple[Num, Num] = (1.2, 1),
     **kwargs: Any,
 ) -> None:
-    """绘制多组柱状图，包含散点和误差条。
+    """
+    绘制多组柱状图，包含散点、误差条、显著性标注和图例等。
 
     Args:
-        data (list[list[NumArray]]): 包含多个组的数据，每组是一个数据集列表，每个数据集是一个数字数组。
-        ax (plt.Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前的 Axes。
-        bar_width (Num, optional): 每个柱子的宽度。默认为 0.2。
-        bar_gap (Num, optional): 柱子之间的间隙。默认为 0.1。
-        bar_color (list[str] | None, optional): 每个柱子的颜色。默认为 None，使用灰色。
-        errorbar_type (str, optional): 误差条类型，支持 "sd"（标准差）和 "se"（标准误）。默认为 "se"。
+        data (list[list[NumArray]]): 多组数据，每组是一个包含若干数值数组的列表。
+        ax (plt.Axes | None, optional): matplotlib 的 Axes 对象。默认为 None，自动使用当前的 Axes。
+        group_labels (list[str] | None, optional): 每组的标签名。默认为 None，使用 "Group i"。
+        bar_labels (list[str] | None, optional): 每组内每个柱子的标签。默认为 None，使用 "Bar i"。
+        bar_width (Num, optional): 单个柱子的宽度。默认为 0.2。
+        bar_gap (Num, optional): 每组柱子之间的间距。默认为 0.1。
+        bar_color (list[str] | None, optional): 每个柱子的颜色列表。默认为 None，使用灰色。
+        errorbar_type (str, optional): 误差条类型，支持 "sd"（标准差）或 "se"（标准误）。默认为 "sd"。
         dots_color (str, optional): 散点的颜色。默认为 "gray"。
         dots_size (int, optional): 散点的大小。默认为 35。
-        group_labels (list[str] | None, optional): 每组的标签名称。默认为 None，使用 "Group i" 作为标签。
-        bar_labels (list[str] | None, optional): 每个柱子的标签名称。默认为 None，使用 "Bar i" 作为标签。
-        title_name (str, optional): 图表的标题。默认为空字符串。
-        y_label_name (str, optional): Y 轴的标签。默认为空字符串。
-        statistic (bool, optional): 是否进行统计检验并标注显著性标记。默认为 False。
-        test_method (str, optional): 统计检验的方法，支持 "external"（外部提供 p 值）和其他方法。默认为 "external"。
-        p_list (list[list[Num]] | None, optional): 外部提供的 p 值列表，用于统计检验。默认为 None。
+        title_name (str, optional): 图标题。默认为空字符串。
+        x_label_name (str, optional): X 轴标签。默认为空字符串。
+        y_label_name (str, optional): Y 轴标签。默认为空字符串。
+        statistic (bool, optional): 是否执行统计检验并显示显著性标注。默认为 False。
+        test_method (str, optional): 统计检验方法。支持 "external"（外部 p 值）或其他方法。默认为 "external"。
+        p_list (list[list[Num]] | None, optional): 外部提供的显著性 p 值列表。默认为 None。
         legend (bool, optional): 是否显示图例。默认为 True。
-        legend_position (tuple[Num, Num], optional): 图例的位置。默认为 (1.2, 1)。
+        legend_position (tuple[Num, Num], optional): 图例在坐标系中的位置。默认为 (1.2, 1)。
         **kwargs (Any): 其他可选参数，用于进一步定制图表样式。
 
     Returns:
@@ -644,11 +674,10 @@ def plot_multi_group_bar_figure(
     """
 
     # 动态参数
-    if ax is None:
-        ax = plt.gca()
+    ax = ax or plt.gca()
+    group_labels = group_labels or [f"Group {i + 1}" for i in range(len(data))]
     n_groups = len(data)
-    if group_labels is None:
-        group_labels = [f"Group {i + 1}" for i in range(n_groups)]
+
     # 把所有子列表展开成一个大列表
     all_values = [x for sublist1 in data for sublist2 in sublist1 for x in sublist2]
 
