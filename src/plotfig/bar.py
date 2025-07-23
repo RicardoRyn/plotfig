@@ -6,6 +6,7 @@ import numpy.typing as npt
 from matplotlib.axes import Axes
 from matplotlib.ticker import FuncFormatter, ScalarFormatter
 from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.patches import Polygon
 from scipy import stats
 
 # 类型别名
@@ -15,6 +16,7 @@ NumArray = list[Num] | npt.NDArray[np.float64]  # 数字数组类型
 __all__ = [
     "plot_one_group_bar_figure",
     "plot_one_group_violin_figure",
+    "plot_one_group_violin_gradient_figure",
     "plot_multi_group_bar_figure",
 ]
 
@@ -157,7 +159,7 @@ def plot_one_group_bar_figure(
     test_method: str = "ttest_ind",
     p_list: list[float] | None = None,
     errorbar_type: str = "se",
-    use_gradient_color: bool = False,
+    gradient_color: bool = False,
     colors_start = None,
     colors_end = None,
     edgecolor: str | None = None,
@@ -213,7 +215,7 @@ def plot_one_group_bar_figure(
         error_values = ses
 
     # 绘制柱子
-    if use_gradient_color:
+    if gradient_color:
         if colors_start is None:  # 默认颜色
             colors_start = ['#e38a48'] * len(x_positions)  # 左边颜色
         if colors_end is None:  # 默认颜色
@@ -247,15 +249,15 @@ def plot_one_group_bar_figure(
             add_scatter(ax, scatter_positions[i], d, dots_color[i], dots_size)
 
     # 美化
-    ax.set_xlim(min(x_positions) - 0.5, max(x_positions) + 0.5)
     ax.spines[["top", "right"]].set_visible(False)
     ax.set_title(
         title_name,
         fontsize=kwargs.get("title_fontsize", 10),
-        pad=kwargs.get("title_pad", 20),
+        pad=kwargs.get("title_pad", 10),
     )
+    # x轴
+    ax.set_xlim(min(x_positions) - 0.5, max(x_positions) + 0.5)
     ax.set_xlabel(x_label_name, fontsize=kwargs.get("x_label_fontsize", 10))
-    ax.set_ylabel(y_label_name, fontsize=kwargs.get("y_label_fontsize", 10))
     ax.set_xticks(x_positions)
     ax.set_xticklabels(
         labels_name,
@@ -264,12 +266,13 @@ def plot_one_group_bar_figure(
         fontsize=kwargs.get("x_tick_fontsize", 10),
         rotation=kwargs.get("x_tick_rotation", 0),
     )
+    # y轴
     ax.tick_params(
         axis="y",
         labelsize=kwargs.get("y_tick_fontsize", 10),
         rotation=kwargs.get("y_tick_rotation", 0),
     )
-
+    ax.set_ylabel(y_label_name, fontsize=kwargs.get("y_label_fontsize", 10))
     all_values = np.concatenate(data)
     set_yaxis(ax, all_values, kwargs)
 
@@ -302,6 +305,159 @@ def plot_one_group_bar_figure(
 
 
 def plot_one_group_violin_figure(
+    data,
+    ax=None,
+    width=0.8,
+    colors=None,
+    gradient_color: bool = False,
+    colors_start=None,
+    colors_end=None,
+    labels_name=None,
+    title_name="",
+    title_pad=10,
+    x_label_name="",
+    y_label_name="",
+    show_dots=False,
+    dots_size: Num = 35,
+    statistic=False,
+    test_method: str = "ttest_ind",
+    p_list: list[float] | None = None,
+    **kwargs: Any,
+):
+    """小提琴图的渐变色版本"""
+    ax = ax or plt.gca()
+    labels_name = labels_name or [str(i) for i in range(len(data))]
+    colors = colors or ["gray"] * len(data)
+    def draw_gradient_violin(ax, data, pos, width=width, c1="red", c2="blue"):
+        # KDE估计
+        kde = stats.gaussian_kde(data)
+        buffer = (max(data)-min(data))/5
+        y = np.linspace(min(data) - buffer, max(data) + buffer, 300)
+        ymax = max(data) + buffer
+        ymin = min(data) - buffer
+        density = kde(y)
+        density = density / density.max() * (width / 2)  # 控制violin宽度
+        # violin左右边界
+        x_left = pos - density
+        x_right = pos + density
+        # 组合封闭边界
+        verts = np.concatenate([
+            np.stack([x_left, y], axis=1),
+            np.stack([x_right[::-1], y[::-1]], axis=1)
+        ])
+        # 构建渐变图像
+        grad_width = 200
+        grad_height = 300
+        gradient = np.linspace(0, 1, grad_width)
+        if c1 == c2:
+            cmap = LinearSegmentedColormap.from_list("cmap", [c1, c2])
+        else:
+            cmap = LinearSegmentedColormap.from_list("cmap", [c1, "white", c2])
+        gradient_rgb = plt.get_cmap(cmap)(gradient)[..., :3]
+        gradient_img = np.tile(gradient_rgb, (grad_height, 1, 1))
+        # 显示图像并裁剪成violin形状
+        im = ax.imshow(
+            gradient_img,
+            extent=[pos - width / 2, pos + width / 2, y.min(), y.max()],
+            origin="lower",
+            aspect="auto",
+            zorder=1,
+        )
+        # 添加边界线并作为clip
+        poly = Polygon(verts, closed=True, facecolor='none', edgecolor='black', linewidth=1.2, zorder=2)
+        ax.add_patch(poly)
+        im.set_clip_path(poly)
+        # 添加 box 元素
+        q1 = np.percentile(data, 25)
+        q3 = np.percentile(data, 75)
+        median = np.median(data)
+        # 添加 IQR box（黑色矩形）
+        ax.add_patch(plt.Rectangle(
+            (pos - width / 16, q1),  # 左下角坐标
+            width / 8,  # 宽度
+            q3 - q1,  # 高度
+            facecolor='black',
+            alpha=0.7
+        ))
+        # 添加白色中位数点
+        ax.plot(pos, median, 'o', color='white', markersize=5, zorder=3)
+        return ymax, ymin
+
+    ymax_lst, ymin_lst = [], []
+    for i, d in enumerate(data):
+        if gradient_color:
+            c1 = colors_start[i]
+            c2 = colors_end[i]
+        else:
+            c1 = c2 = colors[i]
+        ymax, ymin = draw_gradient_violin(ax, d, pos=i, c1=c1, c2=c2)
+        ymax_lst.append(ymax)
+        ymin_lst.append(ymin)
+    ymax = max(ymax_lst)
+    ymin = min(ymin_lst)
+
+    # 绘制散点（复用现有函数）
+    if show_dots:
+        scatter_positions = [
+            np.random.normal(i, 0.1, len(d)) for i, d in enumerate(data)
+        ]
+        for i, d in enumerate(data):
+            add_scatter(ax, scatter_positions[i], d, colors[i], dots_size)
+
+    # 美化
+    ax.set_title(title_name, fontsize=kwargs.get("title_fontsize", 10), pad=title_pad)
+    ax.spines[["top", "right"]].set_visible(False)
+    # x轴
+    ax.set_xlim(-0.5, len(data) - 0.5)
+    ax.set_xlabel(x_label_name, fontsize=kwargs.get("x_label_fontsize", 10))
+    ax.set_xticks(np.arange(len(data)))
+    ax.set_xticklabels(
+        labels_name,
+        fontsize=kwargs.get("x_tick_fontsize", 10),
+        rotation=kwargs.get("x_tick_rotation", 0),
+    )
+    # y轴
+    ax.tick_params(
+        axis="y",
+        labelsize=kwargs.get("y_tick_fontsize", 10),
+        rotation=kwargs.get("y_tick_rotation", 0),
+    )
+    ax.set_ylabel(y_label_name, fontsize=kwargs.get("y_label_fontsize", 10))
+    all_values = [ymin, ymax]
+    set_yaxis(ax, all_values, kwargs)
+
+    # 添加统计标记（复用现有函数）
+    if statistic:
+        comparisons = []
+        idx = 0
+        for i in range(len(data)):
+            for j in range(i + 1, len(data)):
+                if test_method == "external":
+                    p = p_list[idx] if p_list else 1.0
+                    idx += 1
+                else:
+                    _, p = perform_stat_test(data[i], data[j], test_method)
+                if p <= 0.05:
+                    comparisons.append((i, j, p))
+
+        if comparisons:
+            y_max = ax.get_ylim()[1]
+            interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
+            annotate_significance(
+                ax,
+                comparisons,
+                np.max(all_values),
+                interval,
+                line_color=kwargs.get("line_color", "0.5"),
+                star_offset=interval / 5,
+                fontsize=kwargs.get("asterisk_fontsize", 10),
+                color=kwargs.get("asterisk_color", "k"),
+            )
+
+    return
+
+
+def plot_one_group_violin_figure_old(
     data: list[NumArray],
     ax: Axes | None = None,
     labels_name: list[str] | None = None,
@@ -315,8 +471,8 @@ def plot_one_group_violin_figure(
     statistic: bool = False,
     test_method: str = "ttest_ind",
     p_list: list[float] | None = None,
-    show_means: bool = False,
     show_extrema: bool = True,
+    title_pad: Num = 10,
     **kwargs: Any,
 ) -> None:
     """绘制单组小提琴图，包含散点和统计显著性标记。
@@ -354,23 +510,38 @@ def plot_one_group_violin_figure(
         dataset=list(data),
         positions=np.arange(len(data)),
         widths=width,
-        showmeans=show_means,
         showextrema=show_extrema,
     )
+    
+    # 添加 box 元素
+    for i, d in enumerate(data):
+        # 计算统计量
+        q1 = np.percentile(d, 25)
+        q3 = np.percentile(d, 75)
+        median = np.median(d)
+        # 添加 IQR box（黑色矩形）
+        ax.add_patch(plt.Rectangle(
+            (i - width / 16, q1),  # 左下角坐标
+            width / 8,  # 宽度
+            q3 - q1,  # 高度
+            facecolor='black',
+            alpha=0.7
+        ))
+        # 添加白色中位数点
+        ax.plot(i, median, 'o', color='white', markersize=3, zorder=3)
+    
 
     # 设置小提琴颜色（修改默认样式）
     for pc, color in zip(parts["bodies"], colors):
         pc.set_facecolor(color)
         pc.set_edgecolor("black")
-        pc.set_alpha(0.7)
+        pc.set_alpha(1)
 
     # 修改内部线条颜色
     if show_extrema:
         parts["cmins"].set_color("black")  # 最小值线
         parts["cmaxes"].set_color("black")  # 最大值线
         parts["cbars"].set_color("black")  # 中线（median）
-    if show_means:
-        parts["cmeans"].set_color("black")  # 均值线
 
     # 绘制散点（复用现有函数）
     if show_dots:
@@ -382,7 +553,7 @@ def plot_one_group_violin_figure(
 
     # 美化坐标轴（复用现有函数）
     ax.spines[["top", "right"]].set_visible(False)
-    ax.set_title(title_name, fontsize=kwargs.get("title_fontsize", 10), pad=20)
+    ax.set_title(title_name, fontsize=kwargs.get("title_fontsize", 10), pad=title_pad)
     ax.set_xlabel(x_label_name, fontsize=kwargs.get("x_label_fontsize", 10))
     ax.set_ylabel(y_label_name, fontsize=kwargs.get("y_label_fontsize", 10))
     ax.set_xticks(np.arange(len(data)))
@@ -437,6 +608,7 @@ def plot_multi_group_bar_figure(
     group_labels: list[str] | None = None,
     bar_labels: list[str] | None = None,
     title_name: str = "",
+    x_label_name: str = "",
     y_label_name: str = "",
     statistic: bool = False,
     test_method: str = "external",
@@ -525,22 +697,33 @@ def plot_multi_group_bar_figure(
             add_scatter(ax, dot_x_pos, dot, dots_color, dots_size=dots_size)
     if legend:
         ax.legend(bars, bar_labels, bbox_to_anchor=legend_position)
-    # x轴
-    ax.set_xticks(np.arange(n_groups))
-    ax.set_xticklabels(
-        group_labels,
-        fontsize=kwargs.get("x_tick_fontsize", 10),
-        rotation=kwargs.get("x_tick_rotation", 0),
-    )
+
     # 美化
     ax.spines[["top", "right"]].set_visible(False)
     ax.set_title(
         title_name,
         fontsize=kwargs.get("title_fontsize", 15),
-        pad=kwargs.get("title_pad", 20),
+        pad=kwargs.get("title_pad", 10),
+    )
+    # x轴
+    ax.set_xlabel(x_label_name, fontsize=kwargs.get("x_label_fontsize", 10))
+    ax.set_xticks(np.arange(n_groups))
+    ax.set_xticklabels(
+        group_labels,
+        ha=kwargs.get("x_label_ha", "center"),
+        rotation_mode="anchor",
+        fontsize=kwargs.get("x_tick_fontsize", 10),
+        rotation=kwargs.get("x_tick_rotation", 0),
+    )
+    # y轴
+    ax.tick_params(
+        axis="y",
+        labelsize=kwargs.get("y_tick_fontsize", 10),
+        rotation=kwargs.get("y_tick_rotation", 0),
     )
     ax.set_ylabel(y_label_name, fontsize=kwargs.get("y_label_fontsize", 10))
     set_yaxis(ax, all_values, kwargs)
+
     # 添加统计显著性标记
     if statistic:
         for index_group, group_data in enumerate(data):
