@@ -136,8 +136,8 @@ nav:
   - 主页: index.md
   - 安装: installation.md
   - 柱状图:
-    - 单组柱状图: usage/single_group_bar.md
-    - 多组柱状图: usage/multi_groups_bar.md
+    - 单组柱状图: usage/single_group.md
+    - 多组柱状图: usage/multi_groups.md
   - 相关图: usage/correlation.md
   - 矩阵图: usage/matrix.md
   - 连线图: usage/circos.md

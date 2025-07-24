@@ -22,7 +22,7 @@ plot_multi_group_bar_figure([[group1_bar1, group1_bar2, group1_bar3], [group2_ba
 
 
     
-![png](multi_groups_bar_files/multi_groups_bar_2_0.png)
+![png](multi_groups_files/multi_groups_2_0.png)
     
 
 
@@ -65,7 +65,7 @@ plot_multi_group_bar_figure(
 
 
     
-![png](multi_groups_bar_files/multi_groups_bar_5_0.png)
+![png](multi_groups_files/multi_groups_5_0.png)
     
 
 
@@ -110,6 +110,6 @@ plot_multi_group_bar_figure(
 
 
     
-![png](multi_groups_bar_files/multi_groups_bar_8_0.png)
+![png](multi_groups_files/multi_groups_8_0.png)
     
 
