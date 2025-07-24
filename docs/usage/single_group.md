@@ -8,14 +8,14 @@
 在科研和数据分析中，柱状图常用于呈现实验组与对照组之间的差异。
 `plotfig` 基于强大的 `matplotlib` 开发，简化了画图流程，使得多组数据的对比更加直观。
 
-例如，我们有3组数据 （分别有9个样本、10个样本、11个样本）通过柱状图展示它们之间的差异。
+例如，我们有3组数据 （分别有12个样本、10个样本、11个样本）通过柱状图展示它们之间的差异。
 
 
 ```python
 import numpy as np
 from plotfig import *
 
-data1 = np.random.normal(1, 1, 9)
+data1 = np.random.normal(1, 1, 12)
 data2 = np.random.normal(2, 1, 10)
 data3 = np.random.normal(3, 1, 11)
 
