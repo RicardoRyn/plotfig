@@ -1,3 +1,9 @@
+## v1.2.1 (2025-07-24)
+
+### Fix
+
+- **bar**: rename `y_lim_range` to `y_lim` in `plot_one_group_bar_figure`
+
 ## v1.2.0 (2025-07-24)
 
 ### Feat
