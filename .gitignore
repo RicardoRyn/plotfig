@@ -15,6 +15,5 @@ wheels/
 # notebooks
 notebooks/
 
-# test figures
-tests/figures/*
-!tests/figures/.gitkeep
+# tests
+tests/

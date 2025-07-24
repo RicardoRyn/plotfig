@@ -27,19 +27,8 @@ dev = [
 ]
 
 [build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools]
-package-dir = {"plotfig" = "src/plotfig"}
-packages = ["plotfig"]
-include-package-data = true
-
-[tool.setuptools.package-data]
-plotfig = [
-    "data/atlas_tables/**/*",
-    "data/neurodata/**/*"
-]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.ruff]
 exclude = [
