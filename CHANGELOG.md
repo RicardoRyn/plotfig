@@ -1,27 +1,37 @@
+## v1.2.0 (2025-07-24)
+
+### Feat
+
+- **violin**: add function to plot single-group violin fig
+
+### Fix
+
+- **matrix**: changed return value to None
+
 ## v1.1.0 (2025-07-21)
 
 ### Feat
 
-- **corr**: 在绘制相关点线图时，允许用正六边形展示大量散点的分布密度
-- **bar**: 能够绘制间渐变色的bar图，设置bar边框颜色
+- **corr**: allow hexbin to show dense scatter points in correlation plot
+- **bar**: support gradient color bars and now can change border color
 
 ## v1.0.0 (2025-07-03)
 
 ### Feat
 
-- **bar**: 可绘制单组bar图，并自带统计检验结果
-- **bar**: 可绘制多组bar图
-- **corr**: 可绘制相关点线组合图
-- **matrix**: 可绘制矩阵图/热图
-- **surface**: 可绘制人/黑猩猩/猕猴的图集脑区图
-- **circos**: 可绘制脑区连接circos图
-- **connection**: 可绘制玻璃脑连接图
+- **bar**: support plotting single-group bar charts with statistical tests
+- **bar**: support plotting multi-group bars charts
+- **corr**: support combined sactter and line correlation plots
+- **matrix**: support plotting matrix plots (i.e. heatmaps)
+- **surface**: support brain region plots for human, chimpanzee and macaque
+- **circos**: support brain connectivity circos plots
+- **connection**: support glass brain connectivity plots
 
 ### Fix
 
-- **surface**: 修复函数并非仅返回fig的bug
-- **surface**: 修复当值为0的情况下，脑区不显示的bug
+- **surface**: fix bug where function did not retrun fig only
+- **surface**: fix bug where brain region with zero values were not displayed
 
 ### Refactor
 
-- **src**: 重构代码，更加可读，易维护
+- **src**: refactor code for more readability and maintainability
