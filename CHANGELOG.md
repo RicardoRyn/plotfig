@@ -1,3 +1,13 @@
+## v1.2.0 (2025-07-24)
+
+### Feat
+
+- **violin**: add function to plot single-group violin fig
+
+### Fix
+
+- **matrix**: 改成返回None
+
 ## v1.1.0 (2025-07-21)
 
 ### Feat
