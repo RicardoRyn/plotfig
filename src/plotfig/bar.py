@@ -54,8 +54,8 @@ def set_yaxis(
     options: dict[str, Any] | None,
 ) -> None:
     """设置Y轴格式"""
-    if options.get("y_lim_range"):
-        ax.set_ylim(*options["y_lim_range"])
+    if options.get("y_lim"):
+        ax.set_ylim(*options["y_lim"])
     else:
         y_min, y_max = np.min(data), np.max(data)
         y_range = y_max - y_min
