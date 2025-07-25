@@ -1,8 +1,14 @@
 # 矩阵图
 
+矩阵图是一种用于展示多个变量之间成对关系的可视化方式，常见形式为一个对称的二维网格，其中每个单元格表示一对变量之间的统计关系。
+它常用于探索数据集中多个变量之间的相关结构，是数据分析和科研绘图中的常用工具。
+
+`plot_matrix_figure` 支持自动生成矩阵图。
+
+
 ## 快速出图
 
-矩阵图，又称为热图（heat map）直观地展示任意形式的矩阵数据。
+我们可以生成一个 10 × 19 的矩阵图，用于展示 10 个元素与另 19 个元素之间的成对关系。
 
 
 ```python
@@ -15,21 +21,14 @@ plot_matrix_figure(data)
 ```
 
 
-
-
-    <matplotlib.image.AxesImage at 0x24c9e9bc5f0>
-
-
-
-
     
-![png](matrix_files/matrix_2_1.png)
+![png](matrix_files/matrix_4_0.png)
     
 
 
 ## 参数设置
 
-全部参数见[`plotfig.matrix`](../api/index.md/#plotfig.matrix.plot_matrix_figure)的API 文档。
+全部参数见[`plot_matrix_figure`](../api/index.md/#plotfig.matrix.plot_matrix_figure)的 API 文档。
 
 
 ```python
@@ -53,14 +52,7 @@ plot_matrix_figure(
 ```
 
 
-
-
-    <matplotlib.image.AxesImage at 0x24c9e02cf50>
-
-
-
-
     
-![png](matrix_files/matrix_5_1.png)
+![png](matrix_files/matrix_7_0.png)
     
 
