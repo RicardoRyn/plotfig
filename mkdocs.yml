@@ -15,6 +15,7 @@ copyright: Copyright &copy; 2025 Ricardo Ryn
 # Configuration
 theme:
   name: material
+  custom_dir: overrides
   features:
     - announce.dismiss  # 允许用户关闭顶部公告栏
     # - content.action.edit  # 编辑此页
@@ -135,9 +136,9 @@ markdown_extensions:
 nav:
   - 主页: index.md
   - 安装: installation.md
-  - 柱状图:
-    - 单组柱状图: usage/single_group.md
-    - 多组柱状图: usage/multi_groups.md
+  - 更新日志: changelog.md
+  - 单组柱状图: usage/single_group.md
+  - 多组柱状图: usage/multi_groups.md
   - 相关图: usage/correlation.md
   - 矩阵图: usage/matrix.md
   - 连线图: usage/circos.md
