@@ -29,7 +29,7 @@ plot_matrix_figure(data)
 
 ## 参数设置
 
-全部参数见[`plotfig.matrix`](../api/#plotfig.matrix)的API 文档。
+全部参数见[`plotfig.matrix`](../api/index.md/#plotfig.matrix.plot_matrix_figure)的API 文档。
 
 
 ```python

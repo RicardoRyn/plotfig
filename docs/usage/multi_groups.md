@@ -29,7 +29,7 @@ plot_multi_group_bar_figure([[group1_bar1, group1_bar2, group1_bar3], [group2_ba
 ## 图的美化
 
 和单组柱状图类似，多组柱状图也有大量可调节的参数。
-全部参数见[`plotfig.bar.plot_multi_group_bar_figure`](../api/#plotfig.bar.plot_multi_group_bar_figure)的API 文档。
+全部参数见[`plotfig.bar.plot_multi_group_bar_figure`](../api/index.md/#plotfig.bar.plot_multi_group_bar_figure)的API 文档。
 
 
 ```python
