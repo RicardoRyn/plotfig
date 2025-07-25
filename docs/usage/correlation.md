@@ -1,8 +1,16 @@
 # 相关图
 
+点线相关图是一类用于展示两个变量之间相关关系的可视化图形，通常在图中绘制每个样本的一对变量值作为点，并通过拟合线、相关系数和显著性标注来体现它们的相关程度。
+它是探索变量之间线性或非线性关系的常用方法，尤其在科学研究和数据分析中非常常见。
+
+`plot_correlation_figure` 提供了简洁易用的点线相关图功能，能够自动绘制变量散点、拟合线，可以计算并显示 Spearman 或 Pearson 两种相关系数（默认计算 Spearman 相关性）。
+同时，`plot_correlation_figure` 会根据显著性水平自动标注 `*`、`**` 或 `***`，帮助用户快速判断相关性是否显著，适合用于科研图表、演示幻灯片或论文插图中。
+
+
 ## 快速出图
 
-假如我们有2组样本数量一致的数据（都有100个样本）。我们希望画图显示它们是否具有相关性。
+假如我们有两组样本数量一致的数据（每组包含 100 个样本），我们希望通过绘图直观展示它们之间是否存在相关性。
+这通常可以通过点线相关图来实现，将每对样本值绘制为散点，并结合拟合线和相关系数，判断变量之间的相关程度及显著性。
 
 
 ```python
@@ -21,13 +29,13 @@ plot_correlation_figure(data1,data2)
 
 
     
-![png](correlation_files/correlation_2_0.png)
+![png](correlation_files/correlation_4_0.png)
     
 
 
 ## 参数设置
 
-全部参数见[`plotfig.correlation`](../api/index.md/#plotfig.correlation)的API 文档。
+全部参数见[`plot_correlation_figure`](../api/index.md/#plotfig.correlation)的 API 文档。
 
 
 ```python
@@ -59,7 +67,7 @@ plot_correlation_figure(
 
 
     
-![png](correlation_files/correlation_5_0.png)
+![png](correlation_files/correlation_7_0.png)
     
 
 
@@ -92,11 +100,10 @@ hb = plot_correlation_figure(
     hexbin_gridsize=30
 )
 cb = fig.colorbar(hb, ax=ax2, label='counts')
-
 ```
 
 
     
-![png](correlation_files/correlation_7_0.png)
+![png](correlation_files/correlation_9_0.png)
     
 

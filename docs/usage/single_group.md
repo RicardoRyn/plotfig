@@ -8,14 +8,14 @@
 在科研和数据分析中，柱状图常用于呈现实验组与对照组之间的差异。
 `plotfig` 基于强大的 `matplotlib` 开发，简化了画图流程，使得多组数据的对比更加直观。
 
-例如，我们有3组数据 （分别有12个样本、10个样本、11个样本）通过柱状图展示它们之间的差异。
+例如，我们有3组数据 （分别有9个样本、10个样本、11个样本）通过柱状图展示它们之间的差异。
 
 
 ```python
 import numpy as np
 from plotfig import *
 
-data1 = np.random.normal(1, 1, 12)
+data1 = np.random.normal(1, 1, 9)
 data2 = np.random.normal(2, 1, 10)
 data3 = np.random.normal(3, 1, 11)
 
@@ -97,7 +97,7 @@ plot_one_group_bar_figure([ax4_bar1, ax4_bar2], ax=axes[1,1], labels_name=["G", 
 `plotfig` 提供了丰富的选项用于自定义图形样式。
 下面展示的是 `plot_one_group_bar_figure` 函数中部分常用参数的示例用法。
 
-完整参数说明请参阅 [`plotfig.bar.plot_one_group_bar_figure`](../api/index.md/#plotfig.bar.plot_one_group_bar_figure) 的 API 文档。
+完整参数说明请参阅 [`plot_one_group_bar_figure`](../api/index.md/#plotfig.bar.plot_one_group_bar_figure) 的 API 文档。
 
 
 ```python
@@ -219,7 +219,7 @@ plot_one_group_bar_figure(
 ### 关于y轴
 
 `plot_one_group_bar_figure` 默认会自动计算最高点与最低点之间的距离，并将其设置为 y 轴长度的 0.618（即黄金比例），以优化视觉效果。
-如果希望手动设置 y 轴范围，可以使用 y_lim_range 参数来自定义。
+如果希望手动设置 y 轴范围，可以使用 `y_lim` 参数来自定义。
 
 
 ```python
@@ -261,7 +261,7 @@ plot_one_group_bar_figure(
     
 
 
-有时我们希望将 y 轴的起点固定为 0，但不确定最大刻度的具体数值。
+有时我们希望将 ax 的底端固定为 0，但不确定最大刻度的具体数值，可以使用 `ax_bottom_is_0` 来设置 ax 底端固定为0。
 
 
 ```python
@@ -293,7 +293,7 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="不显示负值",
     title_fontsize=15,
-    ax_min_is_0=True,  # 不显示负值
+    ax_bottom_is_0=True,  # 不显示负值
 )
 ```
 
@@ -303,7 +303,7 @@ plot_one_group_bar_figure(
     
 
 
-有时我们希望将 y 轴的刻度最大值限制为 1，例如当 y 轴表示经过 Fisher z 转换的相关系数时。
+有时我们希望将 y 轴的刻度最大值限制为 1，例如当 y 轴表示经过 Fisher z 转换的相关系数时，可以设置`y_max_tick_to_one`来固定 y 轴的刻度最大值为1。
 
 
 ```python
@@ -335,7 +335,7 @@ plot_one_group_bar_figure(
     y_label_name="y",
     title_name="y轴最大刻度取1",
     title_fontsize=15,
-    y_max_tick_to_one=True,  # y轴最大刻度取1
+    y_max_tick_is_1=True,  # y轴最大刻度取1
 )
 ```
 
@@ -345,7 +345,7 @@ plot_one_group_bar_figure(
     
 
 
-有时我们可能希望更改 y 轴的显示格式，例如使用科学计数法来呈现数值。
+有时我们可能希望更改 y 轴的显示格式，例如使用科学计数法来呈现数值，可以使用 `math_text` 参数来设置。
 
 
 ```python
@@ -507,11 +507,11 @@ plot_one_group_bar_figure(
 1. 独立样本 t 检验（`ttest_ind`）  
 2. 配对样本 t 检验（`ttest_rel`）  
 3. Mann-Whitney U 检验（`mannwhitneyu`）  
-4. 外部检验（`external`）
+4. 外部统计检验 （`external`）
 
-> “外部检验”（`external`）指用户可使用其他统计软件完成检验，只需将计算好的 p 值传入函数。
+> “外部统计检验”（`external`）指用户可使用其他统计软件完成检验，只需将计算好的 p 值传入函数。
 
-使用时需先通过 `statistic` 选项启用统计功能，并在 `test_method` 中指定方法名；外部检验还需通过 `p_list` 额外传入对应的 p 值列表。
+使用时需先通过 `statistic` 选项启用统计功能，并在 `test_method` 中指定方法名；外部统计检验还需通过 `p_list` 额外传入对应的 p 值列表。
 
 
 
@@ -568,7 +568,7 @@ plot_one_group_bar_figure(
     ax=axes[1,1],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="外部检验",
+    title_name="外部统计检验",
     title_fontsize=15,
     statistic=True, 
     test_method="external",
@@ -582,11 +582,12 @@ plot_one_group_bar_figure(
     
 
 
-当使用外部统计且有多个柱子需要比较时，传入的 *p* 值应遵循以下顺序：
+!!! note
+    当使用“外部统计检验”且有多个柱子需要比较时，传入的 *p* 值应遵循以下顺序：
 
-- 1 → 2、1 → 3、…、1 → n  
-- 2 → 3、2 → 4、…、2 → n  
-- 依此类推
+    - 1 → 2、1 → 3、…、1 → n  
+    - 2 → 3、2 → 4、…、2 → n  
+    - 依此类推
 
 
 ```python
@@ -634,7 +635,8 @@ plot_one_group_bar_figure(
 
 在 plotfig 中，绘制小提琴图的函数名为 `plot_one_group_violin_figure`。
 其大部分参数与 `plot_one_group_bar_figure` 相似，以下是部分演示。
-完整参数说明请参阅 [`plotfig.bar.plot_one_group_violin_figure`](../api/index.md/#plotfig.bar.plot_one_group_violin_figure) 的 API 文档。
+
+完整参数说明请参阅 [`plot_one_group_violin_figure`](../api/index.md/#plotfig.bar.plot_one_group_violin_figure) 的 API 文档。
 
 
 ```python

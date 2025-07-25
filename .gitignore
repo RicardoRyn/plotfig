@@ -17,3 +17,6 @@ notebooks/
 
 # docs
 docs/changelog.md
+
+# tests
+tests/
