@@ -62,17 +62,17 @@ def set_yaxis(
         golden_ratio = 5**0.5 - 1
         ax_min = (
             0
-            if options.get("ax_min_is_0")
+            if options.get("ax_bottom_is_0")
             else y_min - (y_range / golden_ratio - y_range / 2)
         )
         ax_max = y_max + (y_range / golden_ratio - y_range / 2)
         ax.set_ylim(ax_min, ax_max)
 
-    if options.get("y_max_tick_to_one"):
+    if options.get("y_max_tick_is_1"):
         ticks = [
             tick
             for tick in ax.get_yticks()
-            if tick <= options.get("y_max_tick_to_value", 1)
+            if tick <= options.get("y_max_tick_is_1", 1)
         ]
         ax.set_yticks(ticks)
 
@@ -184,8 +184,8 @@ def plot_one_group_bar_figure(
         y_label_name (str, optional): Y 轴的标签。默认为空字符串。
         errorbar_type (str, optional): 误差条类型。支持 "sd"（标准差）或 "se"（标准误）。默认为 "sd"。
         statistic (bool, optional): 是否进行统计检验并在柱状图上标记显著性。默认为 False。
-        test_method (str, optional): 统计检验方法。支持 "ttest_ind"、"ttest_rel" 或 "mannwhitneyu"。默认为 "ttest_ind"。
-        p_list (list[float] | None, optional): 提供的 p 值列表。若为 None，将自动计算。
+        test_method (str, optional): 统计检验方法。支持 "ttest_ind"、"ttest_rel"、"mannwhitneyu" 或 "external"。默认为 "ttest_ind"。
+        p_list (list[float] | None, optional): 提供的 p 值列表。默认为None。
         **kwargs (Any): 其他 matplotlib 参数，用于进一步定制图表样式。
 
     Returns:
@@ -346,8 +346,8 @@ def plot_one_group_violin_figure(
         show_dots (bool, optional): 是否在小提琴图上叠加散点。默认为 False。
         dots_size (Num, optional): 散点大小。默认为 35。
         statistic (bool, optional): 是否进行统计检验并标注显著性。默认为 False。
-        test_method (str, optional): 统计检验方法。支持 "ttest_ind"、"ttest_rel"、"mannwhitneyu"。默认为 "ttest_ind"。
-        p_list (list[float] | None, optional): 外部提供的 p 值列表。默认为 None，自动计算。
+        test_method (str, optional): 统计检验方法。支持 "ttest_ind"、"ttest_rel"、"mannwhitneyu" 或 "external"。默认为 "ttest_ind"。
+        p_list (list[float] | None, optional): 外部提供的 p 值列表。默认为 None。
         **kwargs (Any): 其他 matplotlib 参数，用于进一步定制图表样式。
 
     Returns:
