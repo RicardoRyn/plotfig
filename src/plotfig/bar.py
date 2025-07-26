@@ -62,17 +62,17 @@ def set_yaxis(
         golden_ratio = 5**0.5 - 1
         ax_min = (
             0
-            if options.get("ax_min_is_0")
+            if options.get("ax_bottom_is_0")
             else y_min - (y_range / golden_ratio - y_range / 2)
         )
         ax_max = y_max + (y_range / golden_ratio - y_range / 2)
         ax.set_ylim(ax_min, ax_max)
 
-    if options.get("y_max_tick_to_one"):
+    if options.get("y_max_tick_is_1"):
         ticks = [
             tick
             for tick in ax.get_yticks()
-            if tick <= options.get("y_max_tick_to_value", 1)
+            if tick <= options.get("y_max_tick_is_1", 1)
         ]
         ax.set_yticks(ticks)
 
