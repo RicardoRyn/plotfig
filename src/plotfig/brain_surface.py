@@ -1,1261 +1,231 @@
-import os.path as op
-import math
+from pathlib import Path
+from typing import TypeAlias
+
 import numpy as np
-import pandas as pd
 import nibabel as nib
-from matplotlib.ticker import ScalarFormatter
-from matplotlib.cm import ScalarMappable
+import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
+
 from surfplot import Plot
 
-from typing import TypeAlias
-import numpy.typing as npt
-import matplotlib.pyplot as plt
-
 # 类型别名定义
-Num: TypeAlias = float | int  # 可同时接受int和float的类型
-NumArray: TypeAlias = list[Num] | npt.NDArray[np.float64]  # 数字数组类型
+Num: TypeAlias = float | int
 
 __all__ = [
-    "plot_human_brain_figure",
-    "plot_human_hemi_brain_figure",
-    "plot_macaque_brain_figure",
-    "plot_macaque_hemi_brain_figure",
-    "plot_chimpanzee_brain_figure",
-    "plot_chimpanzee_hemi_brain_figure",
+    "plot_brain_surface_figure",
 ]
 
+# 路径常量
+NEURODATA = Path(__file__).resolve().parent / "data" / "neurodata"
 
-def plot_human_brain_figure(
+
+def _map_labels_to_values(data, gifti_file):
+    gifti = nib.load(gifti_file)
+    # 获取顶点标签编号数组，shape=(顶点数,)
+    labels = gifti.darrays[0].data  
+    # 构建标签编号到脑区名称的映射字典
+    key_to_label = {label.key: label.label for label in gifti.labeltable.labels}
+    # 检查数据中是否有在图集中找不到的脑区标签
+    missing_labels = list(set(data.keys()) - set(key_to_label.values()))
+    if missing_labels:
+        raise ValueError(
+            f"以下脑区标签在指定图集中未找到，请检查名称是否正确: {missing_labels}"
+        )
+
+    # 准备输出数组，初始化为NaN
+    parc = np.full(labels.shape, np.nan, dtype=float)
+    # 遍历所有标签，将数据映射到对应的顶点
+    for key, label_name in key_to_label.items():
+        if label_name in data:
+            parc[labels == key] = data[label_name]
+    return parc
+
+
+def plot_brain_surface_figure(
     data: dict[str, float],
-    surf: str = "veryinflated",
+    species: str = "human",
     atlas: str = "glasser",
+    surf: str = "veryinflated",
+    ax: Axes | None = None,
     vmin: Num | None = None,
     vmax: Num | None = None,
-    plot: bool = True,
     cmap: str = "Reds",
+    colorbar: bool = True,
+    colorbar_location: str = "right",
+    colorbar_label_name: str = "",
+    colorbar_label_rotation: int = 0,
+    colorbar_decimals: int = 1,
+    colorbar_fontsize: int = 8,
+    colorbar_nticks: int = 2,
+    colorbar_shrink: float = 0.15,
+    colorbar_aspect: int = 8,
+    colorbar_draw_border: bool = False,
+    title_name: str = "",
+    title_fontsize: int = 12,
     as_outline: bool = False,
-    colorbar: bool = True,
-    colorbar_location: str = "right",
-    colorbar_label_name: str = "",
-    colorbar_label_rotation: int = 0,
-    colorbar_decimals: int = 1,
-    colorbar_fontsize: int = 8,
-    colorbar_nticks: int = 2,
-    colorbar_shrink: float = 0.15,
-    colorbar_aspect: int = 8,
-    colorbar_draw_border: bool = False,
-    title_name: str = "",
-    title_fontsize: int = 15,
-    title_y: float = 0.9,
-    rjx_colorbar: bool = False,
-    rjx_colorbar_direction: str = "vertical",
-    horizontal_center: bool = True,
-    rjx_colorbar_outline: bool = False,
-    rjx_colorbar_label_name: str = "",
-    rjx_colorbar_tick_fontsize: int = 10,
-    rjx_colorbar_label_fontsize: int = 10,
-    rjx_colorbar_tick_rotation: int = 0,
-    rjx_colorbar_tick_length: int = 0,
-    rjx_colorbar_nticks: int = 2,
-) -> plt.Figure | tuple[np.ndarray, np.ndarray]:
-    """
-    绘制人类大脑表面图，支持 Glasser 和 BNA 图谱。
+) -> Axes: 
+    """在大脑皮层表面绘制数值数据的函数。
+
+    脑区图是一种用于在大脑皮层表面可视化数值数据的图表。它能够将不同脑区的数值映射到大脑皮层的相应区域，
+    并以颜色编码的方式展示这些数值的分布情况。这种图表常用于展示神经科学研究中的各种脑区指标，
+    如功能连接强度、激活程度或其他数值化的大脑特征。
+
+    本函数基于 surfplot 库开发，提供了一个统一且简化的接口来绘制人脑、猕猴脑和黑猩猩脑的表面图。
+    支持多种脑图谱，包括人脑的 Glasser 和 BNA 图谱、猕猴脑的 CHARM5/6、BNA 和 D99 图谱，
+    以及黑猩猩脑的 BNA 图谱。
 
     Args:
-        data (dict[str, float]): 包含 ROI 名称及其对应值的字典。
-        surf (str, optional): 大脑表面类型（如 "veryinflated", "inflated"）。默认为 "veryinflated"。
-        atlas (str, optional): 使用的图谱名称，支持 "glasser" 或 "bna"。默认为 "glasser"。
-        vmin (Num, optional): 颜色映射的最小值。可以是整数或浮点数。默认为 None。
-        vmax (Num, optional): 颜色映射的最大值。可以是整数或浮点数。默认为 None。
-        plot (bool, optional): 是否直接绘制图形。默认为 True。
-        cmap (str, optional): 颜色映射方案。默认为 "Reds"。
-        as_outline (bool, optional): 是否以轮廓形式显示颜色层。默认为 False。
-        colorbar (bool, optional): 是否显示颜色条。默认为 True。
-        colorbar_location (str, optional): 颜色条的位置。默认为 "right"。
-        colorbar_label_name (str, optional): 颜色条的标签名称。默认为空字符串。
-        colorbar_label_rotation (int, optional): 颜色条标签的旋转角度。默认为 0。
-        colorbar_decimals (int, optional): 颜色条刻度的小数位数。默认为 1。
-        colorbar_fontsize (int, optional): 颜色条标签的字体大小。默认为 8。
-        colorbar_nticks (int, optional): 颜色条上的刻度数量。默认为 2。
-        colorbar_shrink (float, optional): 颜色条的缩放比例。默认为 0.15。
-        colorbar_aspect (int, optional): 颜色条的宽高比。默认为 8。
-        colorbar_draw_border (bool, optional): 是否绘制颜色条边框。默认为 False。
-        title_name (str, optional): 图形标题。默认为空字符串。
-        title_fontsize (int, optional): 标题字体大小。默认为 15。
-        title_y (float, optional): 标题在 y 轴上的位置（范围通常为 0~1）。默认为 0.9。
-        rjx_colorbar (bool, optional): 是否使用自定义颜色条。默认为 False。
-        rjx_colorbar_direction (str, optional): 自定义颜色条方向，支持 "vertical" 或 "horizontal"。默认为 "vertical"。
-        horizontal_center (bool, optional): 水平颜色条是否居中。默认为 True。
-        rjx_colorbar_outline (bool, optional): 自定义颜色条是否显示边框。默认为 False。
-        rjx_colorbar_label_name (str, optional): 自定义颜色条标签名称。默认为空字符串。
-        rjx_colorbar_tick_fontsize (int, optional): 自定义颜色条刻度字体大小。默认为 10。
-        rjx_colorbar_label_fontsize (int, optional): 自定义颜色条标签字体大小。默认为 10。
-        rjx_colorbar_tick_rotation (int, optional): 自定义颜色条刻度标签旋转角度。默认为 0。
-        rjx_colorbar_tick_length (int, optional): 自定义颜色条刻度长度。默认为 0。
-        rjx_colorbar_nticks (int, optional): 自定义颜色条上的刻度数量。默认为 2。
+        data (dict[str, float]): 包含脑区名称和对应数值的字典，键为脑区名称（如"lh_bankssts"），值为数值
+        species (str, optional): 物种名称，支持"human"、"chimpanzee"、"macaque". Defaults to "human".
+        atlas (str, optional): 脑图集名称，根据物种不同可选不同图集. Defaults to "glasser".
+        surf (str, optional): 大脑皮层表面类型，如"inflated"、"veryinflated"、"midthickness"等. Defaults to "veryinflated".
+        ax (Axes | None, optional): matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
+        vmin (Num | None, optional): 颜色映射的最小值，None表示使用数据中的最小值. Defaults to None.
+        vmax (Num | None, optional): 颜色映射的最大值，None表示使用数据中的最大值. Defaults to None.
+        cmap (str, optional): 颜色映射方案，如"Reds"、"Blues"、"viridis"等. Defaults to "Reds".
+        colorbar (bool, optional): 是否显示颜色条. Defaults to True.
+        colorbar_location (str, optional): 颜色条位置，可选"left"、"right"、"top"、"bottom". Defaults to "right".
+        colorbar_label_name (str, optional): 颜色条标签名称. Defaults to "".
+        colorbar_label_rotation (int, optional): 颜色条标签旋转角度. Defaults to 0.
+        colorbar_decimals (int, optional): 颜色条刻度标签的小数位数. Defaults to 1.
+        colorbar_fontsize (int, optional): 颜色条字体大小. Defaults to 8.
+        colorbar_nticks (int, optional): 颜色条刻度数量. Defaults to 2.
+        colorbar_shrink (float, optional): 颜色条收缩比例. Defaults to 0.15.
+        colorbar_aspect (int, optional): 颜色条宽高比. Defaults to 8.
+        colorbar_draw_border (bool, optional): 是否绘制颜色条边框. Defaults to False.
+        title_name (str, optional): 图形标题. Defaults to "".
+        title_fontsize (int, optional): 标题字体大小. Defaults to 12.
+        as_outline (bool, optional): 是否以轮廓线形式显示. Defaults to False.
+
+    Raises:
+        ValueError: 当指定的物种不支持时抛出
+        ValueError: 当指定的图集不支持时抛出
+        ValueError: 当数据为空时抛出
+        ValueError: 当vmin大于vmax时抛出
 
     Returns:
-        Union[plt.Figure, tuple[np.ndarray, np.ndarray]]: 如果 `plot=True`，返回 matplotlib 的 Figure 对象；
-        否则返回左右脑数据数组的元组 `(lh_parc, rh_parc)`。
+        Axes: 包含绘制图像的matplotlib坐标轴对象
     """
+    # 获取或创建坐标轴对象
+    ax = ax or plt.gca()
 
-    # 设置必要文件路径
-    current_dir = op.dirname(__file__)
-    neuromaps_data_dir = op.join(current_dir, "data/neurodata")
-    if atlas == "glasser":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/human_Glasser/fsaverage.L.Glasser.32k_fs_LR.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/human_Glasser/fsaverage.R.Glasser.32k_fs_LR.label.gii",
-        )
-        df = pd.read_csv(op.join(current_dir, "data/atlas_tables/human_glasser.csv"))
-    elif atlas == "bna":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/human_BNA/fsaverage.L.BNA.32k_fs_LR.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/human_BNA/fsaverage.R.BNA.32k_fs_LR.label.gii",
-        )
-        df = pd.read_csv(op.join(current_dir, "data/atlas_tables", "human_bna.csv"))
-    # 获取文件Underlay
-    lh = op.join(
-        neuromaps_data_dir,
-        f"surfaces/human_fsLR/tpl-fsLR_den-32k_hemi-L_{surf}.surf.gii",
-    )
-    rh = op.join(
-        neuromaps_data_dir,
-        f"surfaces/human_fsLR/tpl-fsLR_den-32k_hemi-R_{surf}.surf.gii",
-    )
-    p = Plot(lh, rh)
-    # 将原始数据拆分成左右脑数据
-    lh_data, rh_data = {}, {}
-    for roi in data:
-        if "lh_" in roi:
-            lh_data[roi] = data[roi]
-        elif "rh_" in roi:
-            rh_data[roi] = data[roi]
-    # 加载图集分区数据
-    lh_roi_list, rh_roi_list = (
-        list(df["ROIs_name"])[0 : int(len(df["ROIs_name"]) / 2)],
-        list(df["ROIs_name"])[int(len(df["ROIs_name"]) / 2) : len(df["ROIs_name"])],
-    )
-    # 处理左脑数据
-    lh_parc = nib.load(lh_atlas_dir).darrays[0].data
-    roi_vertics = {roi: [] for roi in lh_roi_list}
-    for vertex_index, label in enumerate(lh_parc):
-        if label - 1 >= 0:
-            roi_vertics[lh_roi_list[label - 1]].append(vertex_index)
-    lh_parc = np.full(lh_parc.shape, np.nan)
-    for roi in lh_data:
-        lh_parc[roi_vertics[roi]] = lh_data[roi]
-    # 处理右脑数据
-    rh_parc = nib.load(rh_atlas_dir).darrays[0].data
-    roi_vertics = {roi: [] for roi in rh_roi_list}
-    for vertex_index, label in enumerate(rh_parc):
-        if label - 1 - len(lh_roi_list) >= 0:
-            roi_vertics[rh_roi_list[label - 1 - len(lh_roi_list)]].append(vertex_index)
-    rh_parc = np.full(rh_parc.shape, np.nan)
-    for roi in rh_data:
-        rh_parc[roi_vertics[roi]] = rh_data[roi]
-    # 画图
-    if plot:
-        # 画图元素参数设置
-        if vmin is None:
-            vmin = min(data.values())
-        if vmax is None:
-            vmax = max(data.values())
-        if vmin > vmax:
-            print("vmin必须小于等于vmax")
-            return
-        if vmin == vmax:
-            vmin = min(0, vmin)
-            vmax = max(0, vmax)
-        # colorbar参数设置
-        colorbar_kws = {
-            "location": colorbar_location,
-            "label_direction": colorbar_label_rotation,
-            "decimals": colorbar_decimals,
-            "fontsize": colorbar_fontsize,
-            "n_ticks": colorbar_nticks,
-            "shrink": colorbar_shrink,
-            "aspect": colorbar_aspect,
-            "draw_border": colorbar_draw_border,
-        }
-        p.add_layer(
-            {"left": lh_parc, "right": rh_parc},
-            cbar=colorbar,
-            cmap=cmap,
-            color_range=(vmin, vmax),
-            cbar_label=colorbar_label_name,
-            zero_transparent=False,
-            as_outline=as_outline,
-        )
-        fig = p.build(cbar_kws=colorbar_kws)
-        fig.suptitle(title_name, fontsize=title_fontsize, y=title_y)
-        ############################################### rjx_colorbar ###############################################
-        sm = ScalarMappable(cmap=cmap)
-        sm.set_array((vmin, vmax))  # 设置值范围
-        if rjx_colorbar:
-            if rjx_colorbar_direction == "vertical":
-                formatter = ScalarFormatter(useMathText=True)  # 科学计数法相关
-                formatter.set_powerlimits(
-                    (-3, 3)
-                )  # <=-1也就是小于等于0.1，>=2，也就是大于等于100，会写成科学计数法
-                cax = fig.add_axes(
-                    [1, 0.425, 0.01, 0.15]
-                )  # [left, bottom, width, height]
-                cbar = fig.colorbar(
-                    sm, cax=cax, orientation="vertical", cmap=cmap
-                )  # "vertical", "horizontal"
-                cbar.outline.set_visible(rjx_colorbar_outline)
-                cbar.ax.set_ylabel(
-                    rjx_colorbar_label_name, fontsize=rjx_colorbar_label_fontsize
-                )
-                cbar.ax.yaxis.set_label_position(
-                    "left"
-                )  # 原本设置y轴label默认在右边，现在换到左边
-                cbar.ax.tick_params(
-                    axis="y",
-                    which="major",
-                    labelsize=rjx_colorbar_tick_fontsize,
-                    rotation=rjx_colorbar_tick_rotation,
-                    length=rjx_colorbar_tick_length,
-                )
-                cbar.set_ticks(np.linspace(vmin, vmax, rjx_colorbar_nticks))
-                if vmax < 0.001 or vmax > 1000:  # y轴设置科学计数法
-                    cbar.ax.yaxis.set_major_formatter(formatter)
-                    cbar.ax.yaxis.get_offset_text().set_visible(
-                        False
-                    )  # 隐藏默认的偏移文本
-                    exponent = math.floor(math.log10(vmax))
-                    # 手动添加文本
-                    cbar.ax.text(
-                        1.05,
-                        1.15,
-                        rf"$\times 10^{{{exponent}}}$",
-                        transform=cbar.ax.transAxes,
-                        fontsize=rjx_colorbar_tick_fontsize,
-                        verticalalignment="bottom",
-                        horizontalalignment="left",
-                    )
-            elif rjx_colorbar_direction == "horizontal":
-                if horizontal_center:
-                    cax = fig.add_axes([0.44, 0.5, 0.15, 0.01])
-                else:
-                    cax = fig.add_axes([0.44, 0.05, 0.15, 0.01])
-                cbar = fig.colorbar(sm, cax=cax, orientation="horizontal", cmap=cmap)
-                cbar.outline.set_visible(rjx_colorbar_outline)
-                cbar.ax.set_title(
-                    rjx_colorbar_label_name, fontsize=rjx_colorbar_label_fontsize
-                )
-                cbar.ax.tick_params(
-                    axis="x",
-                    which="major",
-                    labelsize=rjx_colorbar_tick_fontsize,
-                    rotation=rjx_colorbar_tick_rotation,
-                    length=rjx_colorbar_tick_length,
-                )
-                if vmax < 0.001 or vmax > 1000:  # y轴设置科学计数法
-                    cbar.ax.xaxis.set_major_formatter(formatter)
-                cbar.set_ticks(np.linspace(vmin, vmax, rjx_colorbar_nticks))
-            ########################################### rjx_colorbar ###############################################
-        return fig
-    return lh_parc, rh_parc
-
-
-def plot_human_hemi_brain_figure(
-    data: dict[str, float],
-    hemi: str = "lh",
-    surf: str = "veryinflated",
-    atlas: str = "glasser",
-    vmin: Num | None = None,
-    vmax: Num | None = None,
-    cmap: str = "Reds",
-    colorbar: bool = True,
-    colorbar_location: str = "right",
-    colorbar_label_name: str = "",
-    colorbar_label_rotation: int = 0,
-    colorbar_decimals: int = 1,
-    colorbar_fontsize: int = 8,
-    colorbar_nticks: int = 2,
-    colorbar_shrink: float = 0.15,
-    colorbar_aspect: int = 8,
-    colorbar_draw_border: bool = False,
-    title_name: str = "",
-    title_fontsize: int = 15,
-    title_y: float = 0.9,
-) -> plt.Figure | None:
-    """
-    绘制人类大脑单侧（左脑或右脑）表面图，支持 Glasser 和 BNA 图谱。
-
-    Args:
-        data (dict[str, float]): 包含 ROI 名称及其对应值的字典。
-        hemi (str, optional): 脑半球选择，支持 "lh"（左脑）或 "rh"（右脑）。默认为 "lh"。
-        surf (str, optional): 大脑表面类型（如 "veryinflated", "inflated"）。默认为 "veryinflated"。
-        atlas (str, optional): 使用的图谱名称，支持 "glasser" 或 "bna"。默认为 "glasser"。
-        vmin (Num, optional): 颜色映射的最小值。可以是整数或浮点数。默认为 None。
-        vmax (Num, optional): 颜色映射的最大值。可以是整数或浮点数。默认为 None。
-        cmap (str, optional): 颜色映射方案。默认为 "Reds"。
-        colorbar (bool, optional): 是否显示颜色条。默认为 True。
-        colorbar_location (str, optional): 颜色条的位置。默认为 "right"。
-        colorbar_label_name (str, optional): 颜色条的标签名称。默认为空字符串。
-        colorbar_label_rotation (int, optional): 颜色条标签的旋转角度。默认为 0。
-        colorbar_decimals (int, optional): 颜色条刻度的小数位数。默认为 1。
-        colorbar_fontsize (int, optional): 颜色条标签的字体大小。默认为 8。
-        colorbar_nticks (int, optional): 颜色条上的刻度数量。默认为 2。
-        colorbar_shrink (float, optional): 颜色条的缩放比例。默认为 0.15。
-        colorbar_aspect (int, optional): 颜色条的宽高比。默认为 8。
-        colorbar_draw_border (bool, optional): 是否绘制颜色条边框。默认为 False。
-        title_name (str, optional): 图形标题。默认为空字符串。
-        title_fontsize (int, optional): 标题字体大小。默认为 15。
-        title_y (float, optional): 标题在 y 轴上的位置（范围通常为 0~1）。默认为 0.9。
-
-    Returns:
-        plt.Figure: 返回一个 matplotlib 的 Figure 对象，表示生成的大脑表面图。
-    """
-
-    # 设置必要文件路径
-    current_dir = op.dirname(__file__)
-    neuromaps_data_dir = op.join(current_dir, "data/neurodata")
-    if atlas == "glasser":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/human_Glasser/fsaverage.L.Glasser.32k_fs_LR.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/human_Glasser/fsaverage.R.Glasser.32k_fs_LR.label.gii",
-        )
-        df = pd.read_csv(op.join(current_dir, "data/atlas_tables", "human_glasser.csv"))
-    elif atlas == "bna":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/human_BNA/fsaverage.L.BNA.32k_fs_LR.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/human_BNA/fsaverage.R.BNA.32k_fs_LR.label.gii",
-        )
-        df = pd.read_csv(op.join(current_dir, "data/atlas_tables", "human_bna.csv"))
-    # 获取文件Underlay
-
-    lh = op.join(
-        neuromaps_data_dir,
-        f"surfaces/human_fsLR/tpl-fsLR_den-32k_hemi-L_{surf}.surf.gii",
-    )
-    rh = op.join(
-        neuromaps_data_dir,
-        f"surfaces/human_fsLR/tpl-fsLR_den-32k_hemi-R_{surf}.surf.gii",
-    )
-    if hemi == "lh":
-        p = Plot(lh, size=(800, 400), zoom=1.2)
-    elif hemi == "rh":
-        p = Plot(rh, size=(800, 400), zoom=1.2)
-    # 将原始数据拆分成左右脑数据
-    lh_data, rh_data = {}, {}
-    for roi in data:
-        if "lh_" in roi:
-            lh_data[roi] = data[roi]
-        elif "rh_" in roi:
-            rh_data[roi] = data[roi]
-    # 加载图集分区数据
-    lh_roi_list, rh_roi_list = (
-        list(df["ROIs_name"])[0 : int(len(df["ROIs_name"]) / 2)],
-        list(df["ROIs_name"])[int(len(df["ROIs_name"]) / 2) : len(df["ROIs_name"])],
-    )
-    # 处理左脑数据
-    lh_parc = nib.load(lh_atlas_dir).darrays[0].data
-    roi_vertics = {roi: [] for roi in lh_roi_list}
-    for vertex_index, label in enumerate(lh_parc):
-        if label - 1 >= 0:
-            roi_vertics[lh_roi_list[label - 1]].append(vertex_index)
-    lh_parc = np.full(lh_parc.shape, np.nan)
-    for roi in lh_data:
-        lh_parc[roi_vertics[roi]] = lh_data[roi]
-    # 处理右脑数据
-    rh_parc = nib.load(rh_atlas_dir).darrays[0].data
-    roi_vertics = {roi: [] for roi in rh_roi_list}
-    for vertex_index, label in enumerate(rh_parc):
-        if label - 1 - len(lh_roi_list) >= 0:
-            roi_vertics[rh_roi_list[label - 1 - len(lh_roi_list)]].append(vertex_index)
-    rh_parc = np.full(rh_parc.shape, np.nan)
-    for roi in rh_data:
-        rh_parc[roi_vertics[roi]] = rh_data[roi]
-    # 画图元素参数设置
-    if vmin is None:
-        vmin = min(data.values())
-    if vmax is None:
-        vmax = max(data.values())
-    if vmin > vmax:
-        print("vmin必须小于等于vmax")
-        return
+    # 提取所有数值用于确定vmin和vmax
+    values = list(data.values())
+    if not values:
+        raise ValueError("data 不能为空")
+    vmin = min(values) if vmin is None else vmin
+    vmax = max(values) if vmax is None else vmax
     if vmin == vmax:
-        vmin = min(0, vmin)
-        vmax = max(0, vmax)
-    # colorbar参数设置
-    colorbar_kws = {
-        "location": colorbar_location,
-        "label_direction": colorbar_label_rotation,
-        "decimals": colorbar_decimals,
-        "fontsize": colorbar_fontsize,
-        "n_ticks": colorbar_nticks,
-        "shrink": colorbar_shrink,
-        "aspect": colorbar_aspect,
-        "draw_border": colorbar_draw_border,
-    }
-    if hemi == "lh":
-        p.add_layer(
-            {"left": lh_parc},
-            cbar=colorbar,
-            cmap=cmap,
-            color_range=(vmin, vmax),
-            cbar_label=colorbar_label_name,
-            zero_transparent=False,
-        )
-    elif hemi == "rh":
-        p.add_layer(
-            {"left": rh_parc},
-            cbar=colorbar,
-            cmap=cmap,
-            color_range=(vmin, vmax),
-            cbar_label=colorbar_label_name,
-            zero_transparent=False,
-        )  # 很怪，但是这里就是写“{'left': rh_parc}”
-    fig = p.build(cbar_kws=colorbar_kws)
-    fig.suptitle(title_name, fontsize=title_fontsize, y=title_y)
-    return fig
-
-
-def plot_macaque_brain_figure(
-    data: dict[str, float],
-    surf: str = "veryinflated",
-    atlas: str = "charm5",
-    vmin: Num | None = None,
-    vmax: Num | None = None,
-    plot: bool = True,
-    cmap: str = "Reds",
-    colorbar: bool = True,
-    colorbar_location: str = "right",
-    colorbar_label_name: str = "",
-    colorbar_label_rotation: int = 0,
-    colorbar_decimals: int = 1,
-    colorbar_fontsize: int = 8,
-    colorbar_nticks: int = 2,
-    colorbar_shrink: float = 0.15,
-    colorbar_aspect: int = 8,
-    colorbar_draw_border: bool = False,
-    title_name: str = "",
-    title_fontsize: int = 15,
-    title_y: float = 0.9,
-    rjx_colorbar: bool = False,
-    rjx_colorbar_direction: str = "vertical",
-    horizontal_center: bool = True,
-    rjx_colorbar_outline: bool = False,
-    rjx_colorbar_label_name: str = "",
-    rjx_colorbar_tick_fontsize: int = 10,
-    rjx_colorbar_label_fontsize: int = 10,
-    rjx_colorbar_tick_rotation: int = 0,
-    rjx_colorbar_tick_length: int = 0,
-    rjx_colorbar_nticks: int = 2,
-) -> plt.Figure | tuple[np.ndarray, np.ndarray]:
-    """
-    绘制猕猴大脑表面图，支持多种图谱（CHARM5、CHARM6、BNA、D99）。
-
-    Args:
-        data (dict[str, float]): 包含 ROI 名称及其对应值的字典。
-        surf (str, optional): 大脑表面类型（如 "veryinflated", "inflated"）。默认为 "veryinflated"。
-        atlas (str, optional): 使用的图谱名称，支持 "charm5", "charm6", "bna", "d99"。默认为 "charm5"。
-        vmin (Num, optional): 颜色映射的最小值。可以是整数或浮点数。默认为 None。
-        vmax (Num, optional): 颜色映射的最大值。可以是整数或浮点数。默认为 None。
-        plot (bool, optional): 是否直接绘制图形。默认为 True。
-        cmap (str, optional): 颜色映射方案。默认为 "Reds"。
-        colorbar (bool, optional): 是否显示颜色条。默认为 True。
-        colorbar_location (str, optional): 颜色条的位置。默认为 "right"。
-        colorbar_label_name (str, optional): 颜色条的标签名称。默认为空字符串。
-        colorbar_label_rotation (int, optional): 颜色条标签的旋转角度。默认为 0。
-        colorbar_decimals (int, optional): 颜色条刻度的小数位数。默认为 1。
-        colorbar_fontsize (int, optional): 颜色条标签的字体大小。默认为 8。
-        colorbar_nticks (int, optional): 颜色条上的刻度数量。默认为 2。
-        colorbar_shrink (float, optional): 颜色条的缩放比例。默认为 0.15。
-        colorbar_aspect (int, optional): 颜色条的宽高比。默认为 8。
-        colorbar_draw_border (bool, optional): 是否绘制颜色条边框。默认为 False。
-        title_name (str, optional): 图形标题。默认为空字符串。
-        title_fontsize (int, optional): 标题字体大小。默认为 15。
-        title_y (float, optional): 标题在 y 轴上的位置（范围通常为 0~1）。默认为 0.9。
-        rjx_colorbar (bool, optional): 是否使用自定义颜色条。默认为 False。
-        rjx_colorbar_direction (str, optional): 自定义颜色条方向，支持 "vertical" 或 "horizontal"。默认为 "vertical"。
-        horizontal_center (bool, optional): 水平颜色条是否居中。默认为 True。
-        rjx_colorbar_outline (bool, optional): 自定义颜色条是否显示边框。默认为 False。
-        rjx_colorbar_label_name (str, optional): 自定义颜色条标签名称。默认为空字符串。
-        rjx_colorbar_tick_fontsize (int, optional): 自定义颜色条刻度字体大小。默认为 10。
-        rjx_colorbar_label_fontsize (int, optional): 自定义颜色条标签字体大小。默认为 10。
-        rjx_colorbar_tick_rotation (int, optional): 自定义颜色条刻度标签旋转角度。默认为 0。
-        rjx_colorbar_tick_length (int, optional): 自定义颜色条刻度长度。默认为 0。
-        rjx_colorbar_nticks (int, optional): 自定义颜色条上的刻度数量。默认为 2。
-
-    Returns:
-        Union[plt.Figure, tuple[np.ndarray, np.ndarray]]: 如果 `plot=True`，返回 matplotlib 的 Figure 对象；
-        否则返回左右脑数据数组的元组 `(lh_parc, rh_parc)`。
-    """
-    # 设置必要文件路径
-    current_dir = op.dirname(__file__)
-    neuromaps_data_dir = op.join(current_dir, "data/neurodata")
-    if atlas == "charm5":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_CHARM5/L.charm5.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_CHARM5/R.charm5.label.gii",
-        )
-        df = pd.read_csv(
-            op.join(current_dir, "data/atlas_tables", "macaque_charm5.csv")
-        )
-    elif atlas == "charm6":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_CHARM6/L.charm6.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_CHARM6/R.charm6.label.gii",
-        )
-        df = pd.read_csv(
-            op.join(current_dir, "data/atlas_tables", "macaque_charm6.csv")
-        )
-    elif atlas == "bna":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_BNA/L.charm5.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_BNA/R.charm5.label.gii",
-        )
-        df = pd.read_csv(op.join(current_dir, "data/atlas_tables", "macaque_bna.csv"))
-    elif atlas == "d99":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_D99/L.d99.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_D99/R.d99.label.gii",
-        )
-        df = pd.read_csv(op.join(current_dir, "data/atlas_tables", "macaque_d99.csv"))
-    # 获取文件Underlay
-    lh = op.join(
-        neuromaps_data_dir, f"surfaces/macaque_BNA/civm.L.{surf}.32k_fs_LR.surf.gii"
-    )
-    rh = op.join(
-        neuromaps_data_dir, f"surfaces/macaque_BNA/civm.R.{surf}.32k_fs_LR.surf.gii"
-    )
-    p = Plot(lh, rh)
-    # 将原始数据拆分成左右脑数据
-    lh_data, rh_data = {}, {}
-    for roi in data:
-        if "lh_" in roi:
-            lh_data[roi] = data[roi]
-        elif "rh_" in roi:
-            rh_data[roi] = data[roi]
-    # 加载图集分区数据
-    lh_roi_list, rh_roi_list = (
-        list(df["ROIs_name"])[0 : int(len(df["ROIs_name"]) / 2)],
-        list(df["ROIs_name"])[int(len(df["ROIs_name"]) / 2) : len(df["ROIs_name"])],
-    )
-    # 处理左脑数据
-    lh_parc = nib.load(lh_atlas_dir).darrays[0].data
-    roi_vertics = {roi: [] for roi in lh_roi_list}
-    for vertex_index, label in enumerate(lh_parc):
-        if label - 1 >= 0:
-            roi_vertics[lh_roi_list[label - 1]].append(vertex_index)
-    lh_parc = np.full(lh_parc.shape, np.nan)
-    for roi in lh_data:
-        lh_parc[roi_vertics[roi]] = lh_data[roi]
-    # 处理右脑数据
-    rh_parc = nib.load(rh_atlas_dir).darrays[0].data
-    roi_vertics = {roi: [] for roi in rh_roi_list}
-    for vertex_index, label in enumerate(rh_parc):
-        if label - 1 - len(lh_roi_list) >= 0:
-            roi_vertics[rh_roi_list[label - 1 - len(lh_roi_list)]].append(vertex_index)
-    rh_parc = np.full(rh_parc.shape, np.nan)
-    for roi in rh_data:
-        rh_parc[roi_vertics[roi]] = rh_data[roi]
-    # 画图
-    if plot:
-        # 画图元素参数设置
-        if vmin is None:
-            vmin = min(data.values())
-        if vmax is None:
-            vmax = max(data.values())
-        if vmin > vmax:
-            print("vmin必须小于等于vmax")
-            return
-        if vmin == vmax:
-            vmin = min(0, vmin)
-            vmax = max(0, vmax)
-        # colorbar参数设置
-        colorbar_kws = {
-            "location": colorbar_location,
-            "label_direction": colorbar_label_rotation,
-            "decimals": colorbar_decimals,
-            "fontsize": colorbar_fontsize,
-            "n_ticks": colorbar_nticks,
-            "shrink": colorbar_shrink,
-            "aspect": colorbar_aspect,
-            "draw_border": colorbar_draw_border,
-        }
-        p.add_layer(
-            {"left": lh_parc, "right": rh_parc},
-            cbar=colorbar,
-            cmap=cmap,
-            color_range=(vmin, vmax),
-            cbar_label=colorbar_label_name,
-            zero_transparent=False,
-        )
-        fig = p.build(cbar_kws=colorbar_kws)
-        fig.suptitle(title_name, fontsize=title_fontsize, y=title_y)
-        ############################################### rjx_colorbar ###############################################
-        sm = ScalarMappable(cmap=cmap)
-        sm.set_array((vmin, vmax))  # 设置值范围
-        if rjx_colorbar:
-            formatter = ScalarFormatter(useMathText=True)  # 科学计数法相关
-            formatter.set_powerlimits(
-                (-3, 3)
-            )  # <=-1也就是小于等于0.1，>=2，也就是大于等于100，会写成科学计数法
-            if rjx_colorbar_direction == "vertical":
-                cax = fig.add_axes(
-                    [1, 0.425, 0.01, 0.15]
-                )  # [left, bottom, width, height]
-                cbar = fig.colorbar(
-                    sm, cax=cax, orientation="vertical", cmap=cmap
-                )  # "vertical", "horizontal"
-                cbar.outline.set_visible(rjx_colorbar_outline)
-                cbar.ax.set_ylabel(
-                    rjx_colorbar_label_name, fontsize=rjx_colorbar_label_fontsize
-                )
-                cbar.ax.yaxis.set_label_position(
-                    "left"
-                )  # 原本设置y轴label默认在右边，现在换到左边
-                cbar.ax.tick_params(
-                    axis="y",
-                    which="major",
-                    labelsize=rjx_colorbar_tick_fontsize,
-                    rotation=rjx_colorbar_tick_rotation,
-                    length=rjx_colorbar_tick_length,
-                )
-                cbar.set_ticks(np.linspace(vmin, vmax, rjx_colorbar_nticks))
-                if vmax < 0.001 or vmax > 1000:  # y轴设置科学计数法
-                    cbar.ax.yaxis.set_major_formatter(formatter)
-                    cbar.ax.yaxis.get_offset_text().set_visible(
-                        False
-                    )  # 隐藏默认的偏移文本
-                    exponent = math.floor(math.log10(vmax))
-                    # 手动添加文本
-                    cbar.ax.text(
-                        1.05,
-                        1.15,
-                        rf"$\times 10^{{{exponent}}}$",
-                        transform=cbar.ax.transAxes,
-                        fontsize=rjx_colorbar_tick_fontsize,
-                        verticalalignment="bottom",
-                        horizontalalignment="left",
-                    )
-            elif rjx_colorbar_direction == "horizontal":
-                if horizontal_center:
-                    cax = fig.add_axes([0.44, 0.5, 0.15, 0.01])
-                else:
-                    cax = fig.add_axes([0.44, 0.05, 0.15, 0.01])
-                cbar = fig.colorbar(sm, cax=cax, orientation="horizontal", cmap=cmap)
-                cbar.outline.set_visible(rjx_colorbar_outline)
-                cbar.ax.set_title(
-                    rjx_colorbar_label_name, fontsize=rjx_colorbar_label_fontsize
-                )
-                cbar.ax.tick_params(
-                    axis="x",
-                    which="major",
-                    labelsize=rjx_colorbar_tick_fontsize,
-                    rotation=rjx_colorbar_tick_rotation,
-                    length=rjx_colorbar_tick_length,
-                )
-                if vmax < 0.001 or vmax > 1000:  # y轴设置科学计数法
-                    cbar.ax.xaxis.set_major_formatter(formatter)
-            cbar.set_ticks([vmin, vmax])
-            ########################################### rjx_colorbar ###############################################
-        return fig
-    return lh_parc, rh_parc
-
-
-def plot_macaque_hemi_brain_figure(
-    data: dict[str, float],
-    hemi: str = "lh",
-    surf: str = "veryinflated",
-    atlas: str = "charm5",
-    vmin: Num | None = None,
-    vmax: Num | None = None,
-    cmap: str = "Reds",
-    colorbar: bool = True,
-    colorbar_location: str = "right",
-    colorbar_label_name: str = "",
-    colorbar_label_rotation: int = 0,
-    colorbar_decimals: int = 1,
-    colorbar_fontsize: int = 8,
-    colorbar_nticks: int = 2,
-    colorbar_shrink: float = 0.15,
-    colorbar_aspect: int = 8,
-    colorbar_draw_border: bool = False,
-    title_name: str = "",
-    title_fontsize: int = 15,
-    title_y: float = 0.9,
-) -> plt.Figure:
-    """
-    绘制猕猴大脑单侧（左脑或右脑）表面图，支持多种图谱（CHARM5、CHARM6、BNA、D99）。
-
-    Args:
-        data (dict[str, float]): 包含 ROI 名称及其对应值的字典。
-        hemi (str, optional): 脑半球选择，支持 "lh"（左脑）或 "rh"（右脑）。默认为 "lh"。
-        surf (str, optional): 大脑表面类型（如 "veryinflated", "inflated"）。默认为 "veryinflated"。
-        atlas (str, optional): 使用的图谱名称，支持 "charm5", "charm6", "bna", "d99"。默认为 "charm5"。
-        vmin (Num, optional): 颜色映射的最小值。可以是整数或浮点数。默认为 None。
-        vmax (Num, optional): 颜色映射的最大值。可以是整数或浮点数。默认为 None。
-        cmap (str, optional): 颜色映射方案。默认为 "Reds"。
-        colorbar (bool, optional): 是否显示颜色条。默认为 True。
-        colorbar_location (str, optional): 颜色条的位置。默认为 "right"。
-        colorbar_label_name (str, optional): 颜色条的标签名称。默认为空字符串。
-        colorbar_label_rotation (int, optional): 颜色条标签的旋转角度。默认为 0。
-        colorbar_decimals (int, optional): 颜色条刻度的小数位数。默认为 1。
-        colorbar_fontsize (int, optional): 颜色条标签的字体大小。默认为 8。
-        colorbar_nticks (int, optional): 颜色条上的刻度数量。默认为 2。
-        colorbar_shrink (float, optional): 颜色条的缩放比例。默认为 0.15。
-        colorbar_aspect (int, optional): 颜色条的宽高比。默认为 8。
-        colorbar_draw_border (bool, optional): 是否绘制颜色条边框。默认为 False。
-        title_name (str, optional): 图形标题。默认为空字符串。
-        title_fontsize (int, optional): 标题字体大小。默认为 15。
-        title_y (float, optional): 标题在 y 轴上的位置（范围通常为 0~1）。默认为 0.9。
-
-    Returns:
-        plt.Figure: 返回一个 matplotlib 的 Figure 对象，表示生成的大脑表面图。
-    """
-
-    # 设置必要文件路径
-    current_dir = op.dirname(__file__)
-    neuromaps_data_dir = op.join(current_dir, "data/neurodata")
-    if atlas == "charm5":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_CHARM5/L.charm5.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_CHARM5/R.charm5.label.gii",
-        )
-        df = pd.read_csv(
-            op.join(current_dir, "data/atlas_tables", "macaque_charm5.csv")
-        )
-    elif atlas == "charm6":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_CHARM6/L.charm6.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_CHARM6/R.charm6.label.gii",
-        )
-        df = pd.read_csv(
-            op.join(current_dir, "data/atlas_tables", "macaque_charm6.csv")
-        )
-    elif atlas == "bna":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_BNA/L.charm5.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_BNA/R.charm5.label.gii",
-        )
-        df = pd.read_csv(op.join(current_dir, "data/atlas_tables", "macaque_bna.csv"))
-    elif atlas == "d99":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_D99/L.d99.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/macaque_D99/R.d99.label.gii",
-        )
-        df = pd.read_csv(op.join(current_dir, "data/atlas_tables", "macaque_d99.csv"))
-    # 获取文件Underlay
-    lh = op.join(
-        neuromaps_data_dir, f"surfaces/macaque_BNA/civm.L.{surf}.32k_fs_LR.surf.gii"
-    )
-    rh = op.join(
-        neuromaps_data_dir, f"surfaces/macaque_BNA/civm.R.{surf}.32k_fs_LR.surf.gii"
-    )
-    if hemi == "lh":
-        p = Plot(lh, size=(800, 400), zoom=1.2)
-    elif hemi == "rh":
-        p = Plot(rh, size=(800, 400), zoom=1.2)
-    # 将原始数据拆分成左右脑数据
-    lh_data, rh_data = {}, {}
-    for roi in data:
-        if "lh_" in roi:
-            lh_data[roi] = data[roi]
-        elif "rh_" in roi:
-            rh_data[roi] = data[roi]
-    # 加载分区数据
-    lh_roi_list, rh_roi_list = (
-        list(df["ROIs_name"])[0 : int(len(df["ROIs_name"]) / 2)],
-        list(df["ROIs_name"])[int(len(df["ROIs_name"]) / 2) : len(df["ROIs_name"])],
-    )
-    # 处理左脑数据
-    lh_parc = nib.load(lh_atlas_dir).darrays[0].data
-    roi_vertics = {roi: [] for roi in lh_roi_list}
-    for vertex_index, label in enumerate(lh_parc):
-        if label - 1 >= 0:
-            roi_vertics[lh_roi_list[label - 1]].append(vertex_index)
-    lh_parc = np.full(lh_parc.shape, np.nan)
-    for roi in lh_data:
-        lh_parc[roi_vertics[roi]] = lh_data[roi]
-    # 处理右脑数据
-    rh_parc = nib.load(rh_atlas_dir).darrays[0].data
-    roi_vertics = {roi: [] for roi in rh_roi_list}
-    for vertex_index, label in enumerate(rh_parc):
-        if label - len(lh_roi_list) - 1 >= 0:
-            roi_vertics[rh_roi_list[label - len(lh_roi_list) - 1]].append(vertex_index)
-    rh_parc = np.full(rh_parc.shape, np.nan)
-    for roi in rh_data:
-        rh_parc[roi_vertics[roi]] = rh_data[roi]
-    # 画图元素参数设置
-    if vmin is None:
-        vmin = min(data.values())
-    if vmax is None:
-        vmax = max(data.values())
+        vmin, vmax = min(0, vmin), max(0, vmax)
     if vmin > vmax:
-        print("vmin必须小于等于vmax")
-        return
-    if vmin == vmax:
-        vmin = min(0, vmin)
-        vmax = max(0, vmax)
-    # colorbar参数设置
-    colorbar_kws = {
-        "location": colorbar_location,
-        "label_direction": colorbar_label_rotation,
-        "decimals": colorbar_decimals,
-        "fontsize": colorbar_fontsize,
-        "n_ticks": colorbar_nticks,
-        "shrink": colorbar_shrink,
-        "aspect": colorbar_aspect,
-        "draw_border": colorbar_draw_border,
+        raise ValueError("vmin必须小于等于vmax")
+
+    # 设置数据文件路径
+    # 定义不同物种、表面类型和图集的文件路径信息
+    atlas_info = {
+        "human": {
+            "surf": {
+                "lh": f"surfaces/human_fsLR/tpl-fsLR_den-32k_hemi-L_{surf}.surf.gii",
+                "rh": f"surfaces/human_fsLR/tpl-fsLR_den-32k_hemi-R_{surf}.surf.gii",
+            },
+            "atlas": {
+                "glasser": {
+                    "lh": "atlases/human_Glasser/fsaverage.L.Glasser.32k_fs_LR.label.gii",
+                    "rh": "atlases/human_Glasser/fsaverage.R.Glasser.32k_fs_LR.label.gii",
+                },
+                "bna": {
+                    "lh": "atlases/human_BNA/fsaverage.L.BNA.32k_fs_LR.label.gii",
+                    "rh": "atlases/human_BNA/fsaverage.R.BNA.32k_fs_LR.label.gii",
+                },
+            },
+        },
+        "chimpanzee": {
+            "surf": {
+                "lh": f"surfaces/chimpanzee_BNA/ChimpYerkes29_v1.2.L.{surf}.32k_fs_LR.surf.gii",
+                "rh": f"surfaces/chimpanzee_BNA/ChimpYerkes29_v1.2.R.{surf}.32k_fs_LR.surf.gii",
+            },
+            "atlas": {
+                "bna": {
+                    "lh": "atlases/chimpanzee_BNA/ChimpBNA.L.32k_fs_LR.label.gii",
+                    "rh": "atlases/chimpanzee_BNA/ChimpBNA.R.32k_fs_LR.label.gii",
+                },
+            }
+        },
+        "macaque": {
+            "surf": {
+                "lh": f"surfaces/macaque_BNA/civm.L.{surf}.32k_fs_LR.surf.gii",
+                "rh": f"surfaces/macaque_BNA/civm.R.{surf}.32k_fs_LR.surf.gii",
+            },
+            "atlas": {
+                "charm5": {
+                    "lh": "atlases/macaque_CHARM5/L.charm5.label.gii",
+                    "rh": "atlases/macaque_CHARM5/R.charm5.label.gii",
+                },
+                "charm6": {
+                    "lh": "atlases/macaque_CHARM6/L.charm6.label.gii",
+                    "rh": "atlases/macaque_CHARM6/R.charm6.label.gii",
+                },
+                "bna": {
+                    "lh": "atlases/macaque_BNA/MBNA_124_32k_L.label.gii",
+                    "rh": "atlases/macaque_BNA/MBNA_124_32k_R.label.gii",
+                },
+                "d99": {
+                    "lh": "atlases/macaque_D99/L.d99.label.gii",
+                    "rh": "atlases/macaque_D99/R.d99.label.gii",
+                },
+            }
+        }
     }
-    if hemi == "lh":
-        p.add_layer(
-            {"left": lh_parc},
-            cbar=colorbar,
-            cmap=cmap,
-            color_range=(vmin, vmax),
-            cbar_label=colorbar_label_name,
-            zero_transparent=False,
-        )
+
+    # 检查物种是否支持
+    if species not in atlas_info:
+        raise ValueError(f"Unsupported species: {species}. Supported species are: {list(atlas_info.keys())}")
     else:
-        p.add_layer(
-            {"left": rh_parc},
-            cbar=colorbar,
-            cmap=cmap,
-            color_range=(vmin, vmax),
-            cbar_label=colorbar_label_name,
-            zero_transparent=False,
-        )  # 很怪，但是这里就是写“{'left': rh_parc}”
-    fig = p.build(cbar_kws=colorbar_kws)
-    fig.suptitle(title_name, fontsize=title_fontsize, y=title_y)
-    return fig
+        # 检查指定物种的图集是否支持
+        if atlas not in atlas_info[species]["atlas"]:
+            raise ValueError(f"Unsupported {atlas} atlas for {species}")
 
-
-def plot_chimpanzee_brain_figure(
-    data: dict[str, float],
-    surf: str = "veryinflated",
-    atlas: str = "bna",
-    vmin: Num | None = None,
-    vmax: Num | None = None,
-    plot: bool = True,
-    cmap: str = "Reds",
-    colorbar: bool = True,
-    colorbar_location: str = "right",
-    colorbar_label_name: str = "",
-    colorbar_label_rotation: int = 0,
-    colorbar_decimals: int = 1,
-    colorbar_fontsize: int = 8,
-    colorbar_nticks: int = 2,
-    colorbar_shrink: float = 0.15,
-    colorbar_aspect: int = 8,
-    colorbar_draw_border: bool = False,
-    title_name: str = "",
-    title_fontsize: int = 15,
-    title_y: float = 0.9,
-    rjx_colorbar: bool = False,
-    rjx_colorbar_direction: str = "vertical",
-    horizontal_center: bool = True,
-    rjx_colorbar_outline: bool = False,
-    rjx_colorbar_label_name: str = "",
-    rjx_colorbar_tick_fontsize: int = 10,
-    rjx_colorbar_label_fontsize: int = 10,
-    rjx_colorbar_tick_rotation: int = 0,
-    rjx_colorbar_tick_length: int = 0,
-    rjx_colorbar_nticks: int = 2,
-) -> plt.Figure | tuple[np.ndarray, np.ndarray]:
-    """
-    绘制黑猩猩大脑表面图，支持 BNA 图谱。
-
-    Args:
-        data (dict[str, float]): 包含 ROI 名称及其对应值的字典。
-        surf (str, optional): 大脑表面类型（如 "veryinflated", "midthickness"）。默认为 "veryinflated"。
-        atlas (str, optional): 使用的图谱名称，目前仅支持 "bna"。默认为 "bna"。
-        vmin (Num, optional): 颜色映射的最小值。可以是整数或浮点数。默认为 None。
-        vmax (Num, optional): 颜色映射的最大值。可以是整数或浮点数。默认为 None。
-        plot (bool, optional): 是否直接绘制图形。默认为 True。
-        cmap (str, optional): 颜色映射方案。默认为 "Reds"。
-        colorbar (bool, optional): 是否显示颜色条。默认为 True。
-        colorbar_location (str, optional): 颜色条的位置。默认为 "right"。
-        colorbar_label_name (str, optional): 颜色条的标签名称。默认为空字符串。
-        colorbar_label_rotation (int, optional): 颜色条标签的旋转角度。默认为 0。
-        colorbar_decimals (int, optional): 颜色条刻度的小数位数。默认为 1。
-        colorbar_fontsize (int, optional): 颜色条标签的字体大小。默认为 8。
-        colorbar_nticks (int, optional): 颜色条上的刻度数量。默认为 2。
-        colorbar_shrink (float, optional): 颜色条的缩放比例。默认为 0.15。
-        colorbar_aspect (int, optional): 颜色条的宽高比。默认为 8。
-        colorbar_draw_border (bool, optional): 是否绘制颜色条边框。默认为 False。
-        title_name (str, optional): 图形标题。默认为空字符串。
-        title_fontsize (int, optional): 标题字体大小。默认为 15。
-        title_y (float, optional): 标题在 y 轴上的位置（范围通常为 0~1）。默认为 0.9。
-        rjx_colorbar (bool, optional): 是否使用自定义颜色条。默认为 False。
-        rjx_colorbar_direction (str, optional): 自定义颜色条方向，支持 "vertical" 或 "horizontal"。默认为 "vertical"。
-        horizontal_center (bool, optional): 水平颜色条是否居中。默认为 True。
-        rjx_colorbar_outline (bool, optional): 自定义颜色条是否显示边框。默认为 False。
-        rjx_colorbar_label_name (str, optional): 自定义颜色条标签名称。默认为空字符串。
-        rjx_colorbar_tick_fontsize (int, optional): 自定义颜色条刻度字体大小。默认为 10。
-        rjx_colorbar_label_fontsize (int, optional): 自定义颜色条标签字体大小。默认为 10。
-        rjx_colorbar_tick_rotation (int, optional): 自定义颜色条刻度标签旋转角度。默认为 0。
-        rjx_colorbar_tick_length (int, optional): 自定义颜色条刻度长度。默认为 0。
-        rjx_colorbar_nticks (int, optional): 自定义颜色条上的刻度数量。默认为 2。
-
-    Returns:
-        Union[plt.Figure, tuple[np.ndarray, np.ndarray]]: 如果 `plot=True`，返回 matplotlib 的 Figure 对象；
-        否则返回左右脑数据数组的元组 `(lh_parc, rh_parc)`。
-    """
-
-    # 设置必要文件路径
-    current_dir = op.dirname(__file__)
-    neuromaps_data_dir = op.join(current_dir, "data/neurodata")
-    if atlas == "bna":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/chimpanzee_BNA/ChimpBNA.L.32k_fs_LR.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/chimpanzee_BNA/ChimpBNA.R.32k_fs_LR.label.gii",
-        )
-        df = pd.read_csv(
-            op.join(current_dir, "data/atlas_tables", "chimpanzee_bna.csv")
-        )
-    # 获取文件Underlay
-    lh = op.join(
-        neuromaps_data_dir,
-        f"surfaces/chimpanzee_BNA/ChimpYerkes29_v1.2.L.{surf}.32k_fs_LR.surf.gii",
+    # 创建Plot对象，用于绘制大脑皮层
+    p = Plot(
+        NEURODATA / atlas_info[species]["surf"]["lh"],
+        NEURODATA / atlas_info[species]["surf"]["rh"],
     )
-    rh = op.join(
-        neuromaps_data_dir,
-        f"surfaces/chimpanzee_BNA/ChimpYerkes29_v1.2.R.{surf}.32k_fs_LR.surf.gii",
-    )
-    p = Plot(lh, rh)
-    # 将原始数据拆分成左右脑数据
-    lh_data, rh_data = {}, {}
-    for roi in data:
-        if "lh_" in roi:
-            lh_data[roi] = data[roi]
-        elif "rh_" in roi:
-            rh_data[roi] = data[roi]
-    # 加载图集分区数据
-    lh_roi_list, rh_roi_list = (
-        list(df["ROIs_name"])[0 : int(len(df["ROIs_name"]) / 2)],
-        list(df["ROIs_name"])[int(len(df["ROIs_name"]) / 2) : len(df["ROIs_name"])],
-    )
-    # 处理左脑数据
-    lh_parc = nib.load(lh_atlas_dir).darrays[0].data
-    roi_vertics = {roi: [] for roi in lh_roi_list}
-    for vertex_index, label in enumerate(lh_parc):
-        if label - 1 >= 0:
-            roi_vertics[lh_roi_list[label - 1]].append(vertex_index)
-    lh_parc = np.full(lh_parc.shape, np.nan)
-    for roi in lh_data:
-        lh_parc[roi_vertics[roi]] = lh_data[roi]
-    # 处理右脑数据
-    rh_parc = nib.load(rh_atlas_dir).darrays[0].data
-    roi_vertics = {roi: [] for roi in rh_roi_list}
-    for vertex_index, label in enumerate(rh_parc):
-        if label - 1 - len(lh_roi_list) >= 0:
-            roi_vertics[rh_roi_list[label - 1 - len(lh_roi_list)]].append(vertex_index)
-    rh_parc = np.full(rh_parc.shape, np.nan)
-    for roi in rh_data:
-        rh_parc[roi_vertics[roi]] = rh_data[roi]
+
+    # 分离左半球和右半球的数据
+    hemisphere_data = {}
+    for hemi in ["lh", "rh"]:
+        hemi_data = {k: v for k, v in data.items() if k.startswith(f"{hemi}_")}
+        hemi_parc = _map_labels_to_values(
+            hemi_data, NEURODATA / atlas_info[species]["atlas"][atlas][hemi]
+        )
+        hemisphere_data[hemi] = hemi_parc
+
     # 画图
-    if plot:
-        # 画图元素参数设置
-        if vmin is None:
-            vmin = min(data.values())
-        if vmax is None:
-            vmax = max(data.values())
-        if vmin > vmax:
-            print("vmin必须小于等于vmax")
-            return
-        if vmin == vmax:
-            vmin = min(0, vmin)
-            vmax = max(0, vmax)
-        # colorbar参数设置
-        colorbar_kws = {
-            "location": colorbar_location,
-            "label_direction": colorbar_label_rotation,
-            "decimals": colorbar_decimals,
-            "fontsize": colorbar_fontsize,
-            "n_ticks": colorbar_nticks,
-            "shrink": colorbar_shrink,
-            "aspect": colorbar_aspect,
-            "draw_border": colorbar_draw_border,
-        }
-        p.add_layer(
-            {"left": lh_parc, "right": rh_parc},
-            cbar=colorbar,
-            cmap=cmap,
-            color_range=(vmin, vmax),
-            cbar_label=colorbar_label_name,
-            zero_transparent=False,
-        )
-        fig = p.build(cbar_kws=colorbar_kws)
-        fig.suptitle(title_name, fontsize=title_fontsize, y=title_y)
-        ############################################### rjx_colorbar ###############################################
-        sm = ScalarMappable(cmap=cmap)
-        sm.set_array((vmin, vmax))  # 设置值范围
-        if rjx_colorbar:
-            formatter = ScalarFormatter(useMathText=True)  # 科学计数法相关
-            formatter.set_powerlimits(
-                (-3, 3)
-            )  # <=-1也就是小于等于0.1，>=2，也就是大于等于100，会写成科学计数法
-            if rjx_colorbar_direction == "vertical":
-                cax = fig.add_axes(
-                    [1, 0.425, 0.01, 0.15]
-                )  # [left, bottom, width, height]
-                cbar = fig.colorbar(
-                    sm, cax=cax, orientation="vertical", cmap=cmap
-                )  # "vertical", "horizontal"
-                cbar.outline.set_visible(rjx_colorbar_outline)
-                cbar.ax.set_ylabel(
-                    rjx_colorbar_label_name, fontsize=rjx_colorbar_label_fontsize
-                )
-                cbar.ax.yaxis.set_label_position(
-                    "left"
-                )  # 原本设置y轴label默认在右边，现在换到左边
-                cbar.ax.tick_params(
-                    axis="y",
-                    which="major",
-                    labelsize=rjx_colorbar_tick_fontsize,
-                    rotation=rjx_colorbar_tick_rotation,
-                    length=rjx_colorbar_tick_length,
-                )
-                cbar.set_ticks(np.linspace(vmin, vmax, rjx_colorbar_nticks))
-                if vmax < 0.001 or vmax > 1000:  # y轴设置科学计数法
-                    cbar.ax.yaxis.set_major_formatter(formatter)
-                    cbar.ax.yaxis.get_offset_text().set_visible(
-                        False
-                    )  # 隐藏默认的偏移文本
-                    exponent = math.floor(math.log10(vmax))
-                    # 手动添加文本
-                    cbar.ax.text(
-                        1.05,
-                        1.15,
-                        rf"$\times 10^{{{exponent}}}$",
-                        transform=cbar.ax.transAxes,
-                        fontsize=rjx_colorbar_tick_fontsize,
-                        verticalalignment="bottom",
-                        horizontalalignment="left",
-                    )
-            elif rjx_colorbar_direction == "horizontal":
-                if horizontal_center:
-                    cax = fig.add_axes([0.44, 0.5, 0.15, 0.01])
-                else:
-                    cax = fig.add_axes([0.44, 0.05, 0.15, 0.01])
-                cbar = fig.colorbar(sm, cax=cax, orientation="horizontal", cmap=cmap)
-                cbar.outline.set_visible(rjx_colorbar_outline)
-                cbar.ax.set_title(
-                    rjx_colorbar_label_name, fontsize=rjx_colorbar_label_fontsize
-                )
-                cbar.ax.tick_params(
-                    axis="x",
-                    which="major",
-                    labelsize=rjx_colorbar_tick_fontsize,
-                    rotation=rjx_colorbar_tick_rotation,
-                    length=rjx_colorbar_tick_length,
-                )
-                if vmax < 0.001 or vmax > 1000:  # y轴设置科学计数法
-                    cbar.ax.xaxis.set_major_formatter(formatter)
-            cbar.set_ticks([vmin, vmax])
-            ########################################### rjx_colorbar ###############################################
-        return fig
-    return lh_parc, rh_parc
-
-
-def plot_chimpanzee_hemi_brain_figure(
-    data: dict[str, float],
-    hemi: str = "lh",
-    surf: str = "veryinflated",
-    atlas: str = "bna",
-    vmin: Num | None = None,
-    vmax: Num | None = None,
-    cmap: str = "Reds",
-    colorbar: bool = True,
-    colorbar_location: str = "right",
-    colorbar_label_name: str = "",
-    colorbar_label_rotation: int = 0,
-    colorbar_decimals: int = 1,
-    colorbar_fontsize: int = 8,
-    colorbar_nticks: int = 2,
-    colorbar_shrink: float = 0.15,
-    colorbar_aspect: int = 8,
-    colorbar_draw_border: bool = False,
-    title_name: str = "",
-    title_fontsize: int = 15,
-    title_y: float = 0.9,
-) -> plt.Figure:
-    """
-    绘制黑猩猩大脑单侧（左脑或右脑）表面图，支持 BNA 图谱。
-
-    Args:
-        data (dict[str, float]): 包含 ROI 名称及其对应值的字典。
-        hemi (str, optional): 脑半球选择，支持 "lh"（左脑）或 "rh"（右脑）。默认为 "lh"。
-        surf (str, optional): 大脑表面类型（如 "veryinflated", "midthickness"）。默认为 "veryinflated"。
-        atlas (str, optional): 使用的图谱名称，目前仅支持 "bna"。默认为 "bna"。
-        vmin (Num, optional): 颜色映射的最小值。可以是整数或浮点数。默认为 None。
-        vmax (Num, optional): 颜色映射的最大值。可以是整数或浮点数。默认为 None。
-        cmap (str, optional): 颜色映射方案。默认为 "Reds"。
-        colorbar (bool, optional): 是否显示颜色条。默认为 True。
-        colorbar_location (str, optional): 颜色条的位置。默认为 "right"。
-        colorbar_label_name (str, optional): 颜色条的标签名称。默认为空字符串。
-        colorbar_label_rotation (int, optional): 颜色条标签的旋转角度。默认为 0。
-        colorbar_decimals (int, optional): 颜色条刻度的小数位数。默认为 1。
-        colorbar_fontsize (int, optional): 颜色条标签的字体大小。默认为 8。
-        colorbar_nticks (int, optional): 颜色条上的刻度数量。默认为 2。
-        colorbar_shrink (float, optional): 颜色条的缩放比例。默认为 0.15。
-        colorbar_aspect (int, optional): 颜色条的宽高比。默认为 8。
-        colorbar_draw_border (bool, optional): 是否绘制颜色条边框。默认为 False。
-        title_name (str, optional): 图形标题。默认为空字符串。
-        title_fontsize (int, optional): 标题字体大小。默认为 15。
-        title_y (float, optional): 标题在 y 轴上的位置（范围通常为 0~1）。默认为 0.9。
-
-    Returns:
-        plt.Figure: 返回一个 matplotlib 的 Figure 对象，表示生成的大脑表面图。
-    """
-    # 设置必要文件路径
-    current_dir = op.dirname(__file__)
-    neuromaps_data_dir = op.join(current_dir, "data/neurodata")
-    if atlas == "bna":
-        lh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/chimpanzee_BNA/ChimpBNA.L.32k_fs_LR.label.gii",
-        )
-        rh_atlas_dir = op.join(
-            neuromaps_data_dir,
-            "atlases/chimpanzee_BNA/ChimpBNA.R.32k_fs_LR.label.gii",
-        )
-        df = pd.read_csv(
-            op.join(current_dir, "data/atlas_tables", "chimpanzee_bna.csv")
-        )
-    # 获取文件Underlay
-    lh = op.join(
-        neuromaps_data_dir,
-        f"surfaces/chimpanzee_BNA/ChimpYerkes29_v1.2.L.{surf}.32k_fs_LR.surf.gii",
+    # colorbar参数设置（用列表统一管理，便于维护）
+    colorbar_params = [
+        ("location", colorbar_location),
+        ("label_direction", colorbar_label_rotation),
+        ("decimals", colorbar_decimals),
+        ("fontsize", colorbar_fontsize),
+        ("n_ticks", colorbar_nticks),
+        ("shrink", colorbar_shrink),
+        ("aspect", colorbar_aspect),
+        ("draw_border", colorbar_draw_border),
+    ]
+    colorbar_kws = {k: v for k, v in colorbar_params}
+    # 添加图层到绘图对象
+    p.add_layer(
+        {"left": hemisphere_data["lh"], "right": hemisphere_data["rh"]},
+        cbar=colorbar,
+        cmap=cmap,
+        color_range=(vmin, vmax),
+        cbar_label=colorbar_label_name,
+        zero_transparent=False,
+        as_outline=as_outline,
     )
-    rh = op.join(
-        neuromaps_data_dir,
-        f"surfaces/chimpanzee_BNA/ChimpYerkes29_v1.2.R.{surf}.32k_fs_LR.surf.gii",
-    )
-    if hemi == "lh":
-        p = Plot(lh, size=(800, 400), zoom=1.2)
-    elif hemi == "rh":
-        p = Plot(rh, size=(800, 400), zoom=1.2)
-    # 将原始数据拆分成左右脑数据
-    lh_data, rh_data = {}, {}
-    for roi in data:
-        if "lh_" in roi:
-            lh_data[roi] = data[roi]
-        elif "rh_" in roi:
-            rh_data[roi] = data[roi]
-    # 加载分区数据
-    lh_roi_list, rh_roi_list = (
-        list(df["ROIs_name"])[0 : int(len(df["ROIs_name"]) / 2)],
-        list(df["ROIs_name"])[int(len(df["ROIs_name"]) / 2) : len(df["ROIs_name"])],
-    )
-    # 处理左脑数据
-    lh_parc = nib.load(lh_atlas_dir).darrays[0].data
-    roi_vertics = {roi: [] for roi in lh_roi_list}
-    for vertex_index, label in enumerate(lh_parc):
-        if label - 1 >= 0:
-            roi_vertics[lh_roi_list[label - 1]].append(vertex_index)
-    lh_parc = np.full(lh_parc.shape, np.nan)
-    for roi in lh_data:
-        lh_parc[roi_vertics[roi]] = lh_data[roi]
-    # 处理右脑数据
-    rh_parc = nib.load(rh_atlas_dir).darrays[0].data
-    roi_vertics = {roi: [] for roi in rh_roi_list}
-    for vertex_index, label in enumerate(rh_parc):
-        if label - len(lh_roi_list) - 1 >= 0:
-            roi_vertics[rh_roi_list[label - len(lh_roi_list) - 1]].append(vertex_index)
-    rh_parc = np.full(rh_parc.shape, np.nan)
-    for roi in rh_data:
-        rh_parc[roi_vertics[roi]] = rh_data[roi]
-    # 画图元素参数设置
-    if vmin is None:
-        vmin = min(data.values())
-    if vmax is None:
-        vmax = max(data.values())
-    if vmin > vmax:
-        print("vmin必须小于等于vmax")
-        return
-    if vmin == vmax:
-        vmin = min(0, vmin)
-        vmax = max(0, vmax)
-    # colorbar参数设置
-    colorbar_kws = {
-        "location": colorbar_location,
-        "label_direction": colorbar_label_rotation,
-        "decimals": colorbar_decimals,
-        "fontsize": colorbar_fontsize,
-        "n_ticks": colorbar_nticks,
-        "shrink": colorbar_shrink,
-        "aspect": colorbar_aspect,
-        "draw_border": colorbar_draw_border,
-    }
-    if hemi == "lh":
-        p.add_layer(
-            {"left": lh_parc},
-            cbar=colorbar,
-            cmap=cmap,
-            color_range=(vmin, vmax),
-            cbar_label=colorbar_label_name,
-            zero_transparent=False,
-        )
-    else:
-        p.add_layer(
-            {"left": rh_parc},
-            cbar=colorbar,
-            cmap=cmap,
-            color_range=(vmin, vmax),
-            cbar_label=colorbar_label_name,
-            zero_transparent=False,
-        )  # 很怪，但是这里就是写“{'left': rh_parc}”
-    fig = p.build(cbar_kws=colorbar_kws)
-    fig.suptitle(title_name, fontsize=title_fontsize, y=title_y)
-    return fig
+    # 构建坐标轴并应用颜色条设置
+    ax = p.build_axis(ax=ax, cbar_kws=colorbar_kws)
+    # 设置图形标题
+    ax.set_title(title_name, fontsize=title_fontsize)
+
+    return ax
