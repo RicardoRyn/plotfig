@@ -16,7 +16,7 @@ dependencies = [
     "pandas>=2.2.3",
     "plotly>=6.0.1",
     "scipy>=1.15.2",
-    "surfplot>=0.2.0",
+    "surfplot",
 ]
 
 [dependency-groups]
@@ -43,3 +43,6 @@ version_scheme = "pep440"
 version_provider = "uv"
 update_changelog_on_bump = true
 major_version_zero = false
+
+[tool.uv.sources]
+surfplot = { git = "https://github.com/RicardoRyn/surfplot.git" }
