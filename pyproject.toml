@@ -38,7 +38,8 @@ exclude = [
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-tag_format = "v$version"
+tag_format = "$version"
+legacy_tag_formats = "v$version"
 version_scheme = "pep440"
 version_provider = "uv"
 update_changelog_on_bump = true

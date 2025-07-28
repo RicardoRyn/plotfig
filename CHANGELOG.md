@@ -1,4 +1,4 @@
-## v1.3.0 (2025-07-28)
+## 1.3.0 (2025-07-28)
 
 ### Feat
 
@@ -15,13 +15,13 @@
 - **bar**: rename arguments in plot_one_group_bar_figure
 - **tests**: remove unused tests folder
 
-## v1.2.1 (2025-07-24)
+## 1.2.1 (2025-07-24)
 
 ### Fix
 
 - **bar**: rename `y_lim_range` to `y_lim` in `plot_one_group_bar_figure`
 
-## v1.2.0 (2025-07-24)
+## 1.2.0 (2025-07-24)
 
 ### Feat
 
@@ -31,14 +31,14 @@
 
 - **matrix**: changed return value to None
 
-## v1.1.0 (2025-07-21)
+## 1.1.0 (2025-07-21)
 
 ### Feat
 
 - **corr**: allow hexbin to show dense scatter points in correlation plot
 - **bar**: support gradient color bars and now can change border color
 
-## v1.0.0 (2025-07-03)
+## 1.0.0 (2025-07-03)
 
 ### Feat
 
