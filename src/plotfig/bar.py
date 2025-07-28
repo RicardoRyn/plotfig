@@ -21,6 +21,9 @@ __all__ = [
     "plot_multi_group_bar_figure",
 ]
 
+# 创建随机数生成器
+RNG = np.random.default_rng(seed=1998)
+
 
 def compute_summary(data: NumArray) -> tuple[float, float, float]:
     """计算均值、标准差、标准误"""
@@ -208,7 +211,7 @@ def plot_one_group_bar_figure(
     if colors is None:
         colors = ["gray"] * len(data)
 
-    np.random.seed(1998)
+    # 创建局部随机数生成器
 
     means, sds, ses = [], [], []
     x_positions = np.arange(len(labels_name))
@@ -219,7 +222,7 @@ def plot_one_group_bar_figure(
         means.append(mean)
         sds.append(sd)
         ses.append(se)
-        scatter_x = np.random.normal(i, 0.1, len(d))
+        scatter_x = RNG.normal(i, 0.1, len(d))
         scatter_positions.append(scatter_x)
 
     if errorbar_type == "sd":
@@ -437,9 +440,7 @@ def plot_one_group_violin_figure(
 
     # 绘制散点（复用现有函数）
     if show_dots:
-        scatter_positions = [
-            np.random.normal(i, 0.1, len(d)) for i, d in enumerate(data)
-        ]
+        scatter_positions = [RNG.normal(i, 0.1, len(d)) for i, d in enumerate(data)]
         for i, d in enumerate(data):
             add_scatter(ax, scatter_positions[i], d, colors[i], dots_size)
 
@@ -547,8 +548,6 @@ def plot_one_group_violin_figure_old(
     labels_name = labels_name or [str(i) for i in range(len(data))]
     colors = colors or ["gray"] * len(data)
 
-    np.random.seed(1998)  # 固定随机种子保证散点位置可复现
-
     # 绘制小提琴图
     parts = ax.violinplot(
         dataset=list(data),
@@ -587,9 +586,7 @@ def plot_one_group_violin_figure_old(
 
     # 绘制散点（复用现有函数）
     if show_dots:
-        scatter_positions = [
-            np.random.normal(i, 0.1, len(d)) for i, d in enumerate(data)
-        ]
+        scatter_positions = [RNG.normal(i, 0.1, len(d)) for i, d in enumerate(data)]
         for i, d in enumerate(data):
             add_scatter(ax, scatter_positions[i], d, colors[i], dots_size)
 
@@ -734,7 +731,7 @@ def plot_multi_group_bar_figure(
         )
         # 绘制散点
         for index_bar, dot in enumerate(group_data):
-            dot_x_pos = np.random.normal(
+            dot_x_pos = RNG.normal(
                 x_positions[index_bar], scale=bar_width / 7, size=len(dot)
             )
             add_scatter(ax, dot_x_pos, dot, dots_color, dots_size=dots_size)
