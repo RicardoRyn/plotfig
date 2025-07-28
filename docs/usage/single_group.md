@@ -504,14 +504,15 @@ plot_one_group_bar_figure(
 
 `plot_one_group_bar_figure` 可快速实现柱间统计比较。当前支持以下统计方法：
 
-1. 独立样本 t 检验（`ttest_ind`）  
-2. 配对样本 t 检验（`ttest_rel`）  
-3. Mann-Whitney U 检验（`mannwhitneyu`）  
-4. 外部统计检验 （`external`）
+1. 独立样本 t 检验（`ttest_ind`）
+2. 配对样本 t 检验（`ttest_rel`）
+3. 单样本t检验（`ttest_1samp`）
+4. Mann-Whitney U 检验（`mannwhitneyu`）
+5. 外部统计检验 （`external`）
 
-> “外部统计检验”（`external`）指用户可使用其他统计软件完成检验，只需将计算好的 p 值传入函数。
+> 
 
-使用时需先通过 `statistic` 选项启用统计功能，并在 `test_method` 中指定方法名；外部统计检验还需通过 `p_list` 额外传入对应的 p 值列表。
+使用时需先通过 `statistic` 选项启用统计功能，并在 `test_method` 中指定方法名。
 
 
 
@@ -530,6 +531,8 @@ data2 = np.random.normal(4, 1, 31)
 data3 = np.random.normal(5, 1, 31)
 data4 = np.random.normal(2, 1, 9)
 data5 = np.random.normal(4, 1, 10)
+data6 = np.random.normal(0, 1, 20)
+data7 = np.random.normal(1, 1, 20)
 
 fig, axes = plt.subplots(2, 2, figsize=(6, 6))
 fig.subplots_adjust(wspace=0.5, hspace=0.5)
@@ -554,25 +557,25 @@ plot_one_group_bar_figure(
     test_method="ttest_rel"
 )
 plot_one_group_bar_figure(
-    [data4, data5],
+    [data6, data7],
     ax=axes[1,0],
+    labels_name=["A", "B"],
+    y_label_name="y",
+    title_name="单样本t检验",
+    title_fontsize=15,
+    statistic=True,
+    test_method="ttest_1samp",
+    popmean=0,
+)
+plot_one_group_bar_figure(
+    [data4, data5],
+    ax=axes[1,1],
     labels_name=["A", "B"],
     y_label_name="y",
     title_name="Mann-Whitney U检验",
     title_fontsize=15,
     statistic=True, 
     test_method="mannwhitneyu"
-)
-plot_one_group_bar_figure(
-    [data1, data2],
-    ax=axes[1,1],
-    labels_name=["A", "B"],
-    y_label_name="y",
-    title_name="外部统计检验",
-    title_fontsize=15,
-    statistic=True, 
-    test_method="external",
-    p_list=[0.01],
 )
 ```
 
@@ -581,6 +584,9 @@ plot_one_group_bar_figure(
 ![png](single_group_files/single_group_34_0.png)
     
 
+
+“外部统计检验”（`external`）指用户可使用其他统计软件完成检验，只需将计算好的 p 值传入函数。
+外部统计检验需通过 `p_list` 额外传入对应的 p 值列表。
 
 !!! note
     当使用“外部统计检验”且有多个柱子需要比较时，传入的 *p* 值应遵循以下顺序：
@@ -622,7 +628,7 @@ plot_one_group_bar_figure(
 
 
     
-![png](single_group_files/single_group_36_0.png)
+![png](single_group_files/single_group_37_0.png)
     
 
 
@@ -673,6 +679,6 @@ plot_one_group_violin_figure(
 
 
     
-![png](single_group_files/single_group_39_0.png)
+![png](single_group_files/single_group_40_0.png)
     
 
