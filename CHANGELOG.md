@@ -1,3 +1,20 @@
+## v1.3.0 (2025-07-28)
+
+### Feat
+
+- **bar**: add one-sample t-test functionality
+
+### Fix
+
+- **bar**: isolate random number generator inside function
+
+### Refactor
+
+- **surface**: unify brain surface plotting with new plot_brain_surface_figure
+- **bar**: replace print with warnings.warn
+- **bar**: rename arguments in plot_one_group_bar_figure
+- **tests**: remove unused tests folder
+
 ## v1.2.1 (2025-07-24)
 
 ### Fix
