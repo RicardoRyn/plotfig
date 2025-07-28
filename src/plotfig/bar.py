@@ -107,17 +107,24 @@ def set_yaxis(
 
 
 def perform_stat_test(
-    data1: NumArray,
-    data2: NumArray,
-    method: str,
+    data1: NumArray | None = None,
+    data2: NumArray | None = None,
+    popmean: NumArray | None = None,
+    method: str = "ttest_ind",
 ) -> tuple[float, float]:
     """执行统计检验"""
-    if method == "ttest_ind":
-        stat, p = stats.ttest_ind(data1, data2)
-    elif method == "ttest_rel":
-        stat, p = stats.ttest_rel(data1, data2)
-    elif method == "mannwhitneyu":
-        stat, p = stats.mannwhitneyu(data1, data2, alternative="two-sided")
+    # 使用字典映射替代多个elif分支，提高可读性和可扩展性
+    test_methods = {
+        "ttest_ind": lambda: stats.ttest_ind(data1, data2),
+        "ttest_rel": lambda: stats.ttest_rel(data1, data2),
+        "ttest_1samp": lambda: stats.ttest_1samp(data1, popmean),
+        "mannwhitneyu": lambda: stats.mannwhitneyu(
+            data1, data2, alternative="two-sided"
+        ),
+    }
+
+    if method in test_methods:
+        stat, p = test_methods[method]()
     else:
         raise ValueError(f"未知统计方法: {method}")
     return stat, p
@@ -134,26 +141,80 @@ def annotate_significance(
     color: str,
 ) -> None:
     """添加显著性星号和连线"""
-    for (i, j, pval), count in zip(comparisons, range(1, len(comparisons) + 1)):
-        y = y_base + count * interval
-        ax.annotate(
-            "",
-            xy=(i, y),
-            xytext=(j, y),
-            arrowprops=dict(
-                edgecolor=line_color, width=0.5, headwidth=0.1, headlength=0.1
-            ),
-        )
+
+    def _stars(pval, i, y, color, fontsize):
         stars = "*" if pval > 0.01 else "**" if pval > 0.001 else "***"
         ax.text(
-            (i + j) / 2,
-            y + star_offset,
+            i,
+            y,
             stars,
             ha="center",
             va="center",
             color=color,
             fontsize=fontsize,
         )
+
+    if len(comparisons[0]) == 3:
+        for (i, j, pval), count in zip(comparisons, range(1, len(comparisons) + 1)):
+            y = y_base + count * interval
+            ax.annotate(
+                "",
+                xy=(i, y),
+                xytext=(j, y),
+                arrowprops=dict(
+                    edgecolor=line_color, width=0.5, headwidth=0.1, headlength=0.1
+                ),
+            )
+            _stars(pval, (i + j) / 2, y + star_offset, color, fontsize)
+    else:
+        for i, pval in comparisons:
+            y = y_base + interval
+            _stars(pval, i, y + star_offset, color, fontsize)
+
+
+def statistics(
+    data,
+    test_method,
+    p_list,
+    popmean,
+    ax,
+    all_values,
+    statistical_line_color,
+    asterisk_fontsize,
+    asterisk_color,
+):
+    comparisons = []
+    idx = 0
+    if test_method != "ttest_1samp":
+        for i in range(len(data)):
+            for j in range(i + 1, len(data)):
+                if test_method == "external":
+                    p = p_list[idx]
+                    idx += 1
+                else:
+                    _, p = perform_stat_test(
+                        data1=data[i], data2=data[j], method=test_method
+                    )
+                if p <= 0.05:
+                    comparisons.append((i, j, p))
+    else:
+        for i in range(len(data)):
+            _, p = perform_stat_test(data1=data[i], popmean=popmean, method=test_method)
+            if p <= 0.05:
+                comparisons.append((i, p))
+
+    y_max = ax.get_ylim()[1]
+    interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
+    annotate_significance(
+        ax,
+        comparisons,
+        np.max(all_values),
+        interval,
+        line_color=statistical_line_color,
+        star_offset=interval / 5,
+        fontsize=asterisk_fontsize,
+        color=asterisk_color,
+    )
 
 
 def plot_one_group_bar_figure(
@@ -174,9 +235,15 @@ def plot_one_group_bar_figure(
     errorbar_type: str = "sd",
     statistic: bool = False,
     test_method: str = "ttest_ind",
+    popmean: Num = 0,
     p_list: list[float] | None = None,
+    statistical_line_color: str = "0.5",
+    asterisk_fontsize: Num = 10,
+    asterisk_color: str = "k",
     **kwargs: Any,
 ) -> None:
+
+
     """绘制单组柱状图，包含散点、误差条和统计显著性标记。
 
     Args:
@@ -196,8 +263,12 @@ def plot_one_group_bar_figure(
         y_label_name (str, optional): Y 轴的标签。默认为空字符串。
         errorbar_type (str, optional): 误差条类型。支持 "sd"（标准差）或 "se"（标准误）。默认为 "sd"。
         statistic (bool, optional): 是否进行统计检验并在柱状图上标记显著性。默认为 False。
-        test_method (str, optional): 统计检验方法。支持 "ttest_ind"、"ttest_rel"、"mannwhitneyu" 或 "external"。默认为 "ttest_ind"。
-        p_list (list[float] | None, optional): 提供的 p 值列表。默认为None。
+        test_method (str, optional): 统计检验方法。支持 "ttest_ind"、"ttest_rel"、"ttest_1samp"、"mannwhitneyu" 或 "external"。默认为 "ttest_ind"。
+        popmean (Num): 总体均值假设值，用于单样本t检验(ttest_1samp)。默认为 0。
+        p_list (list[float] | None, optional): 提供的 p 值列表，用于 "external" 检验。默认为None。
+        statistical_line_color (str, optional): 统计显著性标记连线的颜色。默认为 "0.5"（灰色）。
+        asterisk_fontsize (Num, optional): 显著性星号的字体大小。默认为 10。
+        asterisk_color (str, optional): 显著性星号的颜色。默认为 "k"（黑色）。
         **kwargs (Any): 其他 matplotlib 参数，用于进一步定制图表样式。
 
     Returns:
@@ -233,19 +304,21 @@ def plot_one_group_bar_figure(
     # 绘制柱子
     if gradient_color:
         if colors_start is None:  # 默认颜色
-            colors_start = ['#e38a48'] * len(x_positions)  # 左边颜色
+            colors_start = ["#e38a48"] * len(x_positions)  # 左边颜色
         if colors_end is None:  # 默认颜色
-            colors_end = ['#4573a5'] * len(x_positions)  # 右边颜色
+            colors_end = ["#4573a5"] * len(x_positions)  # 右边颜色
         for x, h, c1, c2 in zip(x_positions, means, colors_start, colors_end):
             # 生成线性渐变 colormap
             cmap = LinearSegmentedColormap.from_list("grad_cmap", [c1, "white", c2])
             gradient = np.linspace(0, 1, 100).reshape(1, -1)  # 横向渐变
             # 计算渐变矩形位置：跟bar完全对齐
-            extent = [x - width/2, x + width/2, 0, h]
+            extent = [x - width / 2, x + width / 2, 0, h]
             # 叠加渐变矩形（imshow）
-            ax.imshow(gradient, aspect='auto', cmap=cmap, extent=extent, zorder=0)
-    else :
-        ax.bar(x_positions, means, width=width, color=colors, alpha=1, edgecolor=edgecolor)
+            ax.imshow(gradient, aspect="auto", cmap=cmap, extent=extent, zorder=0)
+    else:
+        ax.bar(
+            x_positions, means, width=width, color=colors, alpha=1, edgecolor=edgecolor
+        )
 
     ax.errorbar(
         x_positions,
@@ -294,29 +367,16 @@ def plot_one_group_bar_figure(
 
     # 添加统计显著性标记
     if statistic:
-        comparisons = []
-        idx = 0
-        for i in range(len(data)):
-            for j in range(i + 1, len(data)):
-                if test_method == "external":
-                    p = p_list[idx]
-                    idx += 1
-                else:
-                    _, p = perform_stat_test(data[i], data[j], test_method)
-                if p <= 0.05:
-                    comparisons.append((i, j, p))
-
-        y_max = ax.get_ylim()[1]
-        interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
-        annotate_significance(
+        statistics(
+            data,
+            test_method,
+            p_list,
+            popmean,
             ax,
-            comparisons,
-            np.max(all_values),
-            interval,
-            line_color=kwargs.get("line_color", "0.5"),
-            star_offset=interval / 5,
-            fontsize=kwargs.get("asterisk_fontsize", 10),
-            color=kwargs.get("asterisk_color", "k"),
+            all_values,
+            statistical_line_color,
+            asterisk_fontsize,
+            asterisk_color,
         )
 
 
@@ -337,7 +397,11 @@ def plot_one_group_violin_figure(
     dots_size: Num = 35,
     statistic: bool = False,
     test_method: str = "ttest_ind",
+    popmean: Num = 0,
     p_list: list[float] | None = None,
+    statistical_line_color: str = "0.5",
+    asterisk_fontsize: Num = 10,
+    asterisk_color: str = "k",
     **kwargs: Any,
 ) -> None:
     """绘制单组小提琴图，可选散点叠加、渐变填色和统计显著性标注。
@@ -359,7 +423,11 @@ def plot_one_group_violin_figure(
         dots_size (Num, optional): 散点大小。默认为 35。
         statistic (bool, optional): 是否进行统计检验并标注显著性。默认为 False。
         test_method (str, optional): 统计检验方法。支持 "ttest_ind"、"ttest_rel"、"mannwhitneyu" 或 "external"。默认为 "ttest_ind"。
+        popmean (Num): 总体均值假设值，用于单样本t检验(ttest_1samp)。默认为 0。
         p_list (list[float] | None, optional): 外部提供的 p 值列表。默认为 None。
+        statistical_line_color (str, optional): 统计显著性标记连线的颜色。默认为 "0.5"（灰色）。
+        asterisk_fontsize (Num, optional): 显著性星号的字体大小。默认为 10。
+        asterisk_color (str, optional): 显著性星号的颜色。默认为 "k"（黑色）。
         **kwargs (Any): 其他 matplotlib 参数，用于进一步定制图表样式。
 
     Returns:
@@ -373,7 +441,7 @@ def plot_one_group_violin_figure(
     def draw_gradient_violin(ax, data, pos, width=width, c1="red", c2="blue"):
         # KDE估计
         kde = stats.gaussian_kde(data)
-        buffer = (max(data)-min(data))/5
+        buffer = (max(data) - min(data)) / 5
         y = np.linspace(min(data) - buffer, max(data) + buffer, 300)
         ymax = max(data) + buffer
         ymin = min(data) - buffer
@@ -383,10 +451,9 @@ def plot_one_group_violin_figure(
         x_left = pos - density
         x_right = pos + density
         # 组合封闭边界
-        verts = np.concatenate([
-            np.stack([x_left, y], axis=1),
-            np.stack([x_right[::-1], y[::-1]], axis=1)
-        ])
+        verts = np.concatenate(
+            [np.stack([x_left, y], axis=1), np.stack([x_right[::-1], y[::-1]], axis=1)]
+        )
         # 构建渐变图像
         grad_width = 200
         grad_height = 300
@@ -406,7 +473,14 @@ def plot_one_group_violin_figure(
             zorder=1,
         )
         # 添加边界线并作为clip
-        poly = Polygon(verts, closed=True, facecolor='none', edgecolor='black', linewidth=1.2, zorder=2)
+        poly = Polygon(
+            verts,
+            closed=True,
+            facecolor="none",
+            edgecolor="black",
+            linewidth=1.2,
+            zorder=2,
+        )
         ax.add_patch(poly)
         im.set_clip_path(poly)
         # 添加 box 元素
@@ -414,15 +488,17 @@ def plot_one_group_violin_figure(
         q3 = np.percentile(data, 75)
         median = np.median(data)
         # 添加 IQR box（黑色矩形）
-        ax.add_patch(plt.Rectangle(
-            (pos - width / 16, q1),  # 左下角坐标
-            width / 8,  # 宽度
-            q3 - q1,  # 高度
-            facecolor='black',
-            alpha=0.7
-        ))
+        ax.add_patch(
+            plt.Rectangle(
+                (pos - width / 16, q1),  # 左下角坐标
+                width / 8,  # 宽度
+                q3 - q1,  # 高度
+                facecolor="black",
+                alpha=0.7,
+            )
+        )
         # 添加白色中位数点
-        ax.plot(pos, median, 'o', color='white', markersize=5, zorder=3)
+        ax.plot(pos, median, "o", color="white", markersize=5, zorder=3)
         return ymax, ymin
 
     ymax_lst, ymin_lst = [], []
@@ -468,31 +544,17 @@ def plot_one_group_violin_figure(
 
     # 添加统计标记（复用现有函数）
     if statistic:
-        comparisons = []
-        idx = 0
-        for i in range(len(data)):
-            for j in range(i + 1, len(data)):
-                if test_method == "external":
-                    p = p_list[idx] if p_list else 1.0
-                    idx += 1
-                else:
-                    _, p = perform_stat_test(data[i], data[j], test_method)
-                if p <= 0.05:
-                    comparisons.append((i, j, p))
-
-        if comparisons:
-            y_max = ax.get_ylim()[1]
-            interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
-            annotate_significance(
-                ax,
-                comparisons,
-                np.max(all_values),
-                interval,
-                line_color=kwargs.get("line_color", "0.5"),
-                star_offset=interval / 5,
-                fontsize=kwargs.get("asterisk_fontsize", 10),
-                color=kwargs.get("asterisk_color", "k"),
-            )
+        statistics(
+            data,
+            test_method,
+            p_list,
+            popmean,
+            ax,
+            all_values,
+            statistical_line_color,
+            asterisk_fontsize,
+            asterisk_color,
+        )
 
     return
 
@@ -562,15 +624,17 @@ def plot_one_group_violin_figure_old(
         q3 = np.percentile(d, 75)
         median = np.median(d)
         # 添加 IQR box（黑色矩形）
-        ax.add_patch(plt.Rectangle(
-            (i - width / 16, q1),  # 左下角坐标
-            width / 8,  # 宽度
-            q3 - q1,  # 高度
-            facecolor='black',
-            alpha=0.7
-        ))
+        ax.add_patch(
+            plt.Rectangle(
+                (i - width / 16, q1),  # 左下角坐标
+                width / 8,  # 宽度
+                q3 - q1,  # 高度
+                facecolor="black",
+                alpha=0.7,
+            )
+        )
         # 添加白色中位数点
-        ax.plot(i, median, 'o', color='white', markersize=3, zorder=3)
+        ax.plot(i, median, "o", color="white", markersize=3, zorder=3)
 
     # 设置小提琴颜色（修改默认样式）
     for pc, color in zip(parts["bodies"], colors):
