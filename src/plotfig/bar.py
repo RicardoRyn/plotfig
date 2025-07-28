@@ -282,8 +282,6 @@ def plot_one_group_bar_figure(
     if colors is None:
         colors = ["gray"] * len(data)
 
-    # 创建局部随机数生成器
-
     means, sds, ses = [], [], []
     x_positions = np.arange(len(labels_name))
     scatter_positions = []
