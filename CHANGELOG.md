@@ -1,3 +1,9 @@
+## 1.3.1 (2025-07-28)
+
+### Fix
+
+- **deps**: update surfplot dependency info to use GitHub version
+
 ## 1.3.0 (2025-07-28)
 
 ### Feat
