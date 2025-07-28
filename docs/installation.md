@@ -32,7 +32,7 @@ pip install -e .
 
 ## 依赖要求
 
-`plotfig` 依赖若干核心库，这些依赖会在安装过程中自动处理，但建议用户事先了解其版本要求以避免兼容性问题。
+`plotfig` 依赖若干核心库，这些依赖均会在安装过程中自动处理。
 
 - [matplotlib](https://matplotlib.org/) &ge; 3.10.1  
 - [mne-connectivity](https://mne.tools/mne-connectivity/stable/index.html) &ge; 0.7.0  
@@ -41,4 +41,4 @@ pip install -e .
 - [pandas](https://pandas.pydata.org/) &ge; 2.2.3  
 - [plotly](https://plotly.com/) &ge; 6.0.1  
 - [scipy](https://scipy.org/) &ge; 1.15.2  
-- [surfplot](https://surfplot.readthedocs.io/en/latest/index.html) &ge; 0.2.0  
+- [surfplot](https://github.com/danjgale/surfplot)（使用其 GitHub 仓库最新版，而非 PyPI 发布版本，因后者尚未包含所需功能）

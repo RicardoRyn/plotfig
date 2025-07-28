@@ -46,4 +46,4 @@ update_changelog_on_bump = true
 major_version_zero = false
 
 [tool.uv.sources]
-surfplot = { git = "https://github.com/RicardoRyn/surfplot.git" }
+surfplot = { git = "https://github.com/danjgale/surfplot.git" }

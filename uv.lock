@@ -995,7 +995,7 @@ requires-dist = [
     { name = "pandas", specifier = ">=2.2.3" },
     { name = "plotly", specifier = ">=6.0.1" },
     { name = "scipy", specifier = ">=1.15.2" },
-    { name = "surfplot", git = "https://github.com/RicardoRyn/surfplot.git" },
+    { name = "surfplot", git = "https://github.com/danjgale/surfplot.git" },
 ]
 
 [package.metadata.requires-dev]
@@ -1249,7 +1249,7 @@ wheels = [
 [[package]]
 name = "surfplot"
 version = "0.2.0"
-source = { git = "https://github.com/RicardoRyn/surfplot.git#fdb914e17be0b05d9a7ba64b3df8ef103107b21a" }
+source = { git = "https://github.com/danjgale/surfplot.git#9d59fa06c941b5ac2a8759b472f5db24883c8a48" }
 dependencies = [
     { name = "brainspace" },
     { name = "matplotlib" },
