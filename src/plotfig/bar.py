@@ -1,3 +1,4 @@
+import warnings
 from typing import Any
 
 import matplotlib.pyplot as plt
@@ -83,13 +84,21 @@ def set_yaxis(
 
     if options.get("one_decimal_place"):
         if options.get("math_text", True):
-            print("“one_decimal_place”会与“math_text”冲突，请关闭“math_text”后再开启！")
+            warnings.warn(
+                "“one_decimal_place”会与“math_text”冲突，请关闭“math_text”后再开启！",
+                UserWarning,
+                stacklevel=2,
+            )
         else:
             ax.yaxis.set_major_formatter(plt.FormatStrFormatter("%.1f"))
 
     if options.get("percentage"):
         if options.get("math_text", True):
-            print("“percentage”会与“math_text”冲突，请关闭“math_text”后再开启！")
+            warnings.warn(
+                "“percentage”会与“math_text”冲突，请关闭“math_text”后再开启！",
+                UserWarning,
+                stacklevel=2,
+            )
         else:
             ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x:.0%}"))
 
@@ -505,6 +514,11 @@ def plot_one_group_violin_figure_old(
     p_list: list[float] | None = None,
     **kwargs: Any,
 ) -> None:
+    warnings.warn(
+        "plot_one_group_violin_figure_old 即将弃用，请使用 plot_one_group_violin_figure 替代。未来版本将移除本函数。",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     """绘制单组小提琴图，包含散点和统计显著性标记。
 
     Args:
