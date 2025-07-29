@@ -15,4 +15,14 @@
 
 ::: plotfig.brain_surface
 
+::: plotfig.brain_surface_deprecated
+    options:
+        members:
+            - plot_human_brain_figure
+            - plot_human_hemi_brain_figure
+            - plot_chimpanzee_brain_figure
+            - plot_chimpanzee_hemi_brain_figure
+            - plot_macaque_brain_figure
+            - plot_macaque_hemi_brain_figure
+
 ::: plotfig.brain_connection

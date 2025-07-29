@@ -154,5 +154,6 @@ nav:
     - 矩阵图: usage/matrix.md
     - 连线图: usage/circos.md
     - 脑区图: usage/brain_surface.md
+    - 脑区图 (旧版): usage/brain_surface_deprecated.md
     - 脑连接图: usage/brain_connectivity.md
   - API: api/index.md
