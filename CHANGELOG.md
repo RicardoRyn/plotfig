@@ -1,3 +1,9 @@
+## 1.3.2 (2025-07-29)
+
+### Fix
+
+- **deps**: use the correct version of surfplot
+
 ## 1.3.1 (2025-07-28)
 
 ### Fix
