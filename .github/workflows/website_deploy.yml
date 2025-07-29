@@ -2,7 +2,7 @@ name: Website Deploy
 on:
   push:
     branches:
-      - ci-test
+      - main
 permissions:
   contents: write
 jobs:
@@ -30,7 +30,7 @@ jobs:
       - name: Check if CHANGELOG.md has changed
         id: changelog_check
         run: |
-          git fetch origin ci-test
+          git fetch origin main
           git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep "CHANGELOG.md" && echo "changed=true" >> $GITHUB_OUTPUT || echo "changed=false" >> $GITHUB_OUTPUT
 
       - name: Get latest CHANGELOG diff
