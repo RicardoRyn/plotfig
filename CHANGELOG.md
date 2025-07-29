@@ -1,3 +1,9 @@
+## 1.3.3 (2025-07-29)
+
+### Fix
+
+- **bar**: handle empty significance plot without error
+
 ## 1.3.2 (2025-07-29)
 
 ### Fix
