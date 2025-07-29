@@ -166,7 +166,7 @@ def annotate_significance(
                 ),
             )
             _stars(pval, (i + j) / 2, y + star_offset, color, fontsize)
-    else:
+    elif len(comparisons[0]) == 2:
         for i, pval in comparisons:
             y = y_base + interval
             _stars(pval, i, y + star_offset, color, fontsize)
@@ -202,6 +202,8 @@ def statistics(
             _, p = perform_stat_test(data1=data[i], popmean=popmean, method=test_method)
             if p <= 0.05:
                 comparisons.append((i, p))
+    if not comparisons:
+        return
 
     y_max = ax.get_ylim()[1]
     interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
