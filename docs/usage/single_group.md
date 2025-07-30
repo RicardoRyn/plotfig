@@ -120,6 +120,7 @@ plot_one_group_bar_figure(
     width=0.5,
     dots_size=15,
     colors=["#4573a5", "orange"],
+    color_alpha=0.7,
     errorbar_type="sd",
     edgecolor="r",
 )
