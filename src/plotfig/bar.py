@@ -6,7 +6,7 @@ import numpy as np
 import numpy.typing as npt
 from matplotlib.axes import Axes
 from matplotlib.ticker import FuncFormatter, ScalarFormatter
-from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.colors import LinearSegmentedColormap, to_rgba
 from matplotlib.patches import Polygon
 from scipy import stats
 
@@ -225,6 +225,7 @@ def plot_one_group_bar_figure(
     labels_name: list[str] | None = None,
     width: Num = 0.5,
     colors: list[str] | None = None,
+    color_alpha: Num = 1,
     edgecolor: str | None = None,
     gradient_color: bool = False,
     colors_start=None,
@@ -254,6 +255,7 @@ def plot_one_group_bar_figure(
         labels_name (list[str] | None, optional): 每个数据集对应的标签。默认为 None，使用索引作为标签。
         width (Num, optional): 柱子的宽度。默认为 0.5。
         colors (list[str] | None, optional): 每个柱子的颜色列表。若为 None，使用默认灰色。
+        color_alpha (Num, optional): 颜色透明度，取值范围为 0（完全透明）到 1（完全不透明）。使用 gradient_color 时该参数无效。默认为 1。
         edgecolor (str | None, optional): 柱子的边缘颜色。默认为 None，即不特别设置。
         gradient_color (bool, optional): 是否为柱子启用渐变色填充。默认为 False。
         colors_start (list[str] | None, optional): 渐变色的起始颜色列表。用于 gradient_color=True。
@@ -317,7 +319,7 @@ def plot_one_group_bar_figure(
             ax.imshow(gradient, aspect="auto", cmap=cmap, extent=extent, zorder=0)
     else:
         ax.bar(
-            x_positions, means, width=width, color=colors, alpha=1, edgecolor=edgecolor
+            x_positions, means, width=width, color=colors, alpha=color_alpha, edgecolor=edgecolor
         )
 
     ax.errorbar(
@@ -385,6 +387,7 @@ def plot_one_group_violin_figure(
     ax: Axes | None = None,
     width: Num = 0.8,
     colors: list[str] | None = None,
+    color_alpha: Num = 1,
     gradient_color: bool = False,
     colors_start: list[str] | None = None,
     colors_end: list[str] | None = None,
@@ -411,6 +414,7 @@ def plot_one_group_violin_figure(
         ax (Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前 Axes。
         width (Num, optional): 小提琴图的总宽度。默认为 0.8。
         colors (list[str] | None, optional): 每个小提琴的颜色。若为 None，使用默认灰色。
+        color_alpha (Num, optional): 颜色透明度，取值范围为 0（完全透明）到 1（完全不透明）。使用 gradient_color 时该参数无效。默认为 1。
         gradient_color (bool, optional): 是否启用渐变色填充。默认为 False。
         colors_start (list[str] | None, optional): 渐变起始颜色列表，对应每组数据。
         colors_end (list[str] | None, optional): 渐变结束颜色列表，对应每组数据。
@@ -438,7 +442,7 @@ def plot_one_group_violin_figure(
     labels_name = labels_name or [str(i) for i in range(len(data))]
     colors = colors or ["gray"] * len(data)
 
-    def draw_gradient_violin(ax, data, pos, width=width, c1="red", c2="blue"):
+    def _draw_gradient_violin(ax, data, pos, width=width, c1="red", c2="blue", color_alpha=1):
         # KDE估计
         kde = stats.gaussian_kde(data)
         buffer = (max(data) - min(data)) / 5
@@ -459,10 +463,12 @@ def plot_one_group_violin_figure(
         grad_height = 300
         gradient = np.linspace(0, 1, grad_width)
         if c1 == c2:
-            cmap = LinearSegmentedColormap.from_list("cmap", [c1, c2])
+            rgba = to_rgba(c1, alpha=color_alpha)
+            cmap = LinearSegmentedColormap.from_list("cmap", [rgba, rgba])
+            gradient_rgb = plt.get_cmap(cmap)(gradient)
         else:
             cmap = LinearSegmentedColormap.from_list("cmap", [c1, "white", c2])
-        gradient_rgb = plt.get_cmap(cmap)(gradient)[..., :3]
+            gradient_rgb = plt.get_cmap(cmap)(gradient)[..., :3]
         gradient_img = np.tile(gradient_rgb, (grad_height, 1, 1))
         # 显示图像并裁剪成violin形状
         im = ax.imshow(
@@ -508,7 +514,7 @@ def plot_one_group_violin_figure(
             c2 = colors_end[i]
         else:
             c1 = c2 = colors[i]
-        ymax, ymin = draw_gradient_violin(ax, d, pos=i, c1=c1, c2=c2)
+        ymax, ymin = _draw_gradient_violin(ax, d, pos=i, c1=c1, c2=c2, color_alpha=color_alpha)
         ymax_lst.append(ymax)
         ymin_lst.append(ymin)
     ymax = max(ymax_lst)
