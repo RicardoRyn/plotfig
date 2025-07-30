@@ -1,9 +1,3 @@
-## 1.3.3 (2025-07-29)
-
-### Fix
-
-- **bar**: handle empty significance plot without error
-
 ## [1.4.0](https://github.com/RicardoRyn/plotfig/compare/1.3.3...v1.4.0) (2025-07-30)
 
 
@@ -17,6 +11,13 @@
 * **announce:** change default content of main.html ([01d73d1](https://github.com/RicardoRyn/plotfig/commit/01d73d19e2ea733ee8184a50158107e349727509))
 * **announce:** remove main.html file ([09c3cde](https://github.com/RicardoRyn/plotfig/commit/09c3cde56f8d27690e9eea1250c14152508046c7))
 * **bar:** add usage example for `color_alpha` ([303e2a3](https://github.com/RicardoRyn/plotfig/commit/303e2a39d29e516ebded6504ba04a357d8428630))
+
+## 1.3.3 (2025-07-29)
+
+### Fix
+
+- **bar**: handle empty significance plot without error
+
 
 ## 1.3.2 (2025-07-29)
 
