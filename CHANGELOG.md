@@ -12,6 +12,13 @@
 * **announce:** remove main.html file ([09c3cde](https://github.com/RicardoRyn/plotfig/commit/09c3cde56f8d27690e9eea1250c14152508046c7))
 * **bar:** add usage example for `color_alpha` ([303e2a3](https://github.com/RicardoRyn/plotfig/commit/303e2a39d29e516ebded6504ba04a357d8428630))
 
+## [1.4.1](https://github.com/RicardoRyn/plotfig/compare/v1.4.0...v1.4.1) (2025-07-30)
+
+
+### Documentation
+
+* **changelog:** fix the wrong order ([736dc68](https://github.com/RicardoRyn/plotfig/commit/736dc682aac3208bd4c1518830b7c61f5d620e28))
+
 ## 1.3.3 (2025-07-29)
 
 ### Fix
