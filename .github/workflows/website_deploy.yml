@@ -68,7 +68,7 @@ jobs:
         run: |
           summary="${{ steps.inference.outputs.response }}"
           # 使用 printf 保证换行缩进和变量替换都准确
-          mkdir overrides
+          mkdir -p overrides
           printf '{%% extends "base.html" %%}\n\n{%% block announce %%}\n  <strong>📢 %s 查看<a href="/plotfig/changelog">更新日志</a>。</strong>\n{%% endblock %%}\n' "$summary" > overrides/main.html
 
       - name: Copy CHANGELOG.md to docs/
