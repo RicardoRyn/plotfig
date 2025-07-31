@@ -218,6 +218,30 @@ def statistics(
                 "test_method 最多只能有2个元素。且当元素数量为2时，其中之一必须是 'ttest_1samp'。"
             )
 
+        for method in test_method:
+            comparisons = determine_test_modle(data, method, p_list, popmean)
+            if not comparisons:
+                return
+
+            y_max = ax.get_ylim()[1]
+            interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
+
+            color = (
+                "b"
+                if len(test_method) > 1 and method == "ttest_1samp"
+                else asterisk_color
+            )
+
+            annotate_significance(
+                ax,
+                comparisons,
+                np.max(all_values),
+                interval,
+                line_color=statistical_line_color,
+                star_offset=interval / 5,
+                fontsize=asterisk_fontsize,
+                color=color,
+            )
     else:
         warnings.warn(
             "请使用列表形式传递 test_method 参数，例如 test_method=['ttest_ind']。字符串形式 test_method='ttest_ind' 将在后续版本中弃用。",
