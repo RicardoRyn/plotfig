@@ -85,7 +85,7 @@ def _add_nodes_to_fig(fig, centroids_real, node_indices, nodes_name, nodes_size,
             )
         )
 
-def _add_edges_to_fig(fig, connectome, centroids_real, nodes_name, scale_method, line_width):
+def _add_edges_to_fig(fig, connectome, centroids_real, nodes_name, scale_method, line_width, line_color="#ff0000"):
     '''将连接线绘制到图中'''
     nodes_num = connectome.shape[0]
     if np.all(connectome == 0):
@@ -101,7 +101,7 @@ def _add_edges_to_fig(fig, connectome, centroids_real, nodes_name, scale_method,
 
             match scale_method:
                 case "width":
-                    each_line_color = "#ff0000" if value > 0 else "#0000ff"
+                    each_line_color = line_color if value > 0 else "#0000ff"
                     each_line_width = abs(value / max_strength) * line_width
                 case "color":
                     norm_value = value / max_strength
@@ -159,6 +159,7 @@ def plot_brain_connection_figure(
     scale_method: str = "",
     line_width: Num = 10,
     show_all_nodes: bool = False,
+    line_color: str = "#ff0000",
 ) -> None:
     """绘制大脑连接图，保存在指定的html文件中
 
@@ -199,7 +200,7 @@ def plot_brain_connection_figure(
 
     centroids_real = _get_centroids_real(niigz_file)
     _add_nodes_to_fig(fig, centroids_real, node_indices, nodes_name, nodes_size, nodes_color)
-    _add_edges_to_fig(fig, connectome, centroids_real, nodes_name, scale_method, line_width)
+    _add_edges_to_fig(fig, connectome, centroids_real, nodes_name, scale_method, line_width, line_color)
     _finalize_figure(fig)
 
     fig.write_html(output_file)
