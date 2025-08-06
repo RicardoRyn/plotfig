@@ -65,6 +65,16 @@ data = {"lh_V1": 1, "rh_MT": 1.5}
 ax = plot_human_brain_figure(data)
 ```
 
+    C:\Users\RicardoRyn\AppData\Local\Temp\ipykernel_32020\3935563387.py:5: DeprecationWarning: plot_human_brain_figure 即将弃用，请使用 plot_brain_surface_figure 替代。未来版本将移除本函数。
+      ax = plot_human_brain_figure(data)
+    
+
+
+    
+![png](brain_surface_deprecated_files/brain_surface_deprecated_7_1.png)
+    
+
+
 
 ```python
 import matplotlib.pyplot as plt
