@@ -77,7 +77,7 @@ def plot_brain_surface_figure(
     Args:
         data (dict[str, float]): 包含脑区名称和对应数值的字典，键为脑区名称（如"lh_bankssts"），值为数值
         species (str, optional): 物种名称，支持"human"、"chimpanzee"、"macaque". Defaults to "human".
-        atlas (str, optional): 脑图集名称，根据物种不同可选不同图集. Defaults to "glasser".
+        atlas (str, optional): 脑图集名称，根据物种不同可选不同图集。人上包括"glasser"、"bna"，黑猩猩上包括"bna"，猕猴上包括"charm5"、"charm6"、"bna"以及"d99". Defaults to "glasser".
         surf (str, optional): 大脑皮层表面类型，如"inflated"、"veryinflated"、"midthickness"等. Defaults to "veryinflated".
         ax (Axes | None, optional): matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
         vmin (Num | None, optional): 颜色映射的最小值，None表示使用数据中的最小值. Defaults to None.
