@@ -3,7 +3,7 @@
     ".": {
       "release-type": "python",
       "include-component-in-tag": false,
-      "skip-tag-prefix": true
+      "bump-minor-pre-major": true
     }
   },
   "changelog-sections": [
