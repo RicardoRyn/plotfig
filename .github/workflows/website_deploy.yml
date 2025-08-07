@@ -1,4 +1,4 @@
-name: Website Deploy 
+name: Website Deploy
 on:
   push:
     branches:
@@ -19,14 +19,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
-      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
       - uses: actions/cache@v4
         with:
           key: mkdocs-material-${{ env.cache_id }}
-          path: .cache 
+          path: .cache
           restore-keys: |
             mkdocs-material-
-      
+
       - name: Check if CHANGELOG.md has changed
         id: changelog_check
         run: |
@@ -69,7 +69,7 @@ jobs:
           summary="${{ steps.inference.outputs.response }}"
           # 使用 printf 保证换行缩进和变量替换都准确
           mkdir -p overrides
-          printf '{%% extends "base.html" %%}\n\n{%% block announce %%}\n  <strong>📢 %s 查看<a href="/plotfig/changelog">更新日志</a>。</strong>\n{%% endblock %%}\n' "$summary" > overrides/main.html
+          printf '{%% extends "base.html" %%}\n\n{%% block announce %%}\n  <strong>📢 %s <a href="/plotfig/changelog">点击查看详情</a></strong>\n{%% endblock %%}\n' "$summary" > overrides/main.html
 
       - name: Copy CHANGELOG.md to docs/
         run: cp CHANGELOG.md docs/changelog.md
