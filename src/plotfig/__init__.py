@@ -1,7 +1,6 @@
 from .bar import (
     plot_one_group_bar_figure,
     plot_one_group_violin_figure,
-    plot_one_group_violin_figure_old,
     plot_multi_group_bar_figure,
 )
 from .correlation import plot_correlation_figure
@@ -23,7 +22,6 @@ from importlib.metadata import version, PackageNotFoundError
 __all__ = [
     "plot_one_group_bar_figure",
     "plot_one_group_violin_figure",
-    "plot_one_group_violin_figure_old",
     "plot_multi_group_bar_figure",
     "plot_correlation_figure",
     "plot_matrix_figure",
