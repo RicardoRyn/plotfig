@@ -329,81 +329,81 @@ def plot_one_group_bar_figure(
     """绘制单组柱状图，包含散点、误差条和统计显著性标记。
 
     Args:
-        data (np.ndarray | Sequence[Sequence[Num] | np.ndarray]): 
+        data (np.ndarray | Sequence[Sequence[Num] | np.ndarray]):
             输入数据，可以是二维numpy数组或嵌套序列，每个子序列代表一个柱状图的数据点
-        ax (Axes | None, optional): 
+        ax (Axes | None, optional):
             matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
-        labels_name (list[str] | None, optional): 
+        labels_name (list[str] | None, optional):
             柱状图的标签名称列表. Defaults to None.
-        colors (list[str] | None, optional): 
+        colors (list[str] | None, optional):
             柱状图的颜色列表. Defaults to None.
-        edgecolor (str | None, optional): 
+        edgecolor (str | None, optional):
             柱状图边缘颜色. Defaults to None.
-        gradient_color (bool, optional): 
+        gradient_color (bool, optional):
             是否使用渐变颜色填充柱状图. Defaults to False.
-        colors_start (list[str] | None, optional): 
+        colors_start (list[str] | None, optional):
             渐变色的起始颜色列表. Defaults to None.
-        colors_end (list[str] | None, optional): 
+        colors_end (list[str] | None, optional):
             渐变色的结束颜色列表. Defaults to None.
-        dots_color (list[list[str]] | None, optional): 
+        dots_color (list[list[str]] | None, optional):
             散点的颜色列表. Defaults to None.
-        y_lim (list[Num] | tuple[Num, Num] | None, optional): 
+        y_lim (list[Num] | tuple[Num, Num] | None, optional):
             Y轴的范围限制. Defaults to None.
-        width (Num, optional): 
+        width (Num, optional):
             柱状图的宽度. Defaults to 0.5.
-        color_alpha (Num, optional): 
+        color_alpha (Num, optional):
             柱状图颜色的透明度. Defaults to 1.
-        dots_size (Num, optional): 
+        dots_size (Num, optional):
             散点的大小. Defaults to 35.
-        errorbar_type (str, optional): 
+        errorbar_type (str, optional):
             误差条类型，可选 "sd"(标准差) 或 "se"(标准误). Defaults to "sd".
-        title_name (str, optional): 
+        title_name (str, optional):
             图表标题. Defaults to "".
-        title_fontsize (Num, optional): 
+        title_fontsize (Num, optional):
             标题字体大小. Defaults to 12.
-        title_pad (Num, optional): 
+        title_pad (Num, optional):
             标题与图表的间距. Defaults to 10.
-        x_label_name (str, optional): 
+        x_label_name (str, optional):
             X轴标签名称. Defaults to "".
-        x_label_ha (str, optional): 
+        x_label_ha (str, optional):
             X轴标签的水平对齐方式. Defaults to "center".
-        x_label_fontsize (Num, optional): 
+        x_label_fontsize (Num, optional):
             X轴标签字体大小. Defaults to 10.
-        x_tick_fontsize (Num, optional): 
+        x_tick_fontsize (Num, optional):
             X轴刻度字体大小. Defaults to 8.
-        x_tick_rotation (Num, optional): 
+        x_tick_rotation (Num, optional):
             X轴刻度旋转角度. Defaults to 0.
-        y_label_name (str, optional): 
+        y_label_name (str, optional):
             Y轴标签名称. Defaults to "".
-        y_label_fontsize (Num, optional): 
+        y_label_fontsize (Num, optional):
             Y轴标签字体大小. Defaults to 10.
-        y_tick_fontsize (Num, optional): 
+        y_tick_fontsize (Num, optional):
             Y轴刻度字体大小. Defaults to 8.
-        y_tick_rotation (Num, optional): 
+        y_tick_rotation (Num, optional):
             Y轴刻度旋转角度. Defaults to 0.
-        statistic (bool, optional): 
+        statistic (bool, optional):
             是否进行统计显著性分析. Defaults to False.
-        test_method (list[str], optional): 
+        test_method (list[str], optional):
             统计检验方法列表. Defaults to ["ttest_ind"].
-        p_list (list[float] | None, optional): 
+        p_list (list[float] | None, optional):
             预计算的p值列表，用于显著性标记. Defaults to None.
-        popmean (Num, optional): 
+        popmean (Num, optional):
             单样本t检验的假设均值. Defaults to 0.
-        statistical_line_color (str, optional): 
+        statistical_line_color (str, optional):
             显著性标记线的颜色. Defaults to "0.5".
-        asterisk_fontsize (Num, optional): 
+        asterisk_fontsize (Num, optional):
             显著性星号的字体大小. Defaults to 10.
-        asterisk_color (str, optional): 
+        asterisk_color (str, optional):
             显著性星号的颜色. Defaults to "k".
-        ax_bottom_is_0 (bool, optional): 
+        ax_bottom_is_0 (bool, optional):
             Y轴是否从0开始. Defaults to False.
-        y_max_tick_is_1 (bool, optional): 
+        y_max_tick_is_1 (bool, optional):
             Y轴最大刻度是否限制为1. Defaults to False.
-        math_text (bool, optional): 
+        math_text (bool, optional):
             是否将Y轴显示为科学计数法格式. Defaults to True.
-        one_decimal_place (bool, optional): 
+        one_decimal_place (bool, optional):
             Y轴刻度是否只保留一位小数. Defaults to False.
-        percentage (bool, optional): 
+        percentage (bool, optional):
             是否将Y轴显示为百分比格式. Defaults to False.
 
     Raises:
@@ -586,77 +586,77 @@ def plot_one_group_violin_figure(
     """绘制单组小提琴图，可选散点叠加、渐变填色和统计显著性标注。
 
     Args:
-        data (Sequence[list[float] | NDArray[np.float64]]): 
+        data (Sequence[list[float] | NDArray[np.float64]]):
             输入数据，可以是二维numpy数组或嵌套序列，每个子序列代表一个小提琴的数据点
-        ax (Axes | None, optional): 
+        ax (Axes | None, optional):
             matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
-        labels_name (list[str] | None, optional): 
+        labels_name (list[str] | None, optional):
             小提琴图的标签名称列表. Defaults to None.
-        width (Num, optional): 
+        width (Num, optional):
             小提琴图的宽度. Defaults to 0.8.
-        colors (list[str] | None, optional): 
+        colors (list[str] | None, optional):
             小提琴图的颜色列表. Defaults to None.
-        color_alpha (Num, optional): 
+        color_alpha (Num, optional):
             小提琴图颜色的透明度. Defaults to 1.
-        gradient_color (bool, optional): 
+        gradient_color (bool, optional):
             是否使用渐变颜色填充小提琴图. Defaults to False.
-        colors_start (list[str] | None, optional): 
+        colors_start (list[str] | None, optional):
             渐变色的起始颜色列表. Defaults to None.
-        colors_end (list[str] | None, optional): 
+        colors_end (list[str] | None, optional):
             渐变色的结束颜色列表. Defaults to None.
-        show_dots (bool, optional): 
+        show_dots (bool, optional):
             是否显示散点. Defaults to False.
-        dots_size (Num, optional): 
+        dots_size (Num, optional):
             散点的大小. Defaults to 35.
-        title_name (str, optional): 
+        title_name (str, optional):
             图表标题. Defaults to "".
-        title_fontsize (Num, optional): 
+        title_fontsize (Num, optional):
             标题字体大小. Defaults to 12.
-        title_pad (Num, optional): 
+        title_pad (Num, optional):
             标题与图表的间距. Defaults to 10.
-        x_label_name (str, optional): 
+        x_label_name (str, optional):
             X轴标签名称. Defaults to "".
-        x_label_ha (str, optional): 
+        x_label_ha (str, optional):
             X轴标签的水平对齐方式. Defaults to "center".
-        x_label_fontsize (Num, optional): 
+        x_label_fontsize (Num, optional):
             X轴标签字体大小. Defaults to 10.
-        x_tick_fontsize (Num, optional): 
+        x_tick_fontsize (Num, optional):
             X轴刻度字体大小. Defaults to 8.
-        x_tick_rotation (Num, optional): 
+        x_tick_rotation (Num, optional):
             X轴刻度旋转角度. Defaults to 0.
-        y_label_name (str, optional): 
+        y_label_name (str, optional):
             Y轴标签名称. Defaults to "".
-        y_label_fontsize (Num, optional): 
+        y_label_fontsize (Num, optional):
             Y轴标签字体大小. Defaults to 10.
-        y_tick_fontsize (Num, optional): 
+        y_tick_fontsize (Num, optional):
             Y轴刻度字体大小. Defaults to 8.
-        y_tick_rotation (Num, optional): 
+        y_tick_rotation (Num, optional):
             Y轴刻度旋转角度. Defaults to 0.
-        statistic (bool, optional): 
+        statistic (bool, optional):
             是否进行统计显著性分析. Defaults to False.
-        test_method (list[str], optional): 
+        test_method (list[str], optional):
             统计检验方法列表. Defaults to ["ttest_ind"].
-        popmean (Num, optional): 
+        popmean (Num, optional):
             单样本t检验的假设均值. Defaults to 0.
-        p_list (list[float] | None, optional): 
+        p_list (list[float] | None, optional):
             预计算的p值列表，用于显著性标记. Defaults to None.
-        statistical_line_color (str, optional): 
+        statistical_line_color (str, optional):
             显著性标记线的颜色. Defaults to "0.5".
-        asterisk_fontsize (Num, optional): 
+        asterisk_fontsize (Num, optional):
             显著性星号的字体大小. Defaults to 10.
-        asterisk_color (str, optional): 
+        asterisk_color (str, optional):
             显著性星号的颜色. Defaults to "k".
-        y_lim (list[Num] | tuple[Num, Num] | None, optional): 
+        y_lim (list[Num] | tuple[Num, Num] | None, optional):
             Y轴的范围限制. Defaults to None.
-        ax_bottom_is_0 (bool, optional): 
+        ax_bottom_is_0 (bool, optional):
             Y轴是否从0开始. Defaults to False.
-        y_max_tick_is_1 (bool, optional): 
+        y_max_tick_is_1 (bool, optional):
             Y轴最大刻度是否限制为1. Defaults to False.
-        math_text (bool, optional): 
+        math_text (bool, optional):
             是否将Y轴显示为科学计数法格式. Defaults to True.
-        one_decimal_place (bool, optional): 
+        one_decimal_place (bool, optional):
             Y轴刻度是否只保留一位小数. Defaults to False.
-        percentage (bool, optional): 
+        percentage (bool, optional):
             是否将Y轴显示为百分比格式. Defaults to False.
 
     Raises:
@@ -866,77 +866,77 @@ def plot_multi_group_bar_figure(
     """绘制多组柱状图，包含散点、误差条、显著性标注和图例等。
 
     Args:
-        data (DataType): 
+        data (DataType):
             输入数据，可以是三维numpy数组、二维numpy数组列表或嵌套序列
-        ax (Axes | None, optional): 
+        ax (Axes | None, optional):
             matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
-        group_labels (list[str] | None, optional): 
+        group_labels (list[str] | None, optional):
             组标签名称列表. Defaults to None.
-        bar_labels (list[str] | None, optional): 
+        bar_labels (list[str] | None, optional):
             柱状图标签名称列表. Defaults to None.
-        bar_width (Num, optional): 
+        bar_width (Num, optional):
             柱状图的宽度. Defaults to 0.2.
-        bar_gap (Num, optional): 
+        bar_gap (Num, optional):
             柱状图之间的间隔. Defaults to 0.1.
-        bar_color (list[str] | None, optional): 
+        bar_color (list[str] | None, optional):
             柱状图的颜色列表. Defaults to None.
-        errorbar_type (str, optional): 
+        errorbar_type (str, optional):
             误差条类型，可选 "sd"(标准差) 或 "se"(标准误). Defaults to "sd".
-        dots_color (str, optional): 
+        dots_color (str, optional):
             散点的颜色. Defaults to "gray".
-        dots_size (int, optional): 
+        dots_size (int, optional):
             散点的大小. Defaults to 35.
-        legend (bool, optional): 
+        legend (bool, optional):
             是否显示图例. Defaults to True.
-        legend_position (tuple[Num, Num], optional): 
+        legend_position (tuple[Num, Num], optional):
             图例位置坐标. Defaults to (1.2, 1).
-        title_name (str, optional): 
+        title_name (str, optional):
             图表标题. Defaults to "".
-        title_fontsize (int, optional): 
+        title_fontsize (int, optional):
             标题字体大小. Defaults to 12.
-        title_pad (int, optional): 
+        title_pad (int, optional):
             标题与图表的间距. Defaults to 10.
-        x_label_name (str, optional): 
+        x_label_name (str, optional):
             X轴标签名称. Defaults to "".
-        x_label_ha (str, optional): 
+        x_label_ha (str, optional):
             X轴标签的水平对齐方式. Defaults to "center".
-        x_label_fontsize (int, optional): 
+        x_label_fontsize (int, optional):
             X轴标签字体大小. Defaults to 10.
-        x_tick_fontsize (int, optional): 
+        x_tick_fontsize (int, optional):
             X轴刻度字体大小. Defaults to 8.
-        x_tick_rotation (int, optional): 
+        x_tick_rotation (int, optional):
             X轴刻度旋转角度. Defaults to 0.
-        y_label_name (str, optional): 
+        y_label_name (str, optional):
             Y轴标签名称. Defaults to "".
-        y_label_fontsize (int, optional): 
+        y_label_fontsize (int, optional):
             Y轴标签字体大小. Defaults to 10.
-        y_tick_fontsize (int, optional): 
+        y_tick_fontsize (int, optional):
             Y轴刻度字体大小. Defaults to 8.
-        y_tick_rotation (int, optional): 
+        y_tick_rotation (int, optional):
             Y轴刻度旋转角度. Defaults to 0.
-        statistic (bool, optional): 
+        statistic (bool, optional):
             是否进行统计显著性分析. Defaults to False.
-        test_method (str, optional): 
+        test_method (str, optional):
             统计检验方法，目前仅支持"external". Defaults to "external".
-        p_list (list[list[Num]] | None, optional): 
+        p_list (list[list[Num]] | None, optional):
             预计算的p值列表，用于显著性标记. Defaults to None.
-        line_color (str, optional): 
+        line_color (str, optional):
             显著性标记线的颜色. Defaults to "0.5".
-        asterisk_fontsize (int, optional): 
+        asterisk_fontsize (int, optional):
             显著性星号的字体大小. Defaults to 10.
-        asterisk_color (str, optional): 
+        asterisk_color (str, optional):
             显著性星号的颜色. Defaults to "k".
-        y_lim (list[Num] | tuple[Num, Num] | None, optional): 
+        y_lim (list[Num] | tuple[Num, Num] | None, optional):
             Y轴的范围限制. Defaults to None.
-        ax_bottom_is_0 (bool, optional): 
+        ax_bottom_is_0 (bool, optional):
             Y轴是否从0开始. Defaults to False.
-        y_max_tick_is_1 (bool, optional): 
+        y_max_tick_is_1 (bool, optional):
             Y轴最大刻度是否限制为1. Defaults to False.
-        math_text (bool, optional): 
+        math_text (bool, optional):
             是否将Y轴显示为科学计数法格式. Defaults to True.
-        one_decimal_place (bool, optional): 
+        one_decimal_place (bool, optional):
             Y轴刻度是否只保留一位小数. Defaults to False.
-        percentage (bool, optional): 
+        percentage (bool, optional):
             是否将Y轴显示为百分比格式. Defaults to False.
 
     Raises:
@@ -946,8 +946,9 @@ def plot_multi_group_bar_figure(
     Returns:
         Axes: 返回matplotlib的坐标轴对象
     """
+
     def _is_valid_data_for_multi_group(data):
-        if not data:
+        if not data.any():
             raise ValueError("data 不能为空")
         NumberTypes = (int, float, np.integer, np.floating)
         # 1) 3D ndarray
@@ -973,6 +974,7 @@ def plot_multi_group_bar_figure(
                 else:
                     return False
         return True
+
     if not _is_valid_data_for_multi_group(data):
         raise ValueError("无效的 data")
 
