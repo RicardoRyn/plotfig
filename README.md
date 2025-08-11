@@ -51,13 +51,15 @@ pip install .
 
 `plotfig` 依赖若干核心库，这些依赖将在安装过程中自动处理：
 
-- [matplotlib](https://matplotlib.org/) ≥ 3.10.
-- [mne-connectivity](https://mne.tools/mne-connectivity/stable/index.html) ≥ 0.7.
-- [nibabel](https://nipy.org/nibabel/) ≥ 5.3.
+- [matplotlib](https://matplotlib.org/) ≥ 3.10.1
+- [mne-connectivity](https://mne.tools/mne-connectivity/stable/index.html) ≥ 0.7.0
+- [nibabel](https://nipy.org/nibabel/) ≥ 5.3.2
 - [numpy](https://numpy.org/) ≥ 2.2.4
-- [pandas](https://pandas.pydata.org/) ≥ 2.2.
-- [plotly](https://plotly.com/) ≥ 6.0.1
-- [scipy](https://scipy.org/) ≥ 1.15.
+- [pandas](https://pandas.pydata.org/) ≥ 2.2.3
+- [plotly](https://plotly.com/) ≥ 6.1.1
+- [kaleido](https://github.com/plotly/Kaleido) ≥ 1.0.0
+- [scipy](https://scipy.org/) ≥ 1.15.2
+- [loguru](https://loguru.readthedocs.io/en/stable/) ≥ 0.7.3
 - [surfplot](https://github.com/danjgale/surfplot) 需使用其 GitHub 仓库中的最新版，而非 PyPI 上的版本，因后者尚未包含所需功能。
 
 > ⚠️ **指定 `surfplot` 版本**

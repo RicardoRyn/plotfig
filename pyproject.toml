@@ -9,12 +9,14 @@ authors = [
     { name = "Ricardo Ryn", email = "ricardoRyn1317@gmail.com" }
 ]
 dependencies = [
+    "kaleido>=1.0.0",
+    "loguru>=0.7.3",
     "matplotlib>=3.10.1",
     "mne-connectivity>=0.7.0",
     "nibabel>=5.3.2",
     "numpy>=2.2.4",
     "pandas>=2.2.3",
-    "plotly>=6.0.1",
+    "plotly>=6.1.1",
     "scipy>=1.15.2",
     "surfplot",
 ]

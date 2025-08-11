@@ -1,26 +1,29 @@
 import warnings
-from typing import Any
+from typing import Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
-import numpy.typing as npt
+from numpy.typing import NDArray
 from matplotlib.axes import Axes
-from matplotlib.ticker import FuncFormatter, ScalarFormatter
+from matplotlib.ticker import FuncFormatter, ScalarFormatter, FormatStrFormatter
 from matplotlib.colors import LinearSegmentedColormap, to_rgba
-from matplotlib.patches import Polygon
+from matplotlib.patches import Polygon, Rectangle
 from scipy import stats
 
 # 设置警告过滤器，显示所有警告
 warnings.simplefilter("always")
 
 # 类型别名
-Num = int | float  # 可同时接受int和float的类型
-NumArray = list[Num] | npt.NDArray[np.float64]  # 数字数组类型
+Num = int | float | np.integer | np.floating
+DataType = (
+    np.ndarray  # 三维 ndarray
+    | Sequence[np.ndarray]  # list[二维 ndarray]
+    | Sequence[Sequence[Sequence[Num] | np.ndarray]]  # 纯 list 嵌套数字
+)
 
 __all__ = [
     "plot_one_group_bar_figure",
     "plot_one_group_violin_figure",
-    "plot_one_group_violin_figure_old",
     "plot_multi_group_bar_figure",
 ]
 
@@ -28,7 +31,24 @@ __all__ = [
 RNG = np.random.default_rng(seed=1998)
 
 
-def compute_summary(data: NumArray) -> tuple[float, float, float]:
+def _is_valid_data(data):
+    if isinstance(data, np.ndarray):
+        return data.ndim == 2
+    if isinstance(data, (list, tuple)):
+        for x in data:
+            if isinstance(x, np.ndarray):
+                if x.ndim != 1:
+                    return False
+            elif isinstance(x, (list, tuple)):
+                if not all(isinstance(i, (int, float, np.floating)) for i in x):
+                    return False
+            else:
+                return False
+        return True
+    return False
+
+
+def _compute_summary(data):
     """计算均值、标准差、标准误"""
     mean = np.mean(data)
     sd = np.std(data, ddof=1)
@@ -36,13 +56,13 @@ def compute_summary(data: NumArray) -> tuple[float, float, float]:
     return mean, sd, se
 
 
-def add_scatter(
-    ax: Axes,
-    x_pos: Num,
-    data: NumArray,
-    color: str,
-    dots_size: Num = 35,
-) -> None:
+def _add_scatter(
+    ax,
+    x_pos,
+    data,
+    color,
+    dots_size,
+):
     """添加散点"""
     ax.scatter(
         x_pos,
@@ -55,51 +75,47 @@ def add_scatter(
     )
 
 
-def set_yaxis(
-    ax: Axes,
-    data: NumArray,
-    options: dict[str, Any] | None,
-) -> None:
+def _set_yaxis(
+    ax,
+    data,
+    y_lim,
+    ax_bottom_is_0,
+    y_max_tick_is_1,
+    math_text,
+    one_decimal_place,
+    percentage,
+):
     """设置Y轴格式"""
-    if options.get("y_lim"):
-        ax.set_ylim(*options["y_lim"])
+    if y_lim:
+        ax.set_ylim(y_lim)
     else:
         y_min, y_max = np.min(data), np.max(data)
         y_range = y_max - y_min
         golden_ratio = 5**0.5 - 1
-        ax_min = (
-            0
-            if options.get("ax_bottom_is_0")
-            else y_min - (y_range / golden_ratio - y_range / 2)
-        )
+        ax_min = 0 if ax_bottom_is_0 else y_min - (y_range / golden_ratio - y_range / 2)
         ax_max = y_max + (y_range / golden_ratio - y_range / 2)
         ax.set_ylim(ax_min, ax_max)
 
-    if options.get("y_max_tick_is_1"):
-        ticks = [
-            tick
-            for tick in ax.get_yticks()
-            if tick <= options.get("y_max_tick_is_1", 1)
-        ]
+    if y_max_tick_is_1:
+        ticks = [tick for tick in ax.get_yticks() if tick <= 1]
         ax.set_yticks(ticks)
 
-    if options.get("math_text", True) and (np.min(data) < 0.1 or np.max(data) > 100):
+    if math_text and (np.min(data) < 0.1 or np.max(data) > 100):
         formatter = ScalarFormatter(useMathText=True)
         formatter.set_powerlimits((-2, 2))
         ax.yaxis.set_major_formatter(formatter)
 
-    if options.get("one_decimal_place"):
-        if options.get("math_text", True):
+    if one_decimal_place:
+        if math_text:
             warnings.warn(
                 "“one_decimal_place”会与“math_text”冲突，请关闭“math_text”后再开启！",
                 UserWarning,
-                stacklevel=2,
             )
         else:
-            ax.yaxis.set_major_formatter(plt.FormatStrFormatter("%.1f"))
+            ax.yaxis.set_major_formatter(FormatStrFormatter("%.1f"))
 
-    if options.get("percentage"):
-        if options.get("math_text", True):
+    if percentage:
+        if math_text:
             warnings.warn(
                 "“percentage”会与“math_text”冲突，请关闭“math_text”后再开启！",
                 UserWarning,
@@ -110,12 +126,12 @@ def set_yaxis(
 
 
 # 统计相关
-def perform_stat_test(
-    data1: NumArray | None = None,
-    data2: NumArray | None = None,
-    popmean: NumArray | None = None,
-    method: str = "ttest_ind",
-) -> tuple[float, float]:
+def _perform_stat_test(
+    data1=None,
+    data2=None,
+    popmean=None,
+    method="ttest_ind",
+):
     """执行统计检验"""
     # 使用字典映射替代多个elif分支，提高可读性和可扩展性
     test_methods = {
@@ -134,39 +150,41 @@ def perform_stat_test(
     return stat, p
 
 
-def determine_test_modle(data, method, p_list=None, popmean=0):
+def _determine_test_modle(data, method, p_list=None, popmean=0):
     comparisons = []
     idx = 0
     if method != "ttest_1samp":
         for i in range(len(data)):
             for j in range(i + 1, len(data)):
                 if method == "external":
+                    if p_list is None:
+                        raise ValueError("p_list参数不能为空")
                     p = p_list[idx]
                     idx += 1
                 else:
-                    _, p = perform_stat_test(
+                    _, p = _perform_stat_test(
                         data1=data[i], data2=data[j], method=method
                     )
                 if p <= 0.05:
                     comparisons.append((i, j, p))
     else:
         for i in range(len(data)):
-            _, p = perform_stat_test(data1=data[i], popmean=popmean, method=method)
+            _, p = _perform_stat_test(data1=data[i], popmean=popmean, method=method)
             if p <= 0.05:
                 comparisons.append((i, p))
     return comparisons
 
 
-def annotate_significance(
-    ax: Axes,
-    comparisons: list[tuple[int, int, float]],
-    y_base: Num,
-    interval: Num,
-    line_color: str,
-    star_offset: Num,
-    fontsize: Num,
-    color: str,
-) -> None:
+def _annotate_significance(
+    ax,
+    comparisons,
+    y_base,
+    interval,
+    line_color,
+    star_offset,
+    fontsize,
+    color,
+):
     """添加显著性星号和连线"""
 
     def _stars(pval, i, y, color, fontsize):
@@ -199,7 +217,7 @@ def annotate_significance(
             _stars(pval, i, y + star_offset, color, fontsize)
 
 
-def statistics(
+def _statistics(
     data,
     test_method,
     p_list,
@@ -219,7 +237,7 @@ def statistics(
             )
 
         for method in test_method:
-            comparisons = determine_test_modle(data, method, p_list, popmean)
+            comparisons = _determine_test_modle(data, method, p_list, popmean)
             if not comparisons:
                 return
 
@@ -232,7 +250,7 @@ def statistics(
                 else asterisk_color
             )
 
-            annotate_significance(
+            _annotate_significance(
                 ax,
                 comparisons,
                 np.max(all_values),
@@ -248,13 +266,13 @@ def statistics(
             DeprecationWarning,
             stacklevel=1,
         )
-        comparisons = determine_test_modle(data, test_method, p_list, popmean)
+        comparisons = _determine_test_modle(data, test_method, p_list, popmean)
         if not comparisons:
             return
 
         y_max = ax.get_ylim()[1]
         interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
-        annotate_significance(
+        _annotate_significance(
             ax,
             comparisons,
             np.max(all_values),
@@ -267,87 +285,171 @@ def statistics(
 
 
 # 可调用接口函数
+# TODO: 增加不显示散点的flag
 def plot_one_group_bar_figure(
-    data: list[NumArray],
+    data: np.ndarray | Sequence[Sequence[Num] | np.ndarray],
     ax: Axes | None = None,
     labels_name: list[str] | None = None,
-    width: Num = 0.5,
     colors: list[str] | None = None,
-    color_alpha: Num = 1,
     edgecolor: str | None = None,
     gradient_color: bool = False,
-    colors_start=None,
-    colors_end=None,
-    dots_size: Num = 35,
+    colors_start: list[str] | None = None,
+    colors_end: list[str] | None = None,
     dots_color: list[list[str]] | None = None,
-    title_name: str = "",
-    x_label_name: str = "",
-    y_label_name: str = "",
+    y_lim: list[Num] | tuple[Num, Num] | None = None,
+    width: Num = 0.5,
+    color_alpha: Num = 1,
+    dots_size: Num = 35,
     errorbar_type: str = "sd",
+    title_name: str = "",
+    title_fontsize: Num = 12,
+    title_pad: Num = 10,
+    x_label_name: str = "",
+    x_label_ha: str = "center",
+    x_label_fontsize: Num = 10,
+    x_tick_fontsize: Num = 8,
+    x_tick_rotation: Num = 0,
+    y_label_name: str = "",
+    y_label_fontsize: Num = 10,
+    y_tick_fontsize: Num = 8,
+    y_tick_rotation: Num = 0,
     statistic: bool = False,
-    test_method: str = "ttest_ind",
-    popmean: Num = 0,
+    test_method: list[str] = ["ttest_ind"],
     p_list: list[float] | None = None,
+    popmean: Num = 0,
     statistical_line_color: str = "0.5",
     asterisk_fontsize: Num = 10,
     asterisk_color: str = "k",
-    **kwargs: Any,
-) -> None:
+    ax_bottom_is_0: bool = False,
+    y_max_tick_is_1: bool = False,
+    math_text: bool = True,
+    one_decimal_place: bool = False,
+    percentage: bool = False,
+) -> Axes | None:
     """绘制单组柱状图，包含散点、误差条和统计显著性标记。
 
     Args:
-        data (list[NumArray]): 包含多个数据集的列表，每个数据集是一个数字数组。
-        ax (Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前 Axes。
-        labels_name (list[str] | None, optional): 每个数据集对应的标签。默认为 None，使用索引作为标签。
-        width (Num, optional): 柱子的宽度。默认为 0.5。
-        colors (list[str] | None, optional): 每个柱子的颜色列表。若为 None，使用默认灰色。
-        color_alpha (Num, optional): 颜色透明度，取值范围为 0（完全透明）到 1（完全不透明）。使用 gradient_color 时该参数无效。默认为 1。
-        edgecolor (str | None, optional): 柱子的边缘颜色。默认为 None，即不特别设置。
-        gradient_color (bool, optional): 是否为柱子启用渐变色填充。默认为 False。
-        colors_start (list[str] | None, optional): 渐变色的起始颜色列表。用于 gradient_color=True。
-        colors_end (list[str] | None, optional): 渐变色的结束颜色列表。用于 gradient_color=True。
-        dots_size (Num, optional): 每个散点的大小。默认为 35。
-        dots_color (list[list[str]] | None, optional): 每组数据中每个散点的颜色（二维列表）。默认为 None，使用灰色。
-        title_name (str, optional): 图表的标题文字。默认为空字符串。
-        x_label_name (str, optional): X 轴的标签。默认为空字符串。
-        y_label_name (str, optional): Y 轴的标签。默认为空字符串。
-        errorbar_type (str, optional): 误差条类型。支持 "sd"（标准差）或 "se"（标准误）。默认为 "sd"。
-        statistic (bool, optional): 是否进行统计检验并在柱状图上标记显著性。默认为 False。
-        test_method (str, optional): 统计检验方法。支持 "ttest_ind"、"ttest_rel"、"ttest_1samp"、"mannwhitneyu" 或 "external"。默认为 "ttest_ind"。
-        popmean (Num): 总体均值假设值，用于单样本t检验(ttest_1samp)。默认为 0。
-        p_list (list[float] | None, optional): 提供的 p 值列表，用于 "external" 检验。默认为None。
-        statistical_line_color (str, optional): 统计显著性标记连线的颜色。默认为 "0.5"（灰色）。
-        asterisk_fontsize (Num, optional): 显著性星号的字体大小。默认为 10。
-        asterisk_color (str, optional): 显著性星号的颜色。默认为 "k"（黑色）。
-        **kwargs (Any): 其他 matplotlib 参数，用于进一步定制图表样式。
+        data (np.ndarray | Sequence[Sequence[Num] | np.ndarray]):
+            输入数据，可以是二维numpy数组或嵌套序列，每个子序列代表一个柱状图的数据点
+        ax (Axes | None, optional):
+            matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
+        labels_name (list[str] | None, optional):
+            柱状图的标签名称列表. Defaults to None.
+        colors (list[str] | None, optional):
+            柱状图的颜色列表. Defaults to None.
+        edgecolor (str | None, optional):
+            柱状图边缘颜色. Defaults to None.
+        gradient_color (bool, optional):
+            是否使用渐变颜色填充柱状图. Defaults to False.
+        colors_start (list[str] | None, optional):
+            渐变色的起始颜色列表. Defaults to None.
+        colors_end (list[str] | None, optional):
+            渐变色的结束颜色列表. Defaults to None.
+        dots_color (list[list[str]] | None, optional):
+            散点的颜色列表. Defaults to None.
+        y_lim (list[Num] | tuple[Num, Num] | None, optional):
+            Y轴的范围限制. Defaults to None.
+        width (Num, optional):
+            柱状图的宽度. Defaults to 0.5.
+        color_alpha (Num, optional):
+            柱状图颜色的透明度. Defaults to 1.
+        dots_size (Num, optional):
+            散点的大小. Defaults to 35.
+        errorbar_type (str, optional):
+            误差条类型，可选 "sd"(标准差) 或 "se"(标准误). Defaults to "sd".
+        title_name (str, optional):
+            图表标题. Defaults to "".
+        title_fontsize (Num, optional):
+            标题字体大小. Defaults to 12.
+        title_pad (Num, optional):
+            标题与图表的间距. Defaults to 10.
+        x_label_name (str, optional):
+            X轴标签名称. Defaults to "".
+        x_label_ha (str, optional):
+            X轴标签的水平对齐方式. Defaults to "center".
+        x_label_fontsize (Num, optional):
+            X轴标签字体大小. Defaults to 10.
+        x_tick_fontsize (Num, optional):
+            X轴刻度字体大小. Defaults to 8.
+        x_tick_rotation (Num, optional):
+            X轴刻度旋转角度. Defaults to 0.
+        y_label_name (str, optional):
+            Y轴标签名称. Defaults to "".
+        y_label_fontsize (Num, optional):
+            Y轴标签字体大小. Defaults to 10.
+        y_tick_fontsize (Num, optional):
+            Y轴刻度字体大小. Defaults to 8.
+        y_tick_rotation (Num, optional):
+            Y轴刻度旋转角度. Defaults to 0.
+        statistic (bool, optional):
+            是否进行统计显著性分析. Defaults to False.
+        test_method (list[str], optional):
+            统计检验方法列表. Defaults to ["ttest_ind"].
+        p_list (list[float] | None, optional):
+            预计算的p值列表，用于显著性标记. Defaults to None.
+        popmean (Num, optional):
+            单样本t检验的假设均值. Defaults to 0.
+        statistical_line_color (str, optional):
+            显著性标记线的颜色. Defaults to "0.5".
+        asterisk_fontsize (Num, optional):
+            显著性星号的字体大小. Defaults to 10.
+        asterisk_color (str, optional):
+            显著性星号的颜色. Defaults to "k".
+        ax_bottom_is_0 (bool, optional):
+            Y轴是否从0开始. Defaults to False.
+        y_max_tick_is_1 (bool, optional):
+            Y轴最大刻度是否限制为1. Defaults to False.
+        math_text (bool, optional):
+            是否将Y轴显示为科学计数法格式. Defaults to True.
+        one_decimal_place (bool, optional):
+            Y轴刻度是否只保留一位小数. Defaults to False.
+        percentage (bool, optional):
+            是否将Y轴显示为百分比格式. Defaults to False.
+
+    Raises:
+        ValueError: 当data数据格式无效时抛出
+        ValueError: 当errorbar_type不是"sd"或"se"时抛出
 
     Returns:
-        None
+        Axes | None: 返回matplotlib的坐标轴对象或None
     """
+    # 处理None值
+    if not _is_valid_data(data):
+        raise ValueError("无效的 data")
+    ax = ax or plt.gca()
+    labels_name = labels_name or [str(i) for i in range(len(data))]
+    colors = colors or ["gray"] * len(data)
+    # 统一参数型
+    width = float(width)
+    color_alpha = float(color_alpha)
+    dots_size = float(dots_size)
+    title_fontsize = float(title_fontsize)
+    title_pad = float(title_pad)
+    x_label_fontsize = float(x_label_fontsize)
+    x_tick_fontsize = float(x_tick_fontsize)
+    x_tick_rotation = float(x_tick_rotation)
+    y_label_fontsize = float(y_label_fontsize)
+    y_tick_fontsize = float(y_tick_fontsize)
+    y_tick_rotation = float(y_tick_rotation)
+    popmean = float(popmean)
+    asterisk_fontsize = float(asterisk_fontsize)
 
-    if ax is None:
-        ax = plt.gca()
-    if labels_name is None:
-        labels_name = [str(i) for i in range(len(data))]
-    if colors is None:
-        colors = ["gray"] * len(data)
-
-    means, sds, ses = [], [], []
     x_positions = np.arange(len(labels_name))
+    means, sds, ses = [], [], []
     scatter_positions = []
-
     for i, d in enumerate(data):
-        mean, sd, se = compute_summary(d)
+        mean, sd, se = _compute_summary(d)
         means.append(mean)
         sds.append(sd)
         ses.append(se)
         scatter_x = RNG.normal(i, 0.1, len(d))
         scatter_positions.append(scatter_x)
-
     if errorbar_type == "sd":
         error_values = sds
     elif errorbar_type == "se":
         error_values = ses
+    else:
+        raise ValueError("errorbar_type 只能是 'sd' 或者 'se'")
 
     # 绘制柱子
     if gradient_color:
@@ -360,7 +462,7 @@ def plot_one_group_bar_figure(
             cmap = LinearSegmentedColormap.from_list("grad_cmap", [c1, "white", c2])
             gradient = np.linspace(0, 1, 100).reshape(1, -1)  # 横向渐变
             # 计算渐变矩形位置：跟bar完全对齐
-            extent = [x - width / 2, x + width / 2, 0, h]
+            extent = (float(x - width / 2), float(x + width / 2), 0, h)
             # 叠加渐变矩形（imshow）
             ax.imshow(gradient, aspect="auto", cmap=cmap, extent=extent, zorder=0)
     else:
@@ -386,41 +488,50 @@ def plot_one_group_bar_figure(
     # 绘制散点
     for i, d in enumerate(data):
         if dots_color is None:
-            add_scatter(ax, scatter_positions[i], d, ["gray"] * len(d), dots_size)
+            _add_scatter(ax, scatter_positions[i], d, ["gray"] * len(d), dots_size)
         else:
-            add_scatter(ax, scatter_positions[i], d, dots_color[i], dots_size)
+            _add_scatter(ax, scatter_positions[i], d, dots_color[i], dots_size)
 
     # 美化
     ax.spines[["top", "right"]].set_visible(False)
     ax.set_title(
         title_name,
-        fontsize=kwargs.get("title_fontsize", 10),
-        pad=kwargs.get("title_pad", 10),
+        fontsize=title_fontsize,
+        pad=float(title_pad),
     )
     # x轴
-    ax.set_xlim(min(x_positions) - 0.5, max(x_positions) + 0.5)
-    ax.set_xlabel(x_label_name, fontsize=kwargs.get("x_label_fontsize", 10))
+    ax.set_xlim(np.min(x_positions) - 0.5, np.max(x_positions) + 0.5)
+    ax.set_xlabel(x_label_name, fontsize=x_label_fontsize)
     ax.set_xticks(x_positions)
     ax.set_xticklabels(
         labels_name,
-        ha=kwargs.get("x_label_ha", "center"),
+        fontsize=x_tick_fontsize,
+        rotation=x_tick_rotation,
+        ha=x_label_ha,
         rotation_mode="anchor",
-        fontsize=kwargs.get("x_tick_fontsize", 10),
-        rotation=kwargs.get("x_tick_rotation", 0),
     )
     # y轴
     ax.tick_params(
         axis="y",
-        labelsize=kwargs.get("y_tick_fontsize", 10),
-        rotation=kwargs.get("y_tick_rotation", 0),
+        labelsize=y_tick_fontsize,
+        rotation=y_tick_rotation,
     )
-    ax.set_ylabel(y_label_name, fontsize=kwargs.get("y_label_fontsize", 10))
-    all_values = np.concatenate(data)
-    set_yaxis(ax, all_values, kwargs)
+    ax.set_ylabel(y_label_name, fontsize=y_label_fontsize)
+    all_values = np.concatenate([np.asarray(x) for x in data]).ravel()
+    _set_yaxis(
+        ax,
+        all_values,
+        y_lim=y_lim,
+        ax_bottom_is_0=ax_bottom_is_0,
+        y_max_tick_is_1=y_max_tick_is_1,
+        math_text=math_text,
+        one_decimal_place=one_decimal_place,
+        percentage=percentage,
+    )
 
     # 添加统计显著性标记
     if statistic:
-        statistics(
+        _statistics(
             data,
             test_method,
             p_list,
@@ -431,71 +542,151 @@ def plot_one_group_bar_figure(
             asterisk_fontsize,
             asterisk_color,
         )
+    return ax
 
 
 def plot_one_group_violin_figure(
-    data: list[NumArray],
+    data: Sequence[list[float] | NDArray[np.float64]],
     ax: Axes | None = None,
+    labels_name: list[str] | None = None,
     width: Num = 0.8,
     colors: list[str] | None = None,
     color_alpha: Num = 1,
     gradient_color: bool = False,
     colors_start: list[str] | None = None,
     colors_end: list[str] | None = None,
-    labels_name: list[str] | None = None,
-    x_label_name: str = "",
-    y_label_name: str = "",
-    title_name: str = "",
-    title_pad: Num = 10,
     show_dots: bool = False,
     dots_size: Num = 35,
+    title_name: str = "",
+    title_fontsize: Num = 12,
+    title_pad: Num = 10,
+    x_label_name: str = "",
+    x_label_ha: str = "center",
+    x_label_fontsize: Num = 10,
+    x_tick_fontsize: Num = 8,
+    x_tick_rotation: Num = 0,
+    y_label_name: str = "",
+    y_label_fontsize: Num = 10,
+    y_tick_fontsize: Num = 8,
+    y_tick_rotation: Num = 0,
     statistic: bool = False,
-    test_method: str = "ttest_ind",
+    test_method: list[str] = ["ttest_ind"],
     popmean: Num = 0,
     p_list: list[float] | None = None,
     statistical_line_color: str = "0.5",
     asterisk_fontsize: Num = 10,
     asterisk_color: str = "k",
-    **kwargs: Any,
-) -> None:
+    y_lim: list[Num] | tuple[Num, Num] | None = None,
+    ax_bottom_is_0: bool = False,
+    y_max_tick_is_1: bool = False,
+    math_text: bool = True,
+    one_decimal_place: bool = False,
+    percentage: bool = False,
+) -> Axes | None:
     """绘制单组小提琴图，可选散点叠加、渐变填色和统计显著性标注。
 
     Args:
-        data (list[NumArray]): 包含多个数据集的列表，每个数据集是一个数值数组。
-        ax (Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前 Axes。
-        width (Num, optional): 小提琴图的总宽度。默认为 0.8。
-        colors (list[str] | None, optional): 每个小提琴的颜色。若为 None，使用默认灰色。
-        color_alpha (Num, optional): 颜色透明度，取值范围为 0（完全透明）到 1（完全不透明）。使用 gradient_color 时该参数无效。默认为 1。
-        gradient_color (bool, optional): 是否启用渐变色填充。默认为 False。
-        colors_start (list[str] | None, optional): 渐变起始颜色列表，对应每组数据。
-        colors_end (list[str] | None, optional): 渐变结束颜色列表，对应每组数据。
-        labels_name (list[str] | None, optional): 每个数据集的标签名称。默认为 None，使用索引作为标签。
-        x_label_name (str, optional): X 轴的标签。默认为空字符串。
-        y_label_name (str, optional): Y 轴的标签。默认为空字符串。
-        title_name (str, optional): 图表标题。默认为空字符串。
-        title_pad (Num, optional): 标题与图之间的垂直距离。默认为 10。
-        show_dots (bool, optional): 是否在小提琴图上叠加散点。默认为 False。
-        dots_size (Num, optional): 散点大小。默认为 35。
-        statistic (bool, optional): 是否进行统计检验并标注显著性。默认为 False。
-        test_method (str, optional): 统计检验方法。支持 "ttest_ind"、"ttest_rel"、"mannwhitneyu" 或 "external"。默认为 "ttest_ind"。
-        popmean (Num): 总体均值假设值，用于单样本t检验(ttest_1samp)。默认为 0。
-        p_list (list[float] | None, optional): 外部提供的 p 值列表。默认为 None。
-        statistical_line_color (str, optional): 统计显著性标记连线的颜色。默认为 "0.5"（灰色）。
-        asterisk_fontsize (Num, optional): 显著性星号的字体大小。默认为 10。
-        asterisk_color (str, optional): 显著性星号的颜色。默认为 "k"（黑色）。
-        **kwargs (Any): 其他 matplotlib 参数，用于进一步定制图表样式。
+        data (Sequence[list[float] | NDArray[np.float64]]):
+            输入数据，可以是二维numpy数组或嵌套序列，每个子序列代表一个小提琴的数据点
+        ax (Axes | None, optional):
+            matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
+        labels_name (list[str] | None, optional):
+            小提琴图的标签名称列表. Defaults to None.
+        width (Num, optional):
+            小提琴图的宽度. Defaults to 0.8.
+        colors (list[str] | None, optional):
+            小提琴图的颜色列表. Defaults to None.
+        color_alpha (Num, optional):
+            小提琴图颜色的透明度. Defaults to 1.
+        gradient_color (bool, optional):
+            是否使用渐变颜色填充小提琴图. Defaults to False.
+        colors_start (list[str] | None, optional):
+            渐变色的起始颜色列表. Defaults to None.
+        colors_end (list[str] | None, optional):
+            渐变色的结束颜色列表. Defaults to None.
+        show_dots (bool, optional):
+            是否显示散点. Defaults to False.
+        dots_size (Num, optional):
+            散点的大小. Defaults to 35.
+        title_name (str, optional):
+            图表标题. Defaults to "".
+        title_fontsize (Num, optional):
+            标题字体大小. Defaults to 12.
+        title_pad (Num, optional):
+            标题与图表的间距. Defaults to 10.
+        x_label_name (str, optional):
+            X轴标签名称. Defaults to "".
+        x_label_ha (str, optional):
+            X轴标签的水平对齐方式. Defaults to "center".
+        x_label_fontsize (Num, optional):
+            X轴标签字体大小. Defaults to 10.
+        x_tick_fontsize (Num, optional):
+            X轴刻度字体大小. Defaults to 8.
+        x_tick_rotation (Num, optional):
+            X轴刻度旋转角度. Defaults to 0.
+        y_label_name (str, optional):
+            Y轴标签名称. Defaults to "".
+        y_label_fontsize (Num, optional):
+            Y轴标签字体大小. Defaults to 10.
+        y_tick_fontsize (Num, optional):
+            Y轴刻度字体大小. Defaults to 8.
+        y_tick_rotation (Num, optional):
+            Y轴刻度旋转角度. Defaults to 0.
+        statistic (bool, optional):
+            是否进行统计显著性分析. Defaults to False.
+        test_method (list[str], optional):
+            统计检验方法列表. Defaults to ["ttest_ind"].
+        popmean (Num, optional):
+            单样本t检验的假设均值. Defaults to 0.
+        p_list (list[float] | None, optional):
+            预计算的p值列表，用于显著性标记. Defaults to None.
+        statistical_line_color (str, optional):
+            显著性标记线的颜色. Defaults to "0.5".
+        asterisk_fontsize (Num, optional):
+            显著性星号的字体大小. Defaults to 10.
+        asterisk_color (str, optional):
+            显著性星号的颜色. Defaults to "k".
+        y_lim (list[Num] | tuple[Num, Num] | None, optional):
+            Y轴的范围限制. Defaults to None.
+        ax_bottom_is_0 (bool, optional):
+            Y轴是否从0开始. Defaults to False.
+        y_max_tick_is_1 (bool, optional):
+            Y轴最大刻度是否限制为1. Defaults to False.
+        math_text (bool, optional):
+            是否将Y轴显示为科学计数法格式. Defaults to True.
+        one_decimal_place (bool, optional):
+            Y轴刻度是否只保留一位小数. Defaults to False.
+        percentage (bool, optional):
+            是否将Y轴显示为百分比格式. Defaults to False.
+
+    Raises:
+        ValueError: 当data数据格式无效时抛出
 
     Returns:
-        None
+        Axes | None: 返回matplotlib的坐标轴对象或None
     """
-
+    # 处理None值
+    if not _is_valid_data(data):
+        raise ValueError("无效的 data")
     ax = ax or plt.gca()
     labels_name = labels_name or [str(i) for i in range(len(data))]
     colors = colors or ["gray"] * len(data)
+    # 统一参数型
+    width = float(width)
+    color_alpha = float(color_alpha)
+    dots_size = float(dots_size)
+    title_fontsize = float(title_fontsize)
+    title_pad = float(title_pad)
+    x_label_fontsize = float(x_label_fontsize)
+    x_tick_fontsize = float(x_tick_fontsize)
+    x_tick_rotation = float(x_tick_rotation)
+    y_label_fontsize = float(y_label_fontsize)
+    y_tick_fontsize = float(y_tick_fontsize)
+    y_tick_rotation = float(y_tick_rotation)
+    popmean = float(popmean)
+    asterisk_fontsize = float(asterisk_fontsize)
 
-    def _draw_gradient_violin(
-        ax, data, pos, width=width, c1="red", c2="blue", color_alpha=1
-    ):
+    def _draw_gradient_violin(ax, data, pos, width, c1, c2, color_alpha):
         # KDE估计
         kde = stats.gaussian_kde(data)
         buffer = (max(data) - min(data)) / 5
@@ -548,9 +739,9 @@ def plot_one_group_violin_figure(
         median = np.median(data)
         # 添加 IQR box（黑色矩形）
         ax.add_patch(
-            plt.Rectangle(
+            Rectangle(
                 (pos - width / 16, q1),  # 左下角坐标
-                width / 8,  # 宽度
+                float(width / 8),  # 宽度
                 q3 - q1,  # 高度
                 facecolor="black",
                 alpha=0.7,
@@ -563,13 +754,16 @@ def plot_one_group_violin_figure(
     ymax_lst, ymin_lst = [], []
     for i, d in enumerate(data):
         if gradient_color:
+            if colors_start is None:
+                colors_start = ["#e38a48"] * len(data)
+            if colors_end is None:  # 默认颜色
+                colors_end = ["#4573a5"] * len(data)
             c1 = colors_start[i]
             c2 = colors_end[i]
         else:
             c1 = c2 = colors[i]
-        ymax, ymin = _draw_gradient_violin(
-            ax, d, pos=i, c1=c1, c2=c2, color_alpha=color_alpha
-        )
+        ymax, ymin = _draw_gradient_violin(ax, d, i, width, c1, c2, color_alpha)
+
         ymax_lst.append(ymax)
         ymin_lst.append(ymin)
     ymax = max(ymax_lst)
@@ -579,33 +773,44 @@ def plot_one_group_violin_figure(
     if show_dots:
         scatter_positions = [RNG.normal(i, 0.1, len(d)) for i, d in enumerate(data)]
         for i, d in enumerate(data):
-            add_scatter(ax, scatter_positions[i], d, colors[i], dots_size)
+            _add_scatter(ax, scatter_positions[i], d, colors[i], dots_size)
 
     # 美化
-    ax.set_title(title_name, fontsize=kwargs.get("title_fontsize", 10), pad=title_pad)
     ax.spines[["top", "right"]].set_visible(False)
+    ax.set_title(title_name, fontsize=title_fontsize, pad=title_pad)
     # x轴
     ax.set_xlim(-0.5, len(data) - 0.5)
-    ax.set_xlabel(x_label_name, fontsize=kwargs.get("x_label_fontsize", 10))
+    ax.set_xlabel(x_label_name, fontsize=x_label_fontsize)
     ax.set_xticks(np.arange(len(data)))
     ax.set_xticklabels(
         labels_name,
-        fontsize=kwargs.get("x_tick_fontsize", 10),
-        rotation=kwargs.get("x_tick_rotation", 0),
+        fontsize=x_tick_fontsize,
+        rotation=x_tick_rotation,
+        ha=x_label_ha,
+        rotation_mode="anchor",
     )
     # y轴
     ax.tick_params(
         axis="y",
-        labelsize=kwargs.get("y_tick_fontsize", 10),
-        rotation=kwargs.get("y_tick_rotation", 0),
+        labelsize=y_tick_fontsize,
+        rotation=y_tick_rotation,
     )
-    ax.set_ylabel(y_label_name, fontsize=kwargs.get("y_label_fontsize", 10))
+    ax.set_ylabel(y_label_name, fontsize=y_label_fontsize)
     all_values = [ymin, ymax]
-    set_yaxis(ax, all_values, kwargs)
+    _set_yaxis(
+        ax,
+        all_values,
+        y_lim=y_lim,
+        ax_bottom_is_0=ax_bottom_is_0,
+        y_max_tick_is_1=y_max_tick_is_1,
+        math_text=math_text,
+        one_decimal_place=one_decimal_place,
+        percentage=percentage,
+    )
 
     # 添加统计标记（复用现有函数）
     if statistic:
-        statistics(
+        _statistics(
             data,
             test_method,
             p_list,
@@ -617,152 +822,12 @@ def plot_one_group_violin_figure(
             asterisk_color,
         )
 
-    return
-
-
-def plot_one_group_violin_figure_old(
-    data: list[NumArray],
-    ax: Axes | None = None,
-    width: Num = 0.8,
-    show_extrema: bool = True,
-    colors: list[str] | None = None,
-    labels_name: list[str] | None = None,
-    x_label_name: str = "",
-    y_label_name: str = "",
-    title_name: str = "",
-    title_pad: Num = 10,
-    show_dots: bool = False,
-    dots_size: Num = 35,
-    statistic: bool = False,
-    test_method: str = "ttest_ind",
-    p_list: list[float] | None = None,
-    **kwargs: Any,
-) -> None:
-    warnings.warn(
-        "plot_one_group_violin_figure_old 即将弃用，请使用 plot_one_group_violin_figure 替代。未来版本将移除本函数。",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    """绘制单组小提琴图，包含散点和统计显著性标记。
-
-    Args:
-        data (list[NumArray]): 包含多个数据集的列表，每个数据集是一个数字数组。
-        ax (Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前的 Axes。
-        width (Num, optional): 小提琴图的宽度。默认为 0.8。
-        show_extrema (bool, optional): 是否显示极值线。默认为 True。
-        colors (list[str] | None, optional): 每个小提琴图的颜色。默认为 None，使用灰色。
-        labels_name (list[str] | None, optional): 每个数据集的标签名称。默认为 None，使用索引作为标签。
-        x_label_name (str, optional): X 轴的标签。默认为空字符串。
-        y_label_name (str, optional): Y 轴的标签。默认为空字符串。
-        title_name (str, optional): 图表的标题。默认为空字符串。
-        title_pad (Num, optional): 标题与图之间的垂直距离。默认为 10。
-        show_dots (bool, optional): 是否显示散点。默认为 False。
-        dots_size (Num, optional): 散点的大小。默认为 35。
-        statistic (bool, optional): 是否进行统计检验并标注显著性标记。默认为 False。
-        test_method (str, optional): 统计检验的方法，支持 "ttest_ind"、"ttest_rel" 和 "mannwhitneyu"。默认为 "ttest_ind"。
-        p_list (list[float] | None, optional): 外部提供的 p 值列表，用于统计检验。默认为 None。
-        **kwargs (Any): 其他可选参数，用于进一步定制图表样式。
-
-    Returns:
-        None
-    """
-
-    ax = ax or plt.gca()
-    labels_name = labels_name or [str(i) for i in range(len(data))]
-    colors = colors or ["gray"] * len(data)
-
-    # 绘制小提琴图
-    parts = ax.violinplot(
-        dataset=list(data),
-        positions=np.arange(len(data)),
-        widths=width,
-        showextrema=show_extrema,
-    )
-    # 添加 box 元素
-    for i, d in enumerate(data):
-        # 计算统计量
-        q1 = np.percentile(d, 25)
-        q3 = np.percentile(d, 75)
-        median = np.median(d)
-        # 添加 IQR box（黑色矩形）
-        ax.add_patch(
-            plt.Rectangle(
-                (i - width / 16, q1),  # 左下角坐标
-                width / 8,  # 宽度
-                q3 - q1,  # 高度
-                facecolor="black",
-                alpha=0.7,
-            )
-        )
-        # 添加白色中位数点
-        ax.plot(i, median, "o", color="white", markersize=3, zorder=3)
-
-    # 设置小提琴颜色（修改默认样式）
-    for pc, color in zip(parts["bodies"], colors):
-        pc.set_facecolor(color)
-        pc.set_edgecolor("black")
-        pc.set_alpha(1)
-
-    # 修改内部线条颜色
-    if show_extrema:
-        parts["cmins"].set_color("black")  # 最小值线
-        parts["cmaxes"].set_color("black")  # 最大值线
-        parts["cbars"].set_color("black")  # 中线（median）
-
-    # 绘制散点（复用现有函数）
-    if show_dots:
-        scatter_positions = [RNG.normal(i, 0.1, len(d)) for i, d in enumerate(data)]
-        for i, d in enumerate(data):
-            add_scatter(ax, scatter_positions[i], d, colors[i], dots_size)
-
-    # 美化坐标轴（复用现有函数）
-    ax.spines[["top", "right"]].set_visible(False)
-    ax.set_title(title_name, fontsize=kwargs.get("title_fontsize", 10), pad=title_pad)
-    ax.set_xlabel(x_label_name, fontsize=kwargs.get("x_label_fontsize", 10))
-    ax.set_ylabel(y_label_name, fontsize=kwargs.get("y_label_fontsize", 10))
-    ax.set_xticks(np.arange(len(data)))
-    ax.set_xticklabels(
-        labels_name,
-        fontsize=kwargs.get("x_tick_fontsize", 10),
-        rotation=kwargs.get("x_tick_rotation", 0),
-    )
-
-    # 设置Y轴（复用现有函数）
-    all_values = np.concatenate(data)
-    set_yaxis(ax, all_values, kwargs)
-
-    # 添加统计标记（复用现有函数）
-    if statistic:
-        comparisons = []
-        idx = 0
-        for i in range(len(data)):
-            for j in range(i + 1, len(data)):
-                if test_method == "external":
-                    p = p_list[idx] if p_list else 1.0
-                    idx += 1
-                else:
-                    _, p = perform_stat_test(data[i], data[j], test_method)
-                if p <= 0.05:
-                    comparisons.append((i, j, p))
-
-        if comparisons:
-            y_max = ax.get_ylim()[1]
-            interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
-            annotate_significance(
-                ax,
-                comparisons,
-                np.max(all_values),
-                interval,
-                line_color=kwargs.get("line_color", "0.5"),
-                star_offset=interval / 5,
-                fontsize=kwargs.get("asterisk_fontsize", 10),
-                color=kwargs.get("asterisk_color", "k"),
-            )
+    return ax
 
 
 def plot_multi_group_bar_figure(
-    data: list[list[NumArray]],
-    ax: plt.Axes | None = None,
+    data: DataType,
+    ax: Axes | None = None,
     group_labels: list[str] | None = None,
     bar_labels: list[str] | None = None,
     bar_width: Num = 0.2,
@@ -771,45 +836,148 @@ def plot_multi_group_bar_figure(
     errorbar_type: str = "sd",
     dots_color: str = "gray",
     dots_size: int = 35,
+    legend: bool = True,
+    legend_position: tuple[Num, Num] = (1.2, 1),
     title_name: str = "",
+    title_fontsize=12,
+    title_pad=10,
     x_label_name: str = "",
+    x_label_ha="center",
+    x_label_fontsize=10,
+    x_tick_fontsize=8,
+    x_tick_rotation=0,
     y_label_name: str = "",
+    y_label_fontsize=10,
+    y_tick_fontsize=8,
+    y_tick_rotation=0,
     statistic: bool = False,
     test_method: str = "external",
     p_list: list[list[Num]] | None = None,
-    legend: bool = True,
-    legend_position: tuple[Num, Num] = (1.2, 1),
-    **kwargs: Any,
-) -> None:
-    """
-    绘制多组柱状图，包含散点、误差条、显著性标注和图例等。
+    line_color="0.5",
+    asterisk_fontsize=10,
+    asterisk_color="k",
+    y_lim: list[Num] | tuple[Num, Num] | None = None,
+    ax_bottom_is_0: bool = False,
+    y_max_tick_is_1: bool = False,
+    math_text: bool = True,
+    one_decimal_place: bool = False,
+    percentage: bool = False,
+) -> Axes:
+    """绘制多组柱状图，包含散点、误差条、显著性标注和图例等。
 
     Args:
-        data (list[list[NumArray]]): 多组数据，每组是一个包含若干数值数组的列表。
-        ax (plt.Axes | None, optional): matplotlib 的 Axes 对象。默认为 None，自动使用当前的 Axes。
-        group_labels (list[str] | None, optional): 每组的标签名。默认为 None，使用 "Group i"。
-        bar_labels (list[str] | None, optional): 每组内每个柱子的标签。默认为 None，使用 "Bar i"。
-        bar_width (Num, optional): 单个柱子的宽度。默认为 0.2。
-        bar_gap (Num, optional): 每组柱子之间的间距。默认为 0.1。
-        bar_color (list[str] | None, optional): 每个柱子的颜色列表。默认为 None，使用灰色。
-        errorbar_type (str, optional): 误差条类型，支持 "sd"（标准差）或 "se"（标准误）。默认为 "sd"。
-        dots_color (str, optional): 散点的颜色。默认为 "gray"。
-        dots_size (int, optional): 散点的大小。默认为 35。
-        title_name (str, optional): 图标题。默认为空字符串。
-        x_label_name (str, optional): X 轴标签。默认为空字符串。
-        y_label_name (str, optional): Y 轴标签。默认为空字符串。
-        statistic (bool, optional): 是否执行统计检验并显示显著性标注。默认为 False。
-        test_method (str, optional): 统计检验方法。支持 "external"（外部 p 值）或其他方法。默认为 "external"。
-        p_list (list[list[Num]] | None, optional): 外部提供的显著性 p 值列表。默认为 None。
-        legend (bool, optional): 是否显示图例。默认为 True。
-        legend_position (tuple[Num, Num], optional): 图例在坐标系中的位置。默认为 (1.2, 1)。
-        **kwargs (Any): 其他可选参数，用于进一步定制图表样式。
+        data (DataType):
+            输入数据，可以是三维numpy数组、二维numpy数组列表或嵌套序列
+        ax (Axes | None, optional):
+            matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
+        group_labels (list[str] | None, optional):
+            组标签名称列表. Defaults to None.
+        bar_labels (list[str] | None, optional):
+            柱状图标签名称列表. Defaults to None.
+        bar_width (Num, optional):
+            柱状图的宽度. Defaults to 0.2.
+        bar_gap (Num, optional):
+            柱状图之间的间隔. Defaults to 0.1.
+        bar_color (list[str] | None, optional):
+            柱状图的颜色列表. Defaults to None.
+        errorbar_type (str, optional):
+            误差条类型，可选 "sd"(标准差) 或 "se"(标准误). Defaults to "sd".
+        dots_color (str, optional):
+            散点的颜色. Defaults to "gray".
+        dots_size (int, optional):
+            散点的大小. Defaults to 35.
+        legend (bool, optional):
+            是否显示图例. Defaults to True.
+        legend_position (tuple[Num, Num], optional):
+            图例位置坐标. Defaults to (1.2, 1).
+        title_name (str, optional):
+            图表标题. Defaults to "".
+        title_fontsize (int, optional):
+            标题字体大小. Defaults to 12.
+        title_pad (int, optional):
+            标题与图表的间距. Defaults to 10.
+        x_label_name (str, optional):
+            X轴标签名称. Defaults to "".
+        x_label_ha (str, optional):
+            X轴标签的水平对齐方式. Defaults to "center".
+        x_label_fontsize (int, optional):
+            X轴标签字体大小. Defaults to 10.
+        x_tick_fontsize (int, optional):
+            X轴刻度字体大小. Defaults to 8.
+        x_tick_rotation (int, optional):
+            X轴刻度旋转角度. Defaults to 0.
+        y_label_name (str, optional):
+            Y轴标签名称. Defaults to "".
+        y_label_fontsize (int, optional):
+            Y轴标签字体大小. Defaults to 10.
+        y_tick_fontsize (int, optional):
+            Y轴刻度字体大小. Defaults to 8.
+        y_tick_rotation (int, optional):
+            Y轴刻度旋转角度. Defaults to 0.
+        statistic (bool, optional):
+            是否进行统计显著性分析. Defaults to False.
+        test_method (str, optional):
+            统计检验方法，目前仅支持"external". Defaults to "external".
+        p_list (list[list[Num]] | None, optional):
+            预计算的p值列表，用于显著性标记. Defaults to None.
+        line_color (str, optional):
+            显著性标记线的颜色. Defaults to "0.5".
+        asterisk_fontsize (int, optional):
+            显著性星号的字体大小. Defaults to 10.
+        asterisk_color (str, optional):
+            显著性星号的颜色. Defaults to "k".
+        y_lim (list[Num] | tuple[Num, Num] | None, optional):
+            Y轴的范围限制. Defaults to None.
+        ax_bottom_is_0 (bool, optional):
+            Y轴是否从0开始. Defaults to False.
+        y_max_tick_is_1 (bool, optional):
+            Y轴最大刻度是否限制为1. Defaults to False.
+        math_text (bool, optional):
+            是否将Y轴显示为科学计数法格式. Defaults to True.
+        one_decimal_place (bool, optional):
+            Y轴刻度是否只保留一位小数. Defaults to False.
+        percentage (bool, optional):
+            是否将Y轴显示为百分比格式. Defaults to False.
+
+    Raises:
+        ValueError: 当data数据格式无效时抛出
+        ValueError: 当test_method不是"external"时抛出（多组数据统计测试方法暂时仅支持external方法）
 
     Returns:
-        None
+        Axes: 返回matplotlib的坐标轴对象
     """
 
-    # 动态参数
+    def _is_valid_data_for_multi_group(data):
+        if not data.any():
+            raise ValueError("data 不能为空")
+        NumberTypes = (int, float, np.integer, np.floating)
+        # 1) 3D ndarray
+        if isinstance(data, np.ndarray):
+            return data.ndim == 3
+        # 必须是外层序列
+        if not isinstance(data, (list, tuple)):
+            return False
+        # 2) 平铺的 list，其中每个元素都是 2D ndarray
+        if all(isinstance(x, np.ndarray) and x.ndim == 2 for x in data):
+            return True
+        # 3) 外层是 groups：每个 group 是序列，group 内的 bar 要么 1D ndarray 要么数字序列
+        for group in data:
+            if not isinstance(group, (list, tuple)):
+                return False
+            for bar in group:
+                if isinstance(bar, np.ndarray):
+                    if bar.ndim != 1:
+                        return False
+                elif isinstance(bar, (list, tuple)):
+                    if not all(isinstance(v, NumberTypes) for v in bar):
+                        return False
+                else:
+                    return False
+        return True
+
+    if not _is_valid_data_for_multi_group(data):
+        raise ValueError("无效的 data")
+
     ax = ax or plt.gca()
     group_labels = group_labels or [f"Group {i + 1}" for i in range(len(data))]
     n_groups = len(data)
@@ -834,13 +1002,15 @@ def plot_multi_group_bar_figure(
         x_positions_all.append(x_positions)
 
         # 计算均值、标准差、标准误
-        means = [compute_summary(group_data[i])[0] for i in range(n_bars)]
-        sds = [compute_summary(group_data[i])[1] for i in range(n_bars)]
-        ses = [compute_summary(group_data[i])[2] for i in range(n_bars)]
+        means = [_compute_summary(group_data[i])[0] for i in range(n_bars)]
+        sds = [_compute_summary(group_data[i])[1] for i in range(n_bars)]
+        ses = [_compute_summary(group_data[i])[2] for i in range(n_bars)]
         if errorbar_type == "sd":
             error_values = sds
         elif errorbar_type == "se":
             error_values = ses
+        else:
+            raise ValueError("errorbar_type 只能是 'sd' 或者 'se'")
         # 绘制柱子
         bars = ax.bar(
             x_positions, means, width=bar_width, color=bar_color, alpha=1, edgecolor="k"
@@ -859,7 +1029,7 @@ def plot_multi_group_bar_figure(
             dot_x_pos = RNG.normal(
                 x_positions[index_bar], scale=bar_width / 7, size=len(dot)
             )
-            add_scatter(ax, dot_x_pos, dot, dots_color, dots_size=dots_size)
+            _add_scatter(ax, dot_x_pos, dot, dots_color, dots_size=dots_size)
     if legend:
         ax.legend(bars, bar_labels, bbox_to_anchor=legend_position)
 
@@ -867,27 +1037,36 @@ def plot_multi_group_bar_figure(
     ax.spines[["top", "right"]].set_visible(False)
     ax.set_title(
         title_name,
-        fontsize=kwargs.get("title_fontsize", 15),
-        pad=kwargs.get("title_pad", 10),
+        fontsize=title_fontsize,
+        pad=title_pad,
     )
     # x轴
-    ax.set_xlabel(x_label_name, fontsize=kwargs.get("x_label_fontsize", 10))
+    ax.set_xlabel(x_label_name, fontsize=x_label_fontsize)
     ax.set_xticks(np.arange(n_groups))
     ax.set_xticklabels(
         group_labels,
-        ha=kwargs.get("x_label_ha", "center"),
+        ha=x_label_ha,
         rotation_mode="anchor",
-        fontsize=kwargs.get("x_tick_fontsize", 10),
-        rotation=kwargs.get("x_tick_rotation", 0),
+        fontsize=x_tick_fontsize,
+        rotation=x_tick_rotation,
     )
     # y轴
     ax.tick_params(
         axis="y",
-        labelsize=kwargs.get("y_tick_fontsize", 10),
-        rotation=kwargs.get("y_tick_rotation", 0),
+        labelsize=y_tick_fontsize,
+        rotation=y_tick_rotation,
     )
-    ax.set_ylabel(y_label_name, fontsize=kwargs.get("y_label_fontsize", 10))
-    set_yaxis(ax, all_values, kwargs)
+    ax.set_ylabel(y_label_name, fontsize=y_label_fontsize)
+    _set_yaxis(
+        ax,
+        all_values,
+        y_lim,
+        ax_bottom_is_0,
+        y_max_tick_is_1,
+        math_text,
+        one_decimal_place,
+        percentage,
+    )
 
     # 添加统计显著性标记
     if statistic:
@@ -898,27 +1077,25 @@ def plot_multi_group_bar_figure(
             for i in range(len(group_data)):
                 for j in range(i + 1, len(group_data)):
                     if test_method == "external":
+                        if p_list is None:
+                            raise ValueError("p_list不能为空")
                         p = p_list[index_group][idx]
                         idx += 1
+                    else:
+                        raise ValueError("多组数据统计测试方法暂时仅支持 external方法")
                     if p <= 0.05:
                         comparisons.append((x_positions[i], x_positions[j], p))
             y_max = ax.get_ylim()[1]
             interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
-            annotate_significance(
+            _annotate_significance(
                 ax,
                 comparisons,
                 np.max(all_values),
                 interval,
-                line_color=kwargs.get("line_color", "0.5"),
+                line_color=line_color,
                 star_offset=interval / 5,
-                fontsize=kwargs.get("asterisk_fontsize", 10),
-                color=kwargs.get("asterisk_color", "k"),
+                fontsize=asterisk_fontsize,
+                color=asterisk_color,
             )
 
-
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    main()
+    return ax
