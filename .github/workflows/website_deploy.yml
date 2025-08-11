@@ -56,7 +56,7 @@ jobs:
               "model": "deepseek-chat",
               "messages": [
                 {"role": "system", "content": "You are a helpful assistant"},
-                {"role": "user", "content": "用中文回答，一句话总结以下更新内容，适合放在公告栏：${{ steps.changelog.outputs.added }}"}
+                {"role": "user", "content": "一句中文总结以下更新内容，适合放在公告栏（不允许出现“`”等特殊符号）：${{ steps.changelog.outputs.added }}"}
               ]
             }' | jq -r '.choices[0].message.content')
           echo "response<<EOF" >> $GITHUB_OUTPUT
