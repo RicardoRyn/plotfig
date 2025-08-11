@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.1](https://github.com/RicardoRyn/plotfig/compare/v1.5.0...v1.5.1) (2025-08-11)
+
+
+### Bug Fixes
+
+* **connec:** fix issue with line_color display under color scale ([83d46d7](https://github.com/RicardoRyn/plotfig/commit/83d46d7031c49a455ab2648a92193ae5278750f4))
+
+
+### Code Refactoring
+
+* **bar:** Remove the legacy `plot_one_group_violin_figure_old` function ([6d1316d](https://github.com/RicardoRyn/plotfig/commit/6d1316d3050279f849d5c941ff6280c0ce419145))
+
 ## [1.5.0](https://github.com/RicardoRyn/plotfig/compare/v1.4.0...v1.5.0) (2025-08-07)
 
 
