@@ -18,8 +18,7 @@ notebooks/
 # docs
 docs/changelog.md
 
-# tests
-tests/
+tests/figures/*
 
 # utils
 utils/
