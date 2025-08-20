@@ -26,7 +26,7 @@ def plot_correlation_figure(
     dots_size: int | float = 1,
     line_color: str = "r",
     title_name: str = "",
-    title_fontsize: int = 10,
+    title_fontsize: int = 12,
     title_pad: int = 10,
     x_label_name: str = "",
     x_label_fontsize: int = 10,
