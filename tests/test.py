@@ -1,5 +1,4 @@
 import random
-from plotfig import *
 
 input_file = r"e:\git_repositories\plotfig\src\plotfig\data\neurodata\atlases\macaque_D99\label.txt"
 output_file = r"e:\git_repositories\plotfig\src\plotfig\data\neurodata\atlases\macaque_D99\label1.txt"
