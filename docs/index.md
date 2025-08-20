@@ -5,7 +5,6 @@
 
 ![plotfig](./assets/plotfig.png)
 
-
 ## 项目结构
 
 项目采用模块化设计，核心代码位于 `src/plotfig/` 目录下，包含如下主要功能模块：
@@ -17,8 +16,7 @@
 - `brain_connection.py`：玻璃脑连接可视化，支持复杂的脑网络结构展示。
 - `circos.py`：环状图（Circos）绘制，适合平面展示脑区之间的连接关系。
 
-
-## 特点
+## 特性
 
 `plotfig` API 设计简洁，参数灵活，适合科研人员和数据分析师快速集成到自己的数据分析流程中。
 其模块化架构便于后续功能扩展和自定义开发。
@@ -29,5 +27,4 @@
 烫知识：一张图上的所有元素[^1]。
 ![Parts of a Figure](https://matplotlib.org/stable/_images/anatomy.png)
 
-[^1]:
-    [Quick start guide of matplotlib.](https://matplotlib.org/stable/tutorials/introductory/usage.html#parts-of-a-figure)
+[^1]: [Quick start guide of matplotlib.](https://matplotlib.org/stable/tutorials/introductory/usage.html#parts-of-a-figure)
