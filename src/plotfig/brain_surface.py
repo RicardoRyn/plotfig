@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import TypeAlias
+from collections.abc import Mapping
 
 import numpy as np
 import nibabel as nib
@@ -42,7 +43,7 @@ def _map_labels_to_values(data, gifti_file):
 
 
 def plot_brain_surface_figure(
-    data: dict[str, float],
+    data: Mapping[str, Num],
     species: str = "human",
     atlas: str = "glasser",
     surf: str = "veryinflated",
