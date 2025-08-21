@@ -16,7 +16,6 @@
 - `matrix.py`：通用矩阵可视化，支持多种配色和注释方式。
 - `brain_surface.py`：脑表面可视化，利用 `surfplot` 实现三维脑表面图集结构的绘制。
 - `brain_connection.py`：玻璃脑连接可视化，支持复杂的脑网络结构展示。
-- `circos.py`：环状图（Circos）绘制，适合平面展示脑区之间的连接关系。
 
 ### 文档与示例
 

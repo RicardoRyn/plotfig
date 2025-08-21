@@ -11,8 +11,6 @@
 
 ::: plotfig.matrix
 
-::: plotfig.circos
-
 ::: plotfig.brain_surface
 
 ::: plotfig.brain_surface_deprecated
