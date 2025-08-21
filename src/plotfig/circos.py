@@ -1,3 +1,10 @@
+"""
+# FIX:
+1. 该模块暂不可用
+2. 需更好的实现方式
+3. 最好摆脱：mne_connectivity
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import mne
