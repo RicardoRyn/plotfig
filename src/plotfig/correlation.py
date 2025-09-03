@@ -209,12 +209,4 @@ def plot_correlation_figure(
     )
     if hexbin:
         return hb
-    return
-
-
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    main()
+    return ax

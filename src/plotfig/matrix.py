@@ -33,7 +33,7 @@ def plot_matrix_figure(
     title_pad: Num = 20,
     diag_border: bool = False,
     **imshow_kwargs: Any,
-) -> AxesImage:
+) -> Axes:
     """Plot a matrix as a heatmap with optional labels, colorbar, and title.
 
     Args:
@@ -112,12 +112,4 @@ def plot_matrix_figure(
             [cax.get_position().x0, ax_pos.y0, cax.get_position().width, ax_pos.height]
         )
 
-    return
-
-
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    main()
+    return ax
