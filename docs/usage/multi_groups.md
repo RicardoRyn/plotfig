@@ -27,7 +27,7 @@ group2_bar1 = np.random.normal(3, 1, 10)
 group2_bar2 = np.random.normal(3, 1, 10)
 group2_bar3 = np.random.normal(3, 1, 10)
 
-plot_multi_group_bar_figure([[group1_bar1, group1_bar2, group1_bar3], [group2_bar1, group2_bar2, group2_bar3]])
+ax = plot_multi_group_bar_figure([[group1_bar1, group1_bar2, group1_bar3], [group2_bar1, group2_bar2, group2_bar3]])
 ```
 
 
@@ -58,7 +58,7 @@ group2_bar2 = np.random.normal(3, 1, 10)
 group2_bar3 = np.random.normal(3, 1, 10)
 
 fig, ax = plt.subplots(figsize=(6, 3))
-plot_multi_group_bar_figure(
+ax = plot_multi_group_bar_figure(
     [[group1_bar1, group1_bar2, group1_bar3], [group2_bar1, group2_bar2, group2_bar3]],
     ax=ax,
     group_labels=["A", "B"],
@@ -102,7 +102,7 @@ group2_bar2 = np.random.normal(3, 1, 10)
 group2_bar3 = np.random.normal(3, 1, 10)
 
 fig, ax = plt.subplots(figsize=(6, 3))
-plot_multi_group_bar_figure(
+ax = plot_multi_group_bar_figure(
     [[group1_bar1, group1_bar2, group1_bar3], [group2_bar1, group2_bar2, group2_bar3]],
     ax=ax,
     group_labels=["A", "B"],
