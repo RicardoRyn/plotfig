@@ -6,7 +6,6 @@
 `plot_correlation_figure` 提供了简洁易用的点线相关图功能，能够自动绘制变量散点、拟合线，可以计算并显示 Spearman 或 Pearson 两种相关系数（默认计算 Spearman 相关性）。
 同时，`plot_correlation_figure` 会根据显著性水平自动标注 `*`、`**` 或 `***`，帮助用户快速判断相关性是否显著，适合用于科研图表、演示幻灯片或论文插图中。
 
-
 ## 快速出图
 
 假如我们有两组样本数量一致的数据（每组包含 100 个样本），我们希望通过绘图直观展示它们之间是否存在相关性。
@@ -24,7 +23,7 @@ data2 = data1 + np.random.normal(1,50, 100)
 # data2是在data1的基础上加上了噪声。
 # 正经人都知道data1和data2相关，那么plotfig知不知道呢？
 
-plot_correlation_figure(data1,data2)
+ax = plot_correlation_figure(data1,data2)
 ```
 
 
@@ -50,7 +49,7 @@ data2 = data1 + np.random.normal(1,50, 100)
 # 正经人都知道data1和data2相关，那么plotfig知不知道呢？
 
 fig, ax = plt.subplots(figsize=(3, 3))
-plot_correlation_figure(
+ax = plot_correlation_figure(
     data1,
     data2,
     stats_method="spearman",  # 仅有“spearman, pearson”，默认是spearman
@@ -85,7 +84,7 @@ data1 = np.random.standard_normal(n)
 data2 = 2.0 + 3.0 * data1 + 4.0 * np.random.standard_normal(n)
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7, 3), layout="constrained")
-plot_correlation_figure(
+ax1 = plot_correlation_figure(
     data1,
     data2,
     ax=ax1
