@@ -153,5 +153,6 @@ nav:
     - 相关图: usage/correlation.md
     - 矩阵图: usage/matrix.md
     - 脑区图: usage/brain_surface.md
+    - 弦图: usage/circos.md
     - 脑连接图: usage/brain_connectivity.md
   - API: api/index.md
