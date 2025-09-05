@@ -209,7 +209,7 @@ def plot_brain_connection_figure(
     line_width: Num = 10,
     line_color: str = "red",
 ) -> go.Figure:
-    """绘制大脑连接图，保存在指定的html文件中
+    """绘制大脑连接图，保存在指定的html文件中。
 
     Args:
         connectome (npt.NDArray):
