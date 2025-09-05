@@ -28,7 +28,7 @@ __all__ = [
 ]
 
 # 创建随机数生成器
-RNG = np.random.default_rng(seed=1998)
+RNG = np.random.default_rng(seed=42)
 
 
 def _is_valid_data(data):
