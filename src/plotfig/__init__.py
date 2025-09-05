@@ -5,7 +5,6 @@ from .bar import (
 )
 from .correlation import plot_correlation_figure
 from .matrix import plot_matrix_figure
-from .circos import plot_symmetric_circle_figure, plot_asymmetric_circle_figure
 from .brain_surface import plot_brain_surface_figure
 from .brain_surface_deprecated import (
     plot_human_brain_figure,
@@ -32,8 +31,6 @@ __all__ = [
     "plot_macaque_hemi_brain_figure",
     "plot_chimpanzee_brain_figure",
     "plot_chimpanzee_hemi_brain_figure",
-    "plot_symmetric_circle_figure",
-    "plot_asymmetric_circle_figure",
     "plot_brain_connection_figure",
     "save_brain_connection_frames",
 ]
