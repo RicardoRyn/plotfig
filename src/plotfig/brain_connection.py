@@ -122,7 +122,7 @@ def _add_edges_to_fig(
         """获取渐变色"""
         assert 0 <= value <= 1, "value 必须在0和1之间"
         cmap = LinearSegmentedColormap.from_list("grad_cmap", ["white", color])
-        rgba = cmap(value)
+        rgba = cmap(float(value))  # 坑，必须要用浮点数
         return to_hex(rgba[:3])
 
     nodes_num = connectome.shape[0]
