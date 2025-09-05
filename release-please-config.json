@@ -21,7 +21,7 @@
     },
     {
       "type": "perf",
-      "section": "Performance Improvements ⚙️"
+      "section": "Performance Improvements ⏲️"
     }
   ],
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
