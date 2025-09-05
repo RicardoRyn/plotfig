@@ -67,14 +67,6 @@ def plot_brain_surface_figure(
 ) -> Axes: 
     """在大脑皮层表面绘制数值数据的函数。
 
-    脑区图是一种用于在大脑皮层表面可视化数值数据的图表。它能够将不同脑区的数值映射到大脑皮层的相应区域，
-    并以颜色编码的方式展示这些数值的分布情况。这种图表常用于展示神经科学研究中的各种脑区指标，
-    如功能连接强度、激活程度或其他数值化的大脑特征。
-
-    本函数基于 surfplot 库开发，提供了一个统一且简化的接口来绘制人脑、猕猴脑和黑猩猩脑的表面图。
-    支持多种脑图谱，包括人脑的 Glasser 和 BNA 图谱、猕猴脑的 CHARM5/6、BNA 和 D99 图谱，
-    以及黑猩猩脑的 BNA 图谱。
-
     Args:
         data (dict[str, float]): 包含脑区名称和对应数值的字典，键为脑区名称（如"lh_bankssts"），值为数值
         species (str, optional): 物种名称，支持"human"、"chimpanzee"、"macaque". Defaults to "human".
