@@ -13,12 +13,6 @@ wheels/
 *.bak
 
 # notebooks
-notebooks/
-
-# docs
-docs/changelog.md
+notebooks/figures/*
 
 tests/figures/*
-
-# utils
-utils/
