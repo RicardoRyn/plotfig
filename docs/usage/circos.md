@@ -8,7 +8,7 @@
 
 ```python
 from plotfig import plot_circos_figure
-from plotfig.utils.utils import gen_symmetric_matrix
+from plotfig.utils import gen_symmetric_matrix
 
 # 随机生成对称加权矩阵（对角线为0）
 connectome = gen_symmetric_matrix(30, mode="nonneg", sparsity=0.1)
@@ -33,7 +33,7 @@ fig = plot_circos_figure(connectome)
 
 ```python
 from plotfig import plot_circos_figure
-from plotfig.utils.utils import gen_symmetric_matrix
+from plotfig.utils import gen_symmetric_matrix
 
 # 随机生成一个10x10的对称加权矩阵（对角线为0）
 connectome = gen_symmetric_matrix(10, mode="nonneg", sparsity=0.2)
@@ -77,7 +77,7 @@ fig = plot_circos_figure(
 ```python
 import matplotlib.pyplot as plt
 from plotfig import plot_circos_figure
-from plotfig.utils.utils import gen_symmetric_matrix
+from plotfig.utils import gen_symmetric_matrix
 
 fig = plt.figure(figsize=(6, 3))
 
@@ -106,7 +106,7 @@ ax2 = plot_circos_figure(connectome, ax=ax2)
 ```python
 import matplotlib.pyplot as plt
 from plotfig import plot_circos_figure
-from plotfig.utils.utils import gen_symmetric_matrix
+from plotfig.utils import gen_symmetric_matrix
 
 fig = plt.figure(figsize=(7, 3))
 ax1 = fig.add_subplot(1, 2, 1, projection="polar")
@@ -135,7 +135,7 @@ ax2 = plot_circos_figure(connectome, symmetric=False, ax=ax2)
 ```python
 import matplotlib.pyplot as plt
 from plotfig import plot_circos_figure
-from plotfig.utils.utils import gen_symmetric_matrix
+from plotfig.utils import gen_symmetric_matrix
 
 fig = plt.figure(figsize=(12, 3), layout="constrained")
 ax1 = fig.add_subplot(1, 3, 1, projection="polar")
@@ -167,7 +167,7 @@ ax3 = plot_circos_figure(connectome, ax=ax3, edge_color="blue")
 ```python
 import matplotlib.pyplot as plt
 from plotfig import plot_circos_figure
-from plotfig.utils.utils import gen_symmetric_matrix
+from plotfig.utils import gen_symmetric_matrix
 
 fig = plt.figure(figsize=(12, 3), layout="constrained")
 ax1 = fig.add_subplot(1, 3, 1, projection="polar")
@@ -195,7 +195,7 @@ ax3 = plot_circos_figure(connectome, ax=ax3, cmap="bwr")
 
 ```python
 from plotfig import plot_circos_figure
-from plotfig.utils.utils import gen_symmetric_matrix
+from plotfig.utils import gen_symmetric_matrix
 
 # 生成带负值的对称矩阵
 connectome = gen_symmetric_matrix(10, mode="all", sparsity=0.1)
@@ -207,7 +207,7 @@ fig = plot_circos_figure(connectome)
 ```
 
     [32m2025-09-05 15:09:37.347[0m | [33m[1mWARNING [0m | [36mplotfig.circos[0m:[36mplot_circos_figure[0m:[36m116[0m - [33m[1m由于 connectome 存在负值，连线颜色无法自定义，只能正值显示红色，负值显示蓝色[0m
-
+    
 
 
     
