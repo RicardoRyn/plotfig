@@ -28,7 +28,7 @@ __all__ = [
 ]
 
 # 创建随机数生成器
-RNG = np.random.default_rng(seed=1998)
+RNG = np.random.default_rng(seed=42)
 
 
 def _is_valid_data(data):
@@ -946,37 +946,6 @@ def plot_multi_group_bar_figure(
     Returns:
         Axes: 返回matplotlib的坐标轴对象
     """
-
-    def _is_valid_data_for_multi_group(data):
-        if not data.any():
-            raise ValueError("data 不能为空")
-        NumberTypes = (int, float, np.integer, np.floating)
-        # 1) 3D ndarray
-        if isinstance(data, np.ndarray):
-            return data.ndim == 3
-        # 必须是外层序列
-        if not isinstance(data, (list, tuple)):
-            return False
-        # 2) 平铺的 list，其中每个元素都是 2D ndarray
-        if all(isinstance(x, np.ndarray) and x.ndim == 2 for x in data):
-            return True
-        # 3) 外层是 groups：每个 group 是序列，group 内的 bar 要么 1D ndarray 要么数字序列
-        for group in data:
-            if not isinstance(group, (list, tuple)):
-                return False
-            for bar in group:
-                if isinstance(bar, np.ndarray):
-                    if bar.ndim != 1:
-                        return False
-                elif isinstance(bar, (list, tuple)):
-                    if not all(isinstance(v, NumberTypes) for v in bar):
-                        return False
-                else:
-                    return False
-        return True
-
-    if not _is_valid_data_for_multi_group(data):
-        raise ValueError("无效的 data")
 
     ax = ax or plt.gca()
     group_labels = group_labels or [f"Group {i + 1}" for i in range(len(data))]

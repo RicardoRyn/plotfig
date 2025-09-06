@@ -19,7 +19,7 @@ data1 = np.random.normal(1, 1, 9)
 data2 = np.random.normal(2, 1, 10)
 data3 = np.random.normal(3, 1, 11)
 
-plot_one_group_bar_figure([data1, data2, data3])
+ax = plot_one_group_bar_figure([data1, data2, data3])
 ```
 
 
@@ -47,8 +47,8 @@ ax2_bar2 = np.random.normal(0, 1, 10)
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust()
 
-plot_one_group_bar_figure([ax1_bar1, ax1_bar2], ax=axes.flatten()[0])
-plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes.flatten()[1])
+ax1 = plot_one_group_bar_figure([ax1_bar1, ax1_bar2], ax=axes.flatten()[0])
+ax2 = plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes.flatten()[1])
 ```
 
 
@@ -77,10 +77,10 @@ ax4_bar2 = np.random.normal(3, 1, 10)
 
 fig, axes = plt.subplots(2, 2, figsize=(6, 6))
 fig.subplots_adjust(wspace=0.5, hspace=0.5)
-plot_one_group_bar_figure([ax1_bar1, ax1_bar2], ax=axes[0,0], labels_name=["A", "B"])
-plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes[0,1], labels_name=["C", "D"])
-plot_one_group_bar_figure([ax3_bar1, ax3_bar2], ax=axes[1,0], labels_name=["E", "F"])
-plot_one_group_bar_figure([ax4_bar1, ax4_bar2], ax=axes[1,1], labels_name=["G", "H"])
+ax1 = plot_one_group_bar_figure([ax1_bar1, ax1_bar2], ax=axes[0,0], labels_name=["A", "B"])
+ax2 = plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes[0,1], labels_name=["C", "D"])
+ax3 = plot_one_group_bar_figure([ax3_bar1, ax3_bar2], ax=axes[1,0], labels_name=["E", "F"])
+ax4 = plot_one_group_bar_figure([ax4_bar1, ax4_bar2], ax=axes[1,1], labels_name=["G", "H"])
 ```
 
 
@@ -109,7 +109,7 @@ data1 = np.random.normal(7, 1, 10)
 data2 = np.random.normal(8, 1, 9)
 
 fig, ax = plt.subplots(figsize=(3, 3))
-plot_one_group_bar_figure(
+ax = plot_one_group_bar_figure(
     [data1, data2],
     ax=ax,
     labels_name=["A", "B"],
@@ -137,6 +137,7 @@ plot_one_group_bar_figure(
 例如，当我们计算了“人-黑猩猩、人-猕猴、黑猩猩-猕猴”之间的同源脑区（共 20 个）结构连接的 Spearman 相关性时，可以考虑使用这种方式进行可视化展示。
 
 
+
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
@@ -153,7 +154,7 @@ human_macaque = np.random.normal(7, 1, 20)
 chimp_macaque = np.random.normal(7, 1, 20)
 
 fig, ax = plt.subplots(figsize=(5,5))
-plot_one_group_bar_figure(
+ax = plot_one_group_bar_figure(
     [human_chimp, human_macaque, chimp_macaque],
     ax=ax,
     labels_name=["Human-Chimp", "Human-Macaque", "Chimp-Macaque"],
@@ -191,7 +192,7 @@ data2 = np.random.normal(4, 1, 9)
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
-plot_one_group_bar_figure(
+ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0],
     labels_name=["AAAAAAAAAAA", "BBBBBBBBBB"],
@@ -199,7 +200,7 @@ plot_one_group_bar_figure(
     title_name="名字过长",
     title_fontsize=15,
 )
-plot_one_group_bar_figure(
+ax2 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[1],
     labels_name=["AAAAAAAAAAA", "BBBBBBBBBB"],
@@ -237,7 +238,7 @@ data2 = np.random.normal(4, 1, 9)
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
-plot_one_group_bar_figure(
+ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0],
     labels_name=["A", "B"],
@@ -245,7 +246,7 @@ plot_one_group_bar_figure(
     title_name="黄金比例显示",
     title_fontsize=15,
 )
-plot_one_group_bar_figure(
+ax2 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[1],
     labels_name=["A", "B"],
@@ -279,7 +280,7 @@ data2 = np.random.normal(2, 1, 9)
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
-plot_one_group_bar_figure(
+ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0],
     labels_name=["A", "B"],
@@ -287,7 +288,7 @@ plot_one_group_bar_figure(
     title_name="黄金比例显示",
     title_fontsize=15,
 )
-plot_one_group_bar_figure(
+ax2 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[1],
     labels_name=["A", "B"],
@@ -321,7 +322,7 @@ data2 = np.random.normal(0.9, 0.1, 9)
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
-plot_one_group_bar_figure(
+ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0],
     labels_name=["A", "B"],
@@ -329,7 +330,7 @@ plot_one_group_bar_figure(
     title_name="黄金比例显示",
     title_fontsize=15,
 )
-plot_one_group_bar_figure(
+ax2 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[1],
     labels_name=["A", "B"],
@@ -365,7 +366,7 @@ data4 = np.random.normal(0.0001, 0.0001, 12)
 
 fig, axes = plt.subplots(2, 2, figsize=(6, 6))
 fig.subplots_adjust(wspace=0.5, hspace=0.5)
-plot_one_group_bar_figure(
+ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0,0],
     labels_name=["A", "B"],
@@ -373,7 +374,7 @@ plot_one_group_bar_figure(
     title_name="科学计数法",
     title_fontsize=15,
 )  # 默认y轴使用科学计数法
-plot_one_group_bar_figure(
+ax2 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0,1],
     labels_name=["A", "B"],
@@ -382,7 +383,7 @@ plot_one_group_bar_figure(
     title_fontsize=15,
     math_text=False,  # 手动关闭科学计数法
 )
-plot_one_group_bar_figure(
+ax3 = plot_one_group_bar_figure(
     [data3, data4],
     ax=axes[1,0],
     labels_name=["A", "B"],
@@ -390,7 +391,7 @@ plot_one_group_bar_figure(
     title_name="科学计数法",
     title_fontsize=15,
 )  # 默认y轴使用科学计数法
-plot_one_group_bar_figure(
+ax4 = plot_one_group_bar_figure(
     [data3, data4],
     ax=axes[1,1],
     labels_name=["A", "B"],
@@ -411,7 +412,7 @@ plot_one_group_bar_figure(
 
 !!! warning
     `percentage` 格式会与 `math_text` 冲突。
-    而`math_text` 默认打开，需显示关闭。
+    而`math_text` 默认打开，需显式关闭。
 
 
 ```python
@@ -428,7 +429,7 @@ data2 = np.random.normal(0.5, 0.1, 9)
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
-plot_one_group_bar_figure(
+ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0],
     labels_name=["A", "B"],
@@ -436,7 +437,7 @@ plot_one_group_bar_figure(
     title_name="常规显示",
     title_fontsize=15,
 )
-plot_one_group_bar_figure(
+ax2 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[1],
     labels_name=["A", "B"],
@@ -475,7 +476,7 @@ dots_color2 = [["green"]*5+["pink"]*5, ["orange"]*4+["purple"]*5]
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
-plot_one_group_bar_figure(
+ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0],
     labels_name=["A", "B"],
@@ -484,7 +485,7 @@ plot_one_group_bar_figure(
     title_fontsize=15,
     dots_color=dots_color1,  # 散点颜色
 )
-plot_one_group_bar_figure(
+ax2 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[1],
     labels_name=["A", "B"],
@@ -511,10 +512,7 @@ plot_one_group_bar_figure(
 4. Mann-Whitney U 检验（`mannwhitneyu`）
 5. 外部统计检验 （`external`）
 
-> 
-
 使用时需先通过 `statistic` 选项启用统计功能，并在 `test_method` 中指定方法名。
-
 
 
 ```python
@@ -537,7 +535,7 @@ data7 = np.random.normal(1, 1, 20)
 
 fig, axes = plt.subplots(2, 2, figsize=(6, 6))
 fig.subplots_adjust(wspace=0.5, hspace=0.5)
-plot_one_group_bar_figure(
+ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0,0],
     labels_name=["A", "B"],
@@ -545,9 +543,9 @@ plot_one_group_bar_figure(
     title_name="独立样本t检验",
     title_fontsize=15,
     statistic=True, 
-    test_method="ttest_ind"
+    test_method=["ttest_ind"]
 )
-plot_one_group_bar_figure(
+ax2 = plot_one_group_bar_figure(
     [data2, data3],
     ax=axes[0,1],
     labels_name=["A", "B"],
@@ -555,9 +553,9 @@ plot_one_group_bar_figure(
     title_name="配对样本t检验",
     title_fontsize=15,
     statistic=True, 
-    test_method="ttest_rel"
+    test_method=["ttest_rel"]
 )
-plot_one_group_bar_figure(
+ax3 = plot_one_group_bar_figure(
     [data6, data7],
     ax=axes[1,0],
     labels_name=["A", "B"],
@@ -565,10 +563,10 @@ plot_one_group_bar_figure(
     title_name="单样本t检验",
     title_fontsize=15,
     statistic=True,
-    test_method="ttest_1samp",
+    test_method=["ttest_1samp"],
     popmean=0,
 )
-plot_one_group_bar_figure(
+ax4 = plot_one_group_bar_figure(
     [data4, data5],
     ax=axes[1,1],
     labels_name=["A", "B"],
@@ -576,7 +574,7 @@ plot_one_group_bar_figure(
     title_name="Mann-Whitney U检验",
     title_fontsize=15,
     statistic=True, 
-    test_method="mannwhitneyu"
+    test_method=["mannwhitneyu"]
 )
 ```
 
@@ -615,21 +613,21 @@ data4 = np.random.normal(9, 1, 20)
 p_list = [0.05, 0.01, 0.001, 1, 0.05, 0.01]
 
 fig, ax = plt.subplots(figsize=(6, 6))
-plot_one_group_bar_figure(
+ax = plot_one_group_bar_figure(
     [data1, data2, data3, data4],
     ax=ax,
     y_label_name="y",
     title_name="外部检验",
     title_fontsize=15,
     statistic=True,
-    test_method="external",
+    test_method=["external"],
     p_list=p_list,
 )
 ```
 
 
     
-![png](single_group_files/single_group_37_0.png)
+![png](single_group_files/single_group_36_0.png)
     
 
 
@@ -662,7 +660,7 @@ human_macaque = 2 + np.random.normal(0, 1, 100)
 chimp_macaque = 3 + np.random.normal(0, 1, 100)
 
 fig, ax = plt.subplots(figsize=(5,5))
-plot_one_group_violin_figure(
+ax = plot_one_group_violin_figure(
     [human_chimp, human_macaque, chimp_macaque],
     ax=ax,
     labels_name=["Human-Chimp", "Human-Macaque", "Chimp-Macaque"],
@@ -674,12 +672,12 @@ plot_one_group_violin_figure(
     show_dots=True,
     dots_size=7,
     statistic=True,
-    test_method="mannwhitneyu"
+    test_method=["mannwhitneyu"]
 )
 ```
 
 
     
-![png](single_group_files/single_group_40_0.png)
+![png](single_group_files/single_group_39_0.png)
     
 

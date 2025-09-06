@@ -5,7 +5,6 @@
 
 `plot_matrix_figure` 支持自动生成矩阵图。
 
-
 ## 快速出图
 
 我们可以生成一个 10 × 19 的矩阵图，用于展示 10 个元素与另 19 个元素之间的成对关系。
@@ -17,7 +16,7 @@ from plotfig import *
 
 data = np.random.rand(10, 19)
 
-plot_matrix_figure(data)
+ax = plot_matrix_figure(data)
 ```
 
 
@@ -39,7 +38,7 @@ from plotfig import *
 data = np.random.rand(4,4)
 
 fig, ax = plt.subplots(figsize=(3,3))
-plot_matrix_figure(
+ax = plot_matrix_figure(
     data,
     row_labels_name=["A", "B", "C", "D"],
     col_labels_name=["E", "F", "G", "H"],

@@ -9,19 +9,19 @@
   "changelog-sections": [
     {
       "type": "feat",
-      "section": "Features"
+      "section": "Features ✨"
     },
     {
       "type": "fix",
-      "section": "Bug Fixes"
+      "section": "Bug Fixes 🔧"
     },
     {
       "type": "refactor",
-      "section": "Code Refactoring"
+      "section": "Code Refactoring ♻️"
     },
     {
       "type": "perf",
-      "section": "Performance Improvements"
+      "section": "Performance Improvements ⏲️"
     }
   ],
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"

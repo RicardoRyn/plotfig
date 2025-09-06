@@ -10,6 +10,7 @@ Num = int | float
 
 __all__ = ["plot_matrix_figure"]
 
+
 def plot_matrix_figure(
     data: np.ndarray,
     ax: Axes | None = None,
@@ -33,36 +34,38 @@ def plot_matrix_figure(
     title_pad: Num = 20,
     diag_border: bool = False,
     **imshow_kwargs: Any,
-) -> AxesImage:
-    """Plot a matrix as a heatmap with optional labels, colorbar, and title.
+) -> Axes:
+    """
+    将矩阵绘制为热图，可选显示标签、颜色条和标题。
 
     Args:
-        data (np.ndarray): 2D array of shape (N, M) to display as the matrix.
-        ax (Axes | None): Matplotlib axes to plot on. If None, uses current axes.
-        row_labels_name (Sequence[str] | None): List of labels for the rows.
-        col_labels_name (Sequence[str] | None): List of labels for the columns.
-        cmap (str): Colormap to use for the matrix.
-        vmin (Num | None): Minimum value for color scaling. Defaults to data.min().
-        vmax (Num | None): Maximum value for color scaling. Defaults to data.max().
-        aspect (str): Aspect ratio of the plot. Usually "equal" or "auto".
-        colorbar (bool): Whether to show a colorbar.
-        colorbar_label_name (str): Label for the colorbar.
-        colorbar_pad (Num): Padding between the colorbar and the matrix.
-        colorbar_label_fontsize (Num): Font size of the colorbar label.
-        colorbar_tick_fontsize (Num): Font size of the colorbar ticks.
-        colorbar_tick_rotation (Num): Rotation angle of the colorbar tick labels.
-        row_labels_fontsize (Num): Font size for the row labels.
-        col_labels_fontsize (Num): Font size for the column labels.
-        x_rotation (Num): Rotation angle for the x-axis (column) labels.
-        title_name (Num): Title of the plot.
-        title_fontsize (Num): Font size of the title.
-        title_pad (Num): Padding above the title.
-        diag_border (bool): Whether to draw borders along the diagonal cells.
-        **imshow_kwargs (Any): Additional keyword arguments for `imshow()`.
+        data (np.ndarray): 形状为 (N, M) 的二维数组，用于显示矩阵。
+        ax (Axes | None): 要绘图的 Matplotlib 坐标轴。如果为 None，则使用当前坐标轴。
+        row_labels_name (Sequence[str] | None): 行标签列表。
+        col_labels_name (Sequence[str] | None): 列标签列表。
+        cmap (str): 矩阵使用的颜色映射。
+        vmin (Num | None): 颜色缩放的最小值，默认使用 data.min()。
+        vmax (Num | None): 颜色缩放的最大值，默认使用 data.max()。
+        aspect (str): 图像的纵横比，通常为 "equal" 或 "auto"。
+        colorbar (bool): 是否显示颜色条。
+        colorbar_label_name (str): 颜色条的标签。
+        colorbar_pad (Num): 颜色条与矩阵之间的间距。
+        colorbar_label_fontsize (Num): 颜色条标签的字体大小。
+        colorbar_tick_fontsize (Num): 颜色条刻度的字体大小。
+        colorbar_tick_rotation (Num): 颜色条刻度标签的旋转角度。
+        row_labels_fontsize (Num): 行标签的字体大小。
+        col_labels_fontsize (Num): 列标签的字体大小。
+        x_rotation (Num): x 轴（列）标签的旋转角度。
+        title_name (Num): 图表标题。
+        title_fontsize (Num): 标题的字体大小。
+        title_pad (Num): 标题上方的间距。
+        diag_border (bool): 是否绘制对角线单元格边框。
+        **imshow_kwargs (Any): 传递给 `imshow()` 的其他关键字参数。
 
     Returns:
-        AxesImage: The image object created by `imshow()`.
+        AxesImage: 由 `imshow()` 创建的图像对象。
     """
+
     ax = ax or plt.gca()
     vmin = vmin if vmin is not None else np.min(data)
     vmax = vmax if vmax is not None else np.max(data)
@@ -112,12 +115,5 @@ def plot_matrix_figure(
             [cax.get_position().x0, ax_pos.y0, cax.get_position().width, ax_pos.height]
         )
 
-    return
+    return ax
 
-
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    main()

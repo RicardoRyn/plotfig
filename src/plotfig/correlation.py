@@ -16,6 +16,7 @@ Num: TypeAlias = float | int  # 可同时接受int和float的类型
 
 __all__ = ["plot_correlation_figure"]
 
+
 def plot_correlation_figure(
     data1: list[Num] | np.ndarray,
     data2: list[Num] | np.ndarray,
@@ -26,7 +27,7 @@ def plot_correlation_figure(
     dots_size: int | float = 1,
     line_color: str = "r",
     title_name: str = "",
-    title_fontsize: int = 10,
+    title_fontsize: int = 12,
     title_pad: int = 10,
     x_label_name: str = "",
     x_label_fontsize: int = 10,
@@ -46,7 +47,7 @@ def plot_correlation_figure(
     show_p_value: bool = False,
     hexbin: bool = False,
     hexbin_cmap: bool = None,
-    hexbin_gridsize:int = 50,
+    hexbin_gridsize: int = 50,
 ) -> None:
     """
     绘制两个数据集之间的相关性图，支持线性回归、置信区间和统计方法（Spearman 或 Pearson）。
@@ -83,6 +84,7 @@ def plot_correlation_figure(
     Returns:
         None
     """
+
     def set_axis(
         ax, axis, label, labelsize, ticksize, rotation, locator, max_tick_value, fmt
     ):
@@ -127,7 +129,9 @@ def plot_correlation_figure(
 
     if hexbin:
         if hexbin_cmap is None:
-            hexbin_cmap = LinearSegmentedColormap.from_list('custom', ['#ffffff', '#4573a5'])
+            hexbin_cmap = LinearSegmentedColormap.from_list(
+                "custom", ["#ffffff", "#4573a5"]
+            )
         hb = ax.hexbin(A, B, gridsize=hexbin_gridsize, cmap=hexbin_cmap)
     else:
         ax.scatter(A, B, c=dots_color, s=dots_size, alpha=0.8)
@@ -191,7 +195,9 @@ def plot_correlation_figure(
     if show_p_value:
         asterisk = f" p={p:.4f}"
     else:
-        asterisk = " ***" if p < 0.001 else " **" if p < 0.01 else " *" if p < 0.05 else ""
+        asterisk = (
+            " ***" if p < 0.001 else " **" if p < 0.01 else " *" if p < 0.05 else ""
+        )
     x_start, x_end = ax.get_xlim()
     y_start, y_end = ax.get_ylim()
     ax.text(
@@ -203,12 +209,4 @@ def plot_correlation_figure(
     )
     if hexbin:
         return hb
-    return
-
-
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    main()
+    return ax
