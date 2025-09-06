@@ -24,17 +24,15 @@
 
 ## 安装
 
-### 普通安装
-
 `plotfig` 支持通过 `pip` 或源码安装，要求 Python 3.11 及以上版本。
 
-#### 使用 pip 安装 (推荐)
+### 使用 pip 安装 (推荐)
 
 ```bash
 pip install plotfig
 ```
 
-#### 使用 GitHub 源码安装
+### 使用 GitHub 源码安装
 
 ```bash
 git clone --depth 1 https://github.com/RicardoRyn/plotfig.git
@@ -76,7 +74,7 @@ rm -rf surfplot
 推荐先 Fork 仓库，然后克隆您自己的 Fork：
 
 ```bash
-git clone -b dev https://github.com/ <your-username >/plotfig.git
+git clone -b dev https://github.com/<your-username >/plotfig.git
 cd plotfig
 pip install -e .
 ```
