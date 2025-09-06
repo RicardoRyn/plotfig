@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.6.0](https://github.com/RicardoRyn/plotfig/compare/v1.5.1...v1.6.0) (2025-09-06)
+
+
+### Features ✨
+
+* **circos:** Implement a new method for drawing circos plots ([ebf3352](https://github.com/RicardoRyn/plotfig/commit/ebf3352491566817fc6202c1a9323e9f6e8a323a))
+* **utils:** Add several utility functions ([b59f2a4](https://github.com/RicardoRyn/plotfig/commit/b59f2a49a6683e8ce942f47a2adc2a79a94e6f84))
+
+
+### Bug Fixes 🔧
+
+* **bar:** fix bug causing multi_bar plot failure ([a797006](https://github.com/RicardoRyn/plotfig/commit/a797006ed7b0598f65ff14f29d1c4c0280b1d811))
+* **connec:** Fix color bug caused by integer values ([b104c1f](https://github.com/RicardoRyn/plotfig/commit/b104c1f985c4aeaf1576c716fc1f0b7725774e26))
+
+
+### Code Refactoring ♻️
+
+* **circos:** Temporarily disable circos plot ([a96bb09](https://github.com/RicardoRyn/plotfig/commit/a96bb09cc799ce34785146f6bd855631ae1ad73a))
+* **corr/matrix:** function now returns Axes object ([e47cada](https://github.com/RicardoRyn/plotfig/commit/e47cada18a411fe28f7dc8a6ef62dea00acd3888))
+* **corr:** change default ax title font size in correlation plots to 12 ([5aab9fe](https://github.com/RicardoRyn/plotfig/commit/5aab9fe082f05894379c90b7e7a4a5a3a4739c49))
+* **surface:** Deprecate old functions ([d90dc92](https://github.com/RicardoRyn/plotfig/commit/d90dc927731cd369d2ac1cc0939556b13d54158c))
+
 ## [1.5.1](https://github.com/RicardoRyn/plotfig/compare/v1.5.0...v1.5.1) (2025-08-11)
 
 
