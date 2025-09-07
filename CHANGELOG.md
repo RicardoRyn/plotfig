@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/RicardoRyn/plotfig/compare/v1.6.0...v1.6.1) (2025-09-07)
+
+
+### Bug Fixes 🔧
+
+* **circos:** prevent type warning from type annotations ([b3552da](https://github.com/RicardoRyn/plotfig/commit/b3552dafd21fe72d9a294e0a52b8dc286d6a108e))
+
 ## [1.6.0](https://github.com/RicardoRyn/plotfig/compare/v1.5.1...v1.6.0) (2025-09-06)
 
 
