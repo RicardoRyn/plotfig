@@ -8,6 +8,7 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.projections.polar import PolarAxes
+from matplotlib.axes import Axes
 from pycirclize import Circos
 from loguru import logger
 
@@ -88,7 +89,7 @@ def _process_sym(
 
 def plot_circos_figure(
     connectome: NDArray,
-    ax: PolarAxes | None = None,
+    ax: Axes | None = None,
     symmetric: bool = True,
     node_names: list[str] | None = None,
     node_colors: list[str] | None = None,
@@ -229,5 +230,8 @@ def plot_circos_figure(
         fig = circos.plotfig()
         return fig
     else:
-        circos.plotfig(ax=ax)
-        return ax
+        if isinstance(ax, PolarAxes):
+            circos.plotfig(ax=ax)
+            return ax
+        else:
+            raise ValueError("ax 不是 PolarAxes 类型")
