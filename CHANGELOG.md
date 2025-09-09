@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/RicardoRyn/plotfig/compare/v1.6.1...v1.7.0) (2025-09-09)
+
+
+### Features ✨
+
+* **bar:** allow single-group bar plots to optionally show dots ([de2a2bb](https://github.com/RicardoRyn/plotfig/commit/de2a2bb5ab846041b380cf6225002575beb0406a))
+
 ## [1.6.1](https://github.com/RicardoRyn/plotfig/compare/v1.6.0...v1.6.1) (2025-09-07)
 
 
