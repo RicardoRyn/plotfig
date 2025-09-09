@@ -84,6 +84,9 @@ plugins:
 
 # Additional configuration
 extra:
+  version:
+    provider: mike
+    alias: true
   status:
     new: Recently added
     deprecated: Deprecated
