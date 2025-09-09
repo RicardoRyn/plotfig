@@ -343,7 +343,7 @@ def plot_one_group_bar_figure(
         colors_end (list[str] | None, optional):
             渐变色的结束颜色列表. Defaults to None.
         show_dots (bool, optional):
-            是否显示散点. Defaults to False.
+            是否显示散点. Defaults to True.
         dots_color (list[list[str]] | None, optional):
             散点的颜色列表. Defaults to None.
         y_lim (list[Num] | tuple[Num, Num] | None, optional):
