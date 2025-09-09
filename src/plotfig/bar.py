@@ -27,8 +27,6 @@ __all__ = [
     "plot_multi_group_bar_figure",
 ]
 
-# 创建随机数生成器
-RNG = np.random.default_rng(seed=42)
 
 
 def _is_valid_data(data):
@@ -284,8 +282,6 @@ def _statistics(
         )
 
 
-# 可调用接口函数
-# TODO: 增加不显示散点的flag
 def plot_one_group_bar_figure(
     data: np.ndarray | Sequence[Sequence[Num] | np.ndarray],
     ax: Axes | None = None,
@@ -295,6 +291,7 @@ def plot_one_group_bar_figure(
     gradient_color: bool = False,
     colors_start: list[str] | None = None,
     colors_end: list[str] | None = None,
+    show_dots: bool = True,
     dots_color: list[list[str]] | None = None,
     y_lim: list[Num] | tuple[Num, Num] | None = None,
     width: Num = 0.5,
@@ -345,6 +342,8 @@ def plot_one_group_bar_figure(
             渐变色的起始颜色列表. Defaults to None.
         colors_end (list[str] | None, optional):
             渐变色的结束颜色列表. Defaults to None.
+        show_dots (bool, optional):
+            是否显示散点. Defaults to False.
         dots_color (list[list[str]] | None, optional):
             散点的颜色列表. Defaults to None.
         y_lim (list[Num] | tuple[Num, Num] | None, optional):
@@ -442,7 +441,10 @@ def plot_one_group_bar_figure(
         means.append(mean)
         sds.append(sd)
         ses.append(se)
-        scatter_x = RNG.normal(i, 0.1, len(d))
+        # 创建随机数生成器
+        rng = np.random.default_rng(seed=42)
+        scatter_x = rng.normal(i, 0.1, len(d))
+        print(scatter_x)
         scatter_positions.append(scatter_x)
     if errorbar_type == "sd":
         error_values = sds
@@ -486,11 +488,12 @@ def plot_one_group_bar_figure(
     )
 
     # 绘制散点
-    for i, d in enumerate(data):
-        if dots_color is None:
-            _add_scatter(ax, scatter_positions[i], d, ["gray"] * len(d), dots_size)
-        else:
-            _add_scatter(ax, scatter_positions[i], d, dots_color[i], dots_size)
+    if show_dots:
+        for i, d in enumerate(data):
+            if dots_color is None:
+                _add_scatter(ax, scatter_positions[i], d, ["gray"] * len(d), dots_size)
+            else:
+                _add_scatter(ax, scatter_positions[i], d, dots_color[i], dots_size)
 
     # 美化
     ax.spines[["top", "right"]].set_visible(False)
@@ -771,7 +774,9 @@ def plot_one_group_violin_figure(
 
     # 绘制散点（复用现有函数）
     if show_dots:
-        scatter_positions = [RNG.normal(i, 0.1, len(d)) for i, d in enumerate(data)]
+        # 创建随机数生成器
+        rng = np.random.default_rng(seed=42)
+        scatter_positions = [rng.normal(i, 0.1, len(d)) for i, d in enumerate(data)]
         for i, d in enumerate(data):
             _add_scatter(ax, scatter_positions[i], d, colors[i], dots_size)
 
@@ -995,7 +1000,9 @@ def plot_multi_group_bar_figure(
         )
         # 绘制散点
         for index_bar, dot in enumerate(group_data):
-            dot_x_pos = RNG.normal(
+            # 创建随机数生成器
+            rng = np.random.default_rng(seed=42)
+            dot_x_pos = rng.normal(
                 x_positions[index_bar], scale=bar_width / 7, size=len(dot)
             )
             _add_scatter(ax, dot_x_pos, dot, dots_color, dots_size=dots_size)
