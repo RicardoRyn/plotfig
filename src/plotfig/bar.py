@@ -444,7 +444,6 @@ def plot_one_group_bar_figure(
         # 创建随机数生成器
         rng = np.random.default_rng(seed=42)
         scatter_x = rng.normal(i, 0.1, len(d))
-        print(scatter_x)
         scatter_positions.append(scatter_x)
     if errorbar_type == "sd":
         error_values = sds
