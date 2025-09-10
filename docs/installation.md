@@ -1,6 +1,6 @@
 # 安装
 
-## 普通安装
+## 安装方式
 
 `plotfig` 支持通过 `pip` 或源码安装，要求 Python 3.11 及以上版本。
 
@@ -28,7 +28,7 @@ pip install .
 
     由于 PyPI 上的 `surfplot` 版本较旧，缺少 `plotfig` 所需功能，建议通过以下步骤安装其 GitHub 仓库的最新版。
 
-    如果您无须绘制 brain_surface 图，可以忽略此步骤。
+    如果您无须绘制 `brain surface` 图，可以忽略此步骤。
 
     ```bash
     # 卸载旧版本
@@ -46,16 +46,21 @@ pip install .
 
 ## 贡献指南
 
-如果您希望参与 `plotfig` 的开发，或者想体验尚未正式发布的新功能，可以选择以开发模式安装项目。
-这种“可编辑模式（editable mode）”安装方式允许您对本地源码的修改立即生效，非常适合开发、调试和贡献代码。
+**_`dev` 分支通常包含最新功能以及尚未合并到 `main` 的修复。_**
 
-推荐先 Fork 仓库，然后克隆您自己的 Fork：
+如果您希望体验这些功能或参与 `plotfig` 的开发，可以选择以 开发模式（editable mode） 安装项目。
+
+这种安装方式允许您对本地源码的修改立即生效，非常适合调试、开发和贡献代码。
+
+推荐先 Fork 仓库，然后克隆您自己的 Fork 并安装 `dev` 分支：
 
 ```bash
-git clone -b dev https://github.com/<your-username>/plotfig.git
+git clone -b dev https://github.com/ <your-username >/plotfig.git
 cd plotfig
 pip install -e .
 ```
+
+---
 
 **欢迎提交 Issue 或 PR！**
 
