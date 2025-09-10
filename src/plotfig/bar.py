@@ -343,7 +343,7 @@ def plot_one_group_bar_figure(
         colors_end (list[str] | None, optional):
             渐变色的结束颜色列表. Defaults to None.
         show_dots (bool, optional):
-            是否显示散点. Defaults to False.
+            是否显示散点. Defaults to True.
         dots_color (list[list[str]] | None, optional):
             散点的颜色列表. Defaults to None.
         y_lim (list[Num] | tuple[Num, Num] | None, optional):
@@ -444,7 +444,6 @@ def plot_one_group_bar_figure(
         # 创建随机数生成器
         rng = np.random.default_rng(seed=42)
         scatter_x = rng.normal(i, 0.1, len(d))
-        print(scatter_x)
         scatter_positions.append(scatter_x)
     if errorbar_type == "sd":
         error_values = sds

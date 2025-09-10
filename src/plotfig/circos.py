@@ -95,6 +95,7 @@ def plot_circos_figure(
     node_colors: list[str] | None = None,
     node_space: float = 0.0,
     node_label_fontsize: int = 10,
+    node_label_orientation: Literal["vertical", "horizontal"] = "horizontal",
     vmin: float | None = None,
     vmax: float | None = None,
     cmap: str | None = None,
@@ -114,6 +115,7 @@ def plot_circos_figure(
         node_colors (list[str] | None, optional): 脑区颜色列表，长度应与脑区数量一致。默认为None时自动生成颜色
         node_space (float, optional): 脑区间间隔角度（度）。默认为0.0
         node_label_fontsize (int, optional): 脑区标签字体大小。默认为10
+        node_label_orientation (Literal["vertical", "horizontal"], optional): 脑区标签方向。默认为"horizontal"
         vmin (float | None, optional): 连接强度颜色映射的最小值。默认为None时根据数据自动确定
         vmax (float | None, optional): 连接强度颜色映射的最大值。默认为None时根据数据自动确定
         cmap (str | None, optional): 颜色映射表名称。默认为None时根据edge_color生成
@@ -190,7 +192,7 @@ def plot_circos_figure(
     for sector in circos.sectors:
         if sector.name.startswith("_gap"):
             continue
-        sector.text(sector.name, size=node_label_fontsize)
+        sector.text(sector.name, size=node_label_fontsize, orientation=node_label_orientation)
         track = sector.add_track((95, 100))
         track.axis(fc=name2color[sector.name])
 
