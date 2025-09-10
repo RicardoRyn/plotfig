@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.8.0](https://github.com/RicardoRyn/plotfig/compare/v1.7.0...v1.8.0) (2025-09-10)
+
+
+### Features ✨
+
+* **circos:** add support for changing node label orientation via `node_label_orientation` ([abb7746](https://github.com/RicardoRyn/plotfig/commit/abb77465b33ea91d1a23592436b27d400799995f))
+
+
+### Bug Fixes 🔧
+
+* **bar:** remove leftover debug print in bar functions ([37f6f4c](https://github.com/RicardoRyn/plotfig/commit/37f6f4cfe55ed7ad0578040838f09f5966ce89cf))
+
 ## [1.7.0](https://github.com/RicardoRyn/plotfig/compare/v1.6.1...v1.7.0) (2025-09-09)
 
 
