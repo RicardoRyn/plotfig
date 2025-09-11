@@ -77,7 +77,7 @@ rm -rf surfplot
 推荐先 Fork 仓库，然后克隆您自己的 Fork 并安装 `dev` 分支：
 
 ```bash
-git clone -b dev https://github.com/ <your-username >/plotfig.git
+git clone -b dev https://github.com/<your-username>/plotfig.git
 cd plotfig
 pip install -e .
 ```
@@ -90,4 +90,4 @@ pip install -e .
 
 都非常欢迎在 [Issue](https://github.com/RicardoRyn/plotfig/issues) 中提出。
 
-也可以直接提交 [PR](https://github.com/RicardoRyn/plotfig/pulls)，一起变得更强 🙌！
+也可以直接提交 [PR](https://github.com/RicardoRyn/plotfig/pulls)，一起变得更强 💪！
