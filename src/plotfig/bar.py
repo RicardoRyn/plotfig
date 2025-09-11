@@ -205,7 +205,7 @@ def _annotate_significance(
                 xy=(i, y),
                 xytext=(j, y),
                 arrowprops=dict(
-                    edgecolor=line_color, width=0.5, headwidth=0.1, headlength=0.1
+                    color=line_color, width=0.5, headwidth=0.1, headlength=0.1
                 ),
             )
             _stars(pval, (i + j) / 2, y + star_offset, color, fontsize)
