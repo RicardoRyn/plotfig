@@ -1,17 +1,12 @@
-import random
+import numpy as np
+import matplotlib.pyplot as plt
+from plotfig import plot_one_group_bar_figure
 
-input_file = r"e:\git_repositories\plotfig\src\plotfig\data\neurodata\atlases\macaque_D99\label.txt"
-output_file = r"e:\git_repositories\plotfig\src\plotfig\data\neurodata\atlases\macaque_D99\label1.txt"
+fig, ax = plt.subplots()
 
-with open(input_file, "r", encoding="utf-8") as fin, \
-    open(output_file, "w", encoding="utf-8") as fout:
+data1 = np.random.rand(10)
+data2 = np.random.rand(10)
 
-    for idx, line in enumerate(fin, start=1):
-        region_name = line.rstrip("\n")
-        fout.write(region_name + "\n")
+ax = plot_one_group_bar_figure([data1, data2], ax=ax)
 
-        r = random.randint(0, 255)
-        g = random.randint(0, 255)
-        b = random.randint(0, 255)
-        # 写格式：序号, r, g, b, 255
-        fout.write(f"{idx} {r} {g} {b} 255\n")
+fig.savefig("test.png")

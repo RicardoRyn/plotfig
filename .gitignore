@@ -12,7 +12,6 @@ wheels/
 # backup
 *.bak
 
-# notebooks
+.vscode/*
 notebooks/figures/*
-
 tests/figures/*
