@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/RicardoRyn/plotfig/compare/v1.8.0...v1.8.1) (2025-10-29)
+
+
+### Bug Fixes 🔧
+
+* **bar:** fix the statistic line color not displaying as expected ([25338dd](https://github.com/RicardoRyn/plotfig/commit/25338dd2322b9bb88297b44a22c67a6b0d92a4cf))
+
 ## [1.8.0](https://github.com/RicardoRyn/plotfig/compare/v1.7.0...v1.8.0) (2025-09-10)
 
 
