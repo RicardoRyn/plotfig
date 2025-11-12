@@ -24,7 +24,7 @@ def plot_correlation_figure(
     stats_method: str = "spearman",
     ci: bool = False,
     dots_color: str = "steelblue",
-    dots_size: int | float = 1,
+    dots_size: int | float = 10,
     line_color: str = "r",
     title_name: str = "",
     title_fontsize: int = 12,

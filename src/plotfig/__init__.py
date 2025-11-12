@@ -9,7 +9,12 @@ from .correlation import plot_correlation_figure
 from .matrix import plot_matrix_figure
 from .brain_surface import plot_brain_surface_figure
 from .circos import plot_circos_figure
-from .brain_connection import plot_brain_connection_figure, save_brain_connection_frames
+from .brain_connection import (
+    plot_brain_connection_figure,
+    save_brain_connection_frames,
+    batch_crop_images,
+    create_gif_from_images,
+)
 from .utils import (
     gen_hex_colors,
     gen_symmetric_matrix,
@@ -35,6 +40,8 @@ __all__ = [
     # brain_connection
     "plot_brain_connection_figure",
     "save_brain_connection_frames",
+    "batch_crop_images",
+    "create_gif_from_images",
     # utils
     "gen_hex_colors",
     "gen_symmetric_matrix",
