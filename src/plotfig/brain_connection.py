@@ -2,6 +2,8 @@ import datetime
 from pathlib import Path
 from typing import Literal
 from collections.abc import Sequence
+from PIL import Image
+import imageio
 
 import numpy as np
 import numpy.typing as npt
@@ -19,6 +21,8 @@ Num = int | float
 __all__ = [
     "plot_brain_connection_figure",
     "save_brain_connection_frames",
+    "batch_crop_images",
+    "create_gif_from_images",
 ]
 
 
@@ -314,3 +318,99 @@ def save_brain_connection_frames(
         fig.update_layout(scene_camera=camera)
         pio.write_image(fig, f"{output_dir}/frame_{i:03d}.png", width=800, height=800)
     logger.info(f"保存了 {n_frames} 张图片在 {output_dir}")
+
+
+def batch_crop_images(
+    directory_path: Path,
+    suffix: str = "_cropped",
+    left_frac: float = 0.25,
+    top_frac: float = 0.25,
+    right_frac: float = 0.25,
+    bottom_frac: float = 0.25,
+):
+    """
+    批量裁剪指定目录下的图像文件。
+
+    Args:
+        directory_path (Path): 图像文件所在的目录路径。
+        suffix (str, optional): 新文件名后缀。默认为 "_cropped"。
+        left_frac (float, optional): 左侧裁剪比例（0-1）。默认为 0.2。
+        top_frac (float, optional): 上侧裁剪比例（0-1）。默认为 0.15。
+        right_frac (float, optional): 右侧裁剪比例（0-1）。默认为 0.2。
+        bottom_frac (float, optional): 下侧裁剪比例（0-1）。默认为 0.15。
+
+    Notes:
+        支持常见图像格式 (PNG, JPG, JPEG, BMP, TIFF)。
+        裁剪后的图像将保存在原目录中，并添加指定后缀，原图像保持不变。
+        所有裁剪均基于图像尺寸的百分比计算，无绝对像素值。
+    """
+    supported_extensions = {".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".tif"}
+
+    for image_path in directory_path.rglob("*"):
+        if (
+            not image_path.is_file()
+            or image_path.suffix.lower() not in supported_extensions
+        ):
+            continue
+
+        new_file_name = image_path.stem + suffix + image_path.suffix
+
+        try:
+            figure = Image.open(image_path)
+            width, height = figure.size
+            print(f"图像宽度：{width}，高度：{height}")
+
+            left = int(width * left_frac)
+            right = int(width * (1 - right_frac))
+            top = int(height * top_frac)
+            bottom = int(height * (1 - bottom_frac))
+
+            # 裁切图像
+            cropped_fig = figure.crop((left, top, right, bottom))
+            # 保存裁切后的图像
+            cropped_fig.save(image_path.parent / new_file_name)
+
+            figure.close()
+            cropped_fig.close()
+        except Exception as e:
+            print(f"处理文件 {image_path.name} 时出错: {e}")
+
+
+def create_gif_from_images(
+    folder_path: str | Path,
+    output_name: str = "output.gif",
+    fps: int = 10,
+    extensions: Sequence[str] = (".png", ".jpg", ".jpeg"),
+) -> None:
+    """
+    从指定文件夹中的图片生成 GIF 文件。
+
+    Args:
+        folder_path (str | Path): 图片所在文件夹路径
+        output_name (str, optional): 输出 GIF 文件名，默认为 "output.gif"
+        fps (int, optional): GIF 帧率，默认为 10
+        extensions (Sequence[str], optional): 图片文件扩展名过滤，默认为 ('.png', '.jpg', '.jpeg')
+    """
+    folder = Path(folder_path)
+    if not folder.exists() or not folder.is_dir():
+        raise ValueError(f"{folder} 不是有效的文件夹路径。")
+
+    # 获取文件夹下指定扩展名的文件，并排序
+    figures_path = sorted(
+        [f for f in folder.iterdir() if f.suffix.lower() in extensions]
+    )
+
+    if not figures_path:
+        raise ValueError(f"文件夹 {folder} 中没有找到符合 {extensions} 的图片文件。")
+
+    figures = [Image.open(f) for f in figures_path]
+
+    # 输出 GIF 路径
+    output_path = folder / output_name
+
+    # 创建 GIF
+    with imageio.get_writer(output_path, mode='I', fps=fps, loop=0) as writer:
+        for figure in figures:
+            writer.append_data(figure.convert('RGB'))
+
+    print(f"GIF 已保存到: {output_path}")
