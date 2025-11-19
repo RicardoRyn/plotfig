@@ -9,6 +9,7 @@ authors = [
     { name = "Ricardo Ryn", email = "ricardoRyn1317@gmail.com" }
 ]
 dependencies = [
+    "imageio>=2.37.2",
     "kaleido>=1.0.0",
     "loguru>=0.7.3",
     "matplotlib>=3.10.6",
