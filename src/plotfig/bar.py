@@ -383,7 +383,13 @@ def plot_one_group_bar_figure(
         statistic (bool, optional):
             是否进行统计显著性分析. Defaults to False.
         test_method (list[str], optional):
-            统计检验方法列表. Defaults to ["ttest_ind"].
+            统计检验方法列表，包括
+            1. `ttest_ind`,
+            2. `ttest_rel`,
+            3. `ttest_1samp`,
+            4. `mannwhitneyu`,
+            5. `external`.
+            Defaults to ["ttest_ind"].
         p_list (list[float] | None, optional):
             预计算的p值列表，用于显著性标记. Defaults to None.
         popmean (Num, optional):
