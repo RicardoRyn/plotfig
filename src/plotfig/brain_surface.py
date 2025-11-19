@@ -50,7 +50,7 @@ def plot_brain_surface_figure(
     ax: Axes | None = None,
     vmin: Num | None = None,
     vmax: Num | None = None,
-    cmap: str = "Reds",
+    cmap: str = "viridis",
     colorbar: bool = True,
     colorbar_location: str = "right",
     colorbar_label_name: str = "",
@@ -75,7 +75,7 @@ def plot_brain_surface_figure(
         ax (Axes | None, optional): matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
         vmin (Num | None, optional): 颜色映射的最小值，None表示使用数据中的最小值. Defaults to None.
         vmax (Num | None, optional): 颜色映射的最大值，None表示使用数据中的最大值. Defaults to None.
-        cmap (str, optional): 颜色映射方案，如"Reds"、"Blues"、"viridis"等. Defaults to "Reds".
+        cmap (str, optional): 颜色映射方案，如"viridis"、"Blues"、"Reds"等. Defaults to "viridis".
         colorbar (bool, optional): 是否显示颜色条. Defaults to True.
         colorbar_location (str, optional): 颜色条位置，可选"left"、"right"、"top"、"bottom". Defaults to "right".
         colorbar_label_name (str, optional): 颜色条标签名称. Defaults to "".
@@ -131,6 +131,10 @@ def plot_brain_surface_figure(
                     "rh": "atlases/human_BNA/fsaverage.R.BNA.32k_fs_LR.label.gii",
                 },
             },
+            "sulc": {
+                "lh": "surfaces/human_fsLR/100206.L.sulc.32k_fs_LR.shape.gii",
+                "rh": "surfaces/human_fsLR/100206.R.sulc.32k_fs_LR.shape.gii",
+            }
         },
         "chimpanzee": {
             "surf": {
@@ -166,7 +170,12 @@ def plot_brain_surface_figure(
                     "lh": "atlases/macaque_D99/L.d99.label.gii",
                     "rh": "atlases/macaque_D99/R.d99.label.gii",
                 },
+            },
+            "sulc": {
+                "lh": "surfaces/macaque_BNA/SC_06018.L.sulc.32k_fs_LR.shape.gii",
+                "rh": "surfaces/macaque_BNA/SC_06018.R.sulc.32k_fs_LR.shape.gii",
             }
+
         }
     }
 
@@ -179,10 +188,29 @@ def plot_brain_surface_figure(
             raise ValueError(f"Unsupported {atlas} atlas for {species}")
 
     # 创建Plot对象，用于绘制大脑皮层
-    p = Plot(
-        NEURODATA / atlas_info[species]["surf"]["lh"],
-        NEURODATA / atlas_info[species]["surf"]["rh"],
-    )
+    if surf != "flat":
+        p = Plot(
+            NEURODATA / atlas_info[species]["surf"]["lh"],
+            NEURODATA / atlas_info[species]["surf"]["rh"],
+        )
+    else:
+        # NOTE: 目前只有人和猕猴具有flat surface，暂时不支持黑猩猩
+        p = Plot(
+            NEURODATA / atlas_info[species]["surf"]["lh"],
+            NEURODATA / atlas_info[species]["surf"]["rh"],
+            views="dorsal",
+            zoom = 1.2,
+        )
+        lh_sulc_file = NEURODATA / atlas_info[species]["sulc"]["lh"]
+        rh_sulc_file = NEURODATA / atlas_info[species]["sulc"]["rh"]
+        p.add_layer(
+            {
+                "left": nib.load(lh_sulc_file).darrays[0].data,
+                "right": nib.load(rh_sulc_file).darrays[0].data,
+            },
+            cmap="Grays_r",
+            cbar=False
+        )
 
     # 分离左半球和右半球的数据
     hemisphere_data = {}
