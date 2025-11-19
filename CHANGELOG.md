@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.10.0](https://github.com/RicardoRyn/plotfig/compare/v1.9.0...v1.10.0) (2025-11-19)
+
+
+### Features ✨
+
+* **data:** add human and macaque flat brain surface data ([86c56b6](https://github.com/RicardoRyn/plotfig/commit/86c56b6d556f62e087ff37cb515c927596f83afe))
+* **surface:** add flat surface support and sulcal data ([fd64707](https://github.com/RicardoRyn/plotfig/commit/fd6470774b83fd97de96fba3fc60e73cc56fa1e0))
+
 ## [1.9.0](https://github.com/RicardoRyn/plotfig/compare/v1.8.1...v1.9.0) (2025-11-12)
 
 
