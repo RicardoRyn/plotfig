@@ -46,16 +46,14 @@ pip install .
 
 ## 贡献指南
 
-**_`dev` 分支通常包含最新功能以及尚未合并到 `main` 的修复。_**
-
 如果您希望体验这些功能或参与 `plotfig` 的开发，可以选择以 开发模式（editable mode） 安装项目。
 
 这种安装方式允许您对本地源码的修改立即生效，非常适合调试、开发和贡献代码。
 
-推荐先 Fork 仓库，然后克隆您自己的 Fork 并安装 `dev` 分支：
+推荐先 Fork 仓库，然后克隆您自己的 Fork 并安装 `main` 分支：
 
 ```bash
-git clone -b dev https://github.com/<your-username>/plotfig.git
+git clone https://github.com/USERNAME/plotfig.git
 cd plotfig
 pip install -e .
 ```
