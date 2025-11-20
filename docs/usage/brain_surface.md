@@ -30,14 +30,14 @@
 
 ## 全脑
 
-### 快速出图
+## 快速出图
 
 !!! info
     画图前请确保脑区名字正确。
 
 
 ```python
-from plotfig import *
+from plotfig import plot_brain_surface_figure
 
 data = {"lh_V1": 1, "rh_MT": 1.5}
 
@@ -52,8 +52,8 @@ ax = plot_brain_surface_figure(data, species="human", atlas="glasser")
 
 
 ```python
+from plotfig import plot_brain_surface_figure
 import matplotlib.pyplot as plt
-from plotfig import *
 
 macaque_data = {"lh_V1": 1}
 chimpanzee_data = {"lh_MVOcC.rv": 1}
@@ -74,13 +74,102 @@ ax2 = plot_brain_surface_figure(
     
 
 
-### 参数设置
+## 不同的表面文件
+
+对于人，提供了以下表面文件：
+
+1. `veryinflated`
+2. `inflated`
+3. `midthiickness`
+4. `sphere`
+5. `flat`
+
+
+```python
+from plotfig import plot_brain_surface_figure
+import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(2, 3, figsize=(12, 6))
+fig.delaxes(axes[1, 2])
+
+plot_data = {"lh_V1": 1, "rh_FST": 2}
+
+ax1 = plot_brain_surface_figure(plot_data, surf="veryinflated", ax=axes[0,0], title_name="veryinflated")
+ax2 = plot_brain_surface_figure(plot_data, surf="inflated", ax=axes[0,1], title_name="inflated")
+ax3 = plot_brain_surface_figure(plot_data, surf="midthickness", ax=axes[0, 2], title_name="midthickness")
+ax4 = plot_brain_surface_figure(plot_data, surf="sphere", ax=axes[1,0], title_name="sphere")
+ax4 = plot_brain_surface_figure(plot_data, surf="flat", ax=axes[1,1], title_name="flat")
+```
+
+
+    
+![png](brain_surface_files/brain_surface_9_0.png)
+    
+
+
+对于黑猩猩，提供了以下表面文件：
+
+1. `veryinflated`
+2. `midthiickness`
+
+
+```python
+from plotfig import plot_brain_surface_figure
+import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(1, 2)
+
+plot_data = {"lh_MVOcC.rd": 1, "rh_STG.r": 2}
+
+ax1 = plot_brain_surface_figure(plot_data, species="chimpanzee", atlas="bna", surf="veryinflated", ax=axes[0], title_name="veryinflated")
+ax3 = plot_brain_surface_figure(plot_data, species="chimpanzee", atlas="bna", surf="midthickness", ax=axes[1], title_name="midthickness")
+```
+
+
+    
+![png](brain_surface_files/brain_surface_11_0.png)
+    
+
+
+对于猕猴，提供了以下表面文件：
+
+1. `veryinflated`
+2. `inflated`
+4. `pial`
+3. `midthiickness`
+5. `white`
+6. `flat`
+
+
+```python
+from plotfig import plot_brain_surface_figure
+import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(2, 3, figsize=(12, 6))
+
+plot_data = {"lh_V1": 1, "rh_FST": 2}
+
+ax1 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", surf="veryinflated", ax=axes[0,0], title_name="veryinflated")
+ax2 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", surf="inflated", ax=axes[0,1], title_name="inflated")
+ax3 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", surf="pial", ax=axes[0, 2], title_name="pial")
+ax4 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", surf="midthickness", ax=axes[1,0], title_name="midthickness")
+ax5 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", surf="white", ax=axes[1,1], title_name="white")
+ax5 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", surf="flat", ax=axes[1,2], title_name="flat")
+```
+
+
+    
+![png](brain_surface_files/brain_surface_13_0.png)
+    
+
+
+## 更多设置
 
 全部参数见 [`plot_brain_surface_figure`](../api/index.md/#plotfig.brain_surface.plot_brain_surface_figure) 的 API 文档。
 
 
 ```python
-from plotfig import *
+from plotfig import plot_brain_surface_figure
 
 data = {"lh_V1": 1, "rh_MT": 1.5, "rh_V1": -1}
 
@@ -99,6 +188,6 @@ ax = plot_brain_surface_figure(
 
 
     
-![png](brain_surface_files/brain_surface_9_0.png)
+![png](brain_surface_files/brain_surface_16_0.png)
     
 
