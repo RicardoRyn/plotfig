@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
 from matplotlib.ticker import (
     ScalarFormatter,
     FuncFormatter,
@@ -20,7 +21,7 @@ __all__ = ["plot_correlation_figure"]
 def plot_correlation_figure(
     data1: list[Num] | np.ndarray,
     data2: list[Num] | np.ndarray,
-    ax: plt.Axes | None = None,
+    ax: Axes | None = None,
     stats_method: str = "spearman",
     ci: bool = False,
     dots_color: str = "steelblue",
@@ -46,9 +47,11 @@ def plot_correlation_figure(
     asterisk_fontsize: int = 10,
     show_p_value: bool = False,
     hexbin: bool = False,
-    hexbin_cmap: bool = None,
+    hexbin_cmap: LinearSegmentedColormap | None = None,
     hexbin_gridsize: int = 50,
-) -> None:
+    xlim: list[Num] | tuple[Num, Num] | None = None,
+    ylim: list[Num] | tuple[Num, Num] | None = None,
+) -> Axes:
     """
     绘制两个数据集之间的相关性图，支持线性回归、置信区间和统计方法（Spearman 或 Pearson）。
 
@@ -80,13 +83,18 @@ def plot_correlation_figure(
         y_format (str, optional): Y 轴格式化方式，支持 "normal", "sci", "1f", "percent"。默认为 "normal"。
         asterisk_fontsize (int, optional): 显著性星号字体大小。默认为 10。
         show_p_value (bool, optional): 是否显示 p 值。默认为 True。
+        hexbin (bool, optional): 是否使用六边形箱图。默认为 False。
+        hexbin_cmap (LinearSegmentedColormap | None, optional): 六边形箱图的颜色映射。默认为 None。
+        hexbin_gridsize (int, optional): 六边形箱图的网格大小。默认为 50。
+        xlim (list[Num] | tuple[Num, Num] | None, optional): X 轴范围限制。默认为 None。
+        ylim (list[Num] | tuple[Num, Num] | None, optional): Y 轴范围限制。默认为 None。
 
     Returns:
         None
     """
 
     def set_axis(
-        ax, axis, label, labelsize, ticksize, rotation, locator, max_tick_value, fmt
+        ax, axis, label, labelsize, ticksize, rotation, locator, max_tick_value, fmt, lim
     ):
         if axis == "x":
             set_label = ax.set_xlabel
@@ -100,6 +108,13 @@ def plot_correlation_figure(
             set_ticks = ax.set_yticks
             axis_formatter = ax.yaxis.set_major_formatter
             axis_major_locator = ax.yaxis.set_major_locator
+
+        # 设置轴范围
+        if lim is not None:
+            if axis == "x":
+                ax.set_xlim(lim)
+            else:
+                ax.set_ylim(lim)
 
         set_label(label, fontsize=labelsize)
         ax.tick_params(axis=axis, which="major", labelsize=ticksize, rotation=rotation)
@@ -167,6 +182,7 @@ def plot_correlation_figure(
         x_major_locator,
         x_max_tick_to_value,
         x_format,
+        xlim,
     )
     set_axis(
         ax,
@@ -178,6 +194,7 @@ def plot_correlation_figure(
         y_major_locator,
         y_max_tick_to_value,
         y_format,
+        ylim,
     )
 
     # 标注r值或rho值
@@ -195,9 +212,7 @@ def plot_correlation_figure(
     if show_p_value:
         asterisk = f" p={p:.4f}"
     else:
-        asterisk = (
-            " ***" if p < 0.001 else " **" if p < 0.01 else " *" if p < 0.05 else ""
-        )
+        asterisk = " ***" if p < 0.001 else " **" if p < 0.01 else " *" if p < 0.05 else ""
     x_start, x_end = ax.get_xlim()
     y_start, y_end = ax.get_ylim()
     ax.text(
