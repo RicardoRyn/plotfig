@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/RicardoRyn/plotfig/compare/v1.10.0...v1.11.0) (2025-11-22)
+
+
+### Features ✨
+
+* **correlation:** add axis limits ([0484b2b](https://github.com/RicardoRyn/plotfig/commit/0484b2bb81018ead5d253ead263dddd7f716291f)), closes [#53](https://github.com/RicardoRyn/plotfig/issues/53)
+
 ## [1.10.0](https://github.com/RicardoRyn/plotfig/compare/v1.9.0...v1.10.0) (2025-11-19)
 
 
