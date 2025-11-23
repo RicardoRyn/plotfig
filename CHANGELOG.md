@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.0](https://github.com/RicardoRyn/plotfig/compare/v1.11.0...v1.12.0) (2025-11-23)
+
+
+### Features ✨
+
+* **matrix:** add xlabel and ylabel parameters for axis labels ([2bea2b0](https://github.com/RicardoRyn/plotfig/commit/2bea2b0338bbc13a8186592559b11bc081a999e2)), closes [#56](https://github.com/RicardoRyn/plotfig/issues/56)
+
 ## [1.11.0](https://github.com/RicardoRyn/plotfig/compare/v1.10.0...v1.11.0) (2025-11-22)
 
 
