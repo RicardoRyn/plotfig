@@ -9,10 +9,16 @@ wheels/
 # Virtual environments
 .venv
 
-# backup
-*.bak
-
-.vscode/
+# Figures
 notebooks/figures/
 tests/figures/
+
+# deployment
 site/
+
+# ai agent docs
+IFLOW.md
+
+*.bak
+.vscode/
+
