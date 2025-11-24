@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.1](https://github.com/RicardoRyn/plotfig/compare/v1.12.0...v1.12.1) (2025-11-24)
+
+
+### Code Refactoring ♻️
+
+* **brain_connection:** reorganize imports and improve gif generation ([790f43b](https://github.com/RicardoRyn/plotfig/commit/790f43be2ffb29f4892d8eea32dcc298e745d55e))
+
 ## [1.12.0](https://github.com/RicardoRyn/plotfig/compare/v1.11.0...v1.12.0) (2025-11-23)
 
 
