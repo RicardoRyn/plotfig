@@ -1,20 +1,22 @@
 import datetime
+import warnings
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Literal
-from collections.abc import Sequence
-from PIL import Image
-import imageio
 
+import imageio
+from PIL import Image
+import nibabel as nib
 import numpy as np
 import numpy.typing as npt
-import nibabel as nib
+from scipy.ndimage import center_of_mass
+from tqdm import tqdm
 import plotly.graph_objects as go
 import plotly.io as pio
 from matplotlib.colors import LinearSegmentedColormap, to_hex
-from scipy.ndimage import center_of_mass
-from tqdm import tqdm
-
 from loguru import logger
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 Num = int | float
 
@@ -380,7 +382,6 @@ def create_gif_from_images(
     folder_path: str | Path,
     output_name: str = "output.gif",
     fps: int = 10,
-    extensions: Sequence[str] = (".png", ".jpg", ".jpeg"),
 ) -> None:
     """
     从指定文件夹中的图片生成 GIF 文件。
@@ -389,13 +390,13 @@ def create_gif_from_images(
         folder_path (str | Path): 图片所在文件夹路径
         output_name (str, optional): 输出 GIF 文件名，默认为 "output.gif"
         fps (int, optional): GIF 帧率，默认为 10
-        extensions (Sequence[str], optional): 图片文件扩展名过滤，默认为 ('.png', '.jpg', '.jpeg')
     """
     folder = Path(folder_path)
     if not folder.exists() or not folder.is_dir():
         raise ValueError(f"{folder} 不是有效的文件夹路径。")
 
     # 获取文件夹下指定扩展名的文件，并排序
+    extensions = (".png", ".jpg", ".jpeg")
     figures_path = sorted(
         [f for f in folder.iterdir() if f.suffix.lower() in extensions]
     )
@@ -409,8 +410,8 @@ def create_gif_from_images(
     output_path = folder / output_name
 
     # 创建 GIF
-    with imageio.get_writer(output_path, mode='I', fps=fps, loop=0) as writer:
+    with imageio.get_writer(output_path, mode="I", fps=fps, loop=0) as writer:
         for figure in figures:
-            writer.append_data(figure.convert('RGB'))
+            writer.append_data(figure.convert("RGB"))
 
-    print(f"GIF 已保存到: {output_path}")
+    logger.info(f"GIF 已保存到: {output_path}")
