@@ -50,6 +50,8 @@ __all__ = [
     "is_symmetric_square",
 ]
 
+__author__ = "Ricardo Ryn"
+__description__ = "A python package for neuroscience plotting."
 try:
     __version__ = version("plotfig")
 except PackageNotFoundError:
