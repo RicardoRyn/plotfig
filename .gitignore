@@ -10,7 +10,7 @@ wheels/
 .venv
 
 # Figures
-notebooks/figures/
+notebooks/example_data/
 tests/figures/
 
 # deployment
