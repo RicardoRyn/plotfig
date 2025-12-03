@@ -96,7 +96,7 @@ ax1 = plot_brain_surface_figure(plot_data, surf="veryinflated", ax=axes[0,0], ti
 ax2 = plot_brain_surface_figure(plot_data, surf="inflated", ax=axes[0,1], title_name="inflated")
 ax3 = plot_brain_surface_figure(plot_data, surf="midthickness", ax=axes[0, 2], title_name="midthickness")
 ax4 = plot_brain_surface_figure(plot_data, surf="sphere", ax=axes[1,0], title_name="sphere")
-ax4 = plot_brain_surface_figure(plot_data, surf="flat", ax=axes[1,1], title_name="flat")
+ax5 = plot_brain_surface_figure(plot_data, surf="flat", ax=axes[1,1], title_name="flat")
 ```
 
 
@@ -152,7 +152,7 @@ ax2 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", su
 ax3 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", surf="pial", ax=axes[0, 2], title_name="pial")
 ax4 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", surf="midthickness", ax=axes[1,0], title_name="midthickness")
 ax5 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", surf="white", ax=axes[1,1], title_name="white")
-ax5 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", surf="flat", ax=axes[1,2], title_name="flat")
+ax6 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", surf="flat", ax=axes[1,2], title_name="flat")
 ```
 
 
