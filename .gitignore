@@ -9,16 +9,8 @@ wheels/
 # Virtual environments
 .venv
 
-# Figures
-notebooks/example_data/
-tests/figures/
-
-# deployment
 site/
-
-# ai agent docs
 IFLOW.md
-
 *.bak
 .vscode/
 
