@@ -24,6 +24,7 @@ def plot_correlation_figure(
     ax: Axes | None = None,
     stats_method: str = "spearman",
     ci: bool = False,
+    ci_color: str = "salmon",
     dots_color: str = "steelblue",
     dots_size: int | float = 10,
     line_color: str = "r",
@@ -43,7 +44,7 @@ def plot_correlation_figure(
     y_tick_rotation: int = 0,
     y_major_locator: float | None = None,
     y_max_tick_to_value: float | None = None,
-    y_format: str = "normal",  # 支持 "normal", "sci", "1f", "percent"
+    y_format: str = "sci",  # 支持 "normal", "sci", "1f", "percent"
     asterisk_fontsize: int = 10,
     show_p_value: bool = False,
     hexbin: bool = False,
@@ -61,6 +62,7 @@ def plot_correlation_figure(
         ax (plt.Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前 Axes。
         stats_method (str, optional): 相关性统计方法，支持 "spearman" 和 "pearson"。默认为 "spearman"。
         ci (bool, optional): 是否绘制置信区间带。默认为 False。
+        ci_color (str, optional): 置信区间带颜色。默认为 "salmon"。
         dots_color (str, optional): 散点的颜色。默认为 "steelblue"。
         dots_size (int | float, optional): 散点的大小。默认为 1。
         line_color (str, optional): 回归线的颜色。默认为 "r"（红色）。
@@ -165,7 +167,7 @@ def plot_correlation_figure(
             x_seq,
             y_pred - conf_interval,
             y_pred + conf_interval,
-            color="salmon",
+            color=ci_color,
             alpha=0.3,
         )
 
@@ -210,7 +212,7 @@ def plot_correlation_figure(
         label = r"$\rho$"
 
     if show_p_value:
-        asterisk = f" p={p:.4f}"
+        asterisk = f" p={p:.3f}"
     else:
         asterisk = " ***" if p < 0.001 else " **" if p < 0.01 else " *" if p < 0.05 else ""
     x_start, x_end = ax.get_xlim()
