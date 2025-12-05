@@ -41,7 +41,7 @@ ax = plot_multi_group_bar_figure([[group1_bar1, group1_bar2, group1_bar3], [grou
 与单组柱状图类似，多组柱状图也提供了大量可调节的参数，用于灵活控制图像的外观。  
 本节仅展示其中的一部分参数。
 
-完整参数列表请参见 [`plot_multi_group_bar_figure`](../api/index.md/#plotfig.bar.plot_multi_group_bar_figure) 的 API 文档。
+完整参数列表请参见 [`plot_multi_group_bar_figure`](../api/#plotfig.bar.plot_multi_group_bar_figure) 的 API 文档。
 
 
 ```python

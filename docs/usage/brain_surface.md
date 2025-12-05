@@ -163,7 +163,7 @@ ax6 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", su
 
 ## 更多设置
 
-全部参数见 [`plot_brain_surface_figure`](../api/index.md/#plotfig.brain_surface.plot_brain_surface_figure) 的 API 文档。
+全部参数见 [`plot_brain_surface_figure`](../api/#plotfig.brain_surface.plot_brain_surface_figure) 的 API 文档。
 
 
 ```python

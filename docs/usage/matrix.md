@@ -27,7 +27,7 @@ ax = plot_matrix_figure(data)
 
 ## 参数设置
 
-全部参数见[`plot_matrix_figure`](../api/index.md/#plotfig.matrix.plot_matrix_figure)的 API 文档。
+全部参数见[`plot_matrix_figure`](../api/#plotfig.matrix.plot_matrix_figure)的 API 文档。
 
 
 ```python

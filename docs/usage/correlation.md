@@ -73,7 +73,7 @@ cb = fig.colorbar(hb, ax=ax2, label='counts')
 
 ## 参数设置
 
-全部参数见[`plot_correlation_figure`](../api/index.md/#plotfig.correlation)的 API 文档。
+全部参数见[`plot_correlation_figure`](../api/#plotfig.correlation)的 API 文档。
 
 
 ```python

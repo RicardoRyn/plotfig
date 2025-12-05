@@ -28,7 +28,7 @@ fig = plot_circos_figure(connectome)
 
 ## 参数设置
 
-全部参数见[`plot_circos_figure`](../api/index.md/#plotfig.circos.plot_circos_figure)的 API 文档。
+全部参数见[`plot_circos_figure`](../api/#plotfig.circos.plot_circos_figure)的 API 文档。
 
 
 ```python

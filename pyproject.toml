@@ -25,7 +25,8 @@ dependencies = [
 [dependency-groups]
 dev = [
     "ipykernel>=6.30.1",
-    "zensical>=0.0.8",
+    "mkdocstrings-python>=2.0.1",
+    "zensical>=0.0.11",
 ]
 
 [build-system]

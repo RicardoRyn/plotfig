@@ -60,7 +60,8 @@ nav = [
     "usage/circos.md",
     "usage/brain_surface.md",
     "usage/brain_connectivity.md"
-  ]}
+  ]},
+  { "🔌 API" = "api/index.md" }
 ]
 
 # With the "extra_css" option you can add your own CSS styling to customize
@@ -328,3 +329,42 @@ view = "material/eye"
 [[project.extra.social]]
 icon = "fontawesome/brands/github"
 link = "https://github.com/RicardoRyn"
+
+[project.plugins.mkdocstrings.handlers.python]
+inventories = ["https://docs.python.org/3/objects.inv"]
+paths = ["src"]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+docstring_style = "google"
+show_source = true
+# DOCSTRINGS -------------------------------------------------------------
+docstring_options.ignore_init_summary = true
+# docstring_section_style = "list"
+# CROSS-REFERENCES -------------------------------------------------------
+relative_crossrefs = true  # Sponsors only!
+scoped_crossrefs = true  # Sponsors only!
+signature_crossrefs = true
+unwrap_annotated = true
+# MEMBERS ----------------------------------------------------------------
+filters = "public"  # Sponsors only!
+inherited_members = true
+summary = true
+# HEADINGS ---------------------------------------------------------------
+# heading_level = 1
+# parameter_headings = true
+# type_parameter_headings = true
+show_root_heading = true
+show_root_full_path = false
+show_symbol_type_heading = true
+show_symbol_type_toc = true
+# SIGNATURES -------------------------------------------------------------
+# line_length = 88
+merge_init_into_class = true
+separate_signature = true
+show_signature_annotations = true
+show_signature_type_parameters = true
+# OTHER ------------------------------------------------------------------
+backlinks = "tree"
+show_bases = false
+show_inheritance_diagram = true
+

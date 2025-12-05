@@ -97,7 +97,7 @@ ax4 = plot_one_group_bar_figure([ax4_bar1, ax4_bar2], ax=axes[1,1], labels_name=
 `plotfig` 提供了丰富的选项用于自定义图形样式。
 下面展示的是 `plot_one_group_bar_figure` 函数中部分常用参数的示例用法。
 
-完整参数说明请参阅 [`plot_one_group_bar_figure`](../api/index.md/#plotfig.bar.plot_one_group_bar_figure) 的 API 文档。
+完整参数说明请参阅 [`plot_one_group_bar_figure`](../api/#plotfig.bar.plot_one_group_bar_figure) 的 API 文档。
 
 
 ```python
@@ -641,7 +641,7 @@ ax = plot_one_group_bar_figure(
 在 plotfig 中，绘制小提琴图的函数名为 `plot_one_group_violin_figure`。
 其大部分参数与 `plot_one_group_bar_figure` 相似，以下是部分演示。
 
-完整参数说明请参阅 [`plot_one_group_violin_figure`](../api/index.md/#plotfig.bar.plot_one_group_violin_figure) 的 API 文档。
+完整参数说明请参阅 [`plot_one_group_violin_figure`](../api/#plotfig.bar.plot_one_group_violin_figure) 的 API 文档。
 
 
 ```python

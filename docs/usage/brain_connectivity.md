@@ -3,6 +3,9 @@
 透明的大脑图，可以展示脑区间的连接关系。
 需要准备左右半脑的surface文件、脑区相关的nii.gz文件以及连接矩阵。
 
+## 快速出图
+
+全部参数见 [`plot_brain_connection_figure`](../api/#plotfig.brain_connection.plot_brain_connection_figure) 的 API 文档。
 
 ```python
 from plotfig import plot_brain_connection_figure, gen_symmetric_matrix
