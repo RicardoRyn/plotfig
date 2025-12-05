@@ -28,7 +28,6 @@ __all__ = [
 ]
 
 
-
 def _is_valid_data(data):
     if isinstance(data, np.ndarray):
         return data.ndim == 2
@@ -225,6 +224,8 @@ def _statistics(
     statistical_line_color,
     asterisk_fontsize,
     asterisk_color,
+    y_base,
+    interval,
 ):
     if isinstance(test_method, list):
         if len(test_method) > 2 or (
@@ -240,7 +241,8 @@ def _statistics(
                 return
 
             y_max = ax.get_ylim()[1]
-            interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
+            y_base = y_base or np.max(all_values)
+            interval = interval or (y_max - np.max(all_values)) / (len(comparisons) + 1)
 
             color = (
                 "b"
@@ -251,7 +253,7 @@ def _statistics(
             _annotate_significance(
                 ax,
                 comparisons,
-                np.max(all_values),
+                y_base,
                 interval,
                 line_color=statistical_line_color,
                 star_offset=interval / 5,
@@ -269,11 +271,13 @@ def _statistics(
             return
 
         y_max = ax.get_ylim()[1]
-        interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
+        y_base = y_base or np.max(all_values)
+        interval = interval or (y_max - np.max(all_values)) / (len(comparisons) + 1)
+
         _annotate_significance(
             ax,
             comparisons,
-            np.max(all_values),
+            y_base,
             interval,
             line_color=statistical_line_color,
             star_offset=interval / 5,
@@ -293,7 +297,6 @@ def plot_one_group_bar_figure(
     colors_end: list[str] | None = None,
     show_dots: bool = True,
     dots_color: list[list[str]] | None = None,
-    y_lim: list[Num] | tuple[Num, Num] | None = None,
     width: Num = 0.5,
     color_alpha: Num = 1,
     dots_size: Num = 35,
@@ -310,6 +313,7 @@ def plot_one_group_bar_figure(
     y_label_fontsize: Num = 10,
     y_tick_fontsize: Num = 8,
     y_tick_rotation: Num = 0,
+    y_lim: list[Num] | tuple[Num, Num] | None = None,
     statistic: bool = False,
     test_method: list[str] = ["ttest_ind"],
     p_list: list[float] | None = None,
@@ -317,6 +321,8 @@ def plot_one_group_bar_figure(
     statistical_line_color: str = "0.5",
     asterisk_fontsize: Num = 10,
     asterisk_color: str = "k",
+    y_base: float | None = None,
+    interval: float | None = None,
     ax_bottom_is_0: bool = False,
     y_max_tick_is_1: bool = False,
     math_text: bool = True,
@@ -346,8 +352,6 @@ def plot_one_group_bar_figure(
             是否显示散点. Defaults to True.
         dots_color (list[list[str]] | None, optional):
             散点的颜色列表. Defaults to None.
-        y_lim (list[Num] | tuple[Num, Num] | None, optional):
-            Y轴的范围限制. Defaults to None.
         width (Num, optional):
             柱状图的宽度. Defaults to 0.5.
         color_alpha (Num, optional):
@@ -380,6 +384,8 @@ def plot_one_group_bar_figure(
             Y轴刻度字体大小. Defaults to 8.
         y_tick_rotation (Num, optional):
             Y轴刻度旋转角度. Defaults to 0.
+        y_lim (list[Num] | tuple[Num, Num] | None, optional):
+            Y轴的范围限制. Defaults to None.
         statistic (bool, optional):
             是否进行统计显著性分析. Defaults to False.
         test_method (list[str], optional):
@@ -400,6 +406,10 @@ def plot_one_group_bar_figure(
             显著性星号的字体大小. Defaults to 10.
         asterisk_color (str, optional):
             显著性星号的颜色. Defaults to "k".
+        y_base (float | None, optional):
+            显著性连线的起始Y轴位置（高度）。如果为None，则使用内部算法自动计算一个合适的位置。Defaults to None.
+        interval (float | None, optional):
+            相邻显著性连线之间的垂直距离（Y轴增量）。如果为None，则使用内部算法根据图表范围和比较对数自动计算。Defaults to None.
         ax_bottom_is_0 (bool, optional):
             Y轴是否从0开始. Defaults to False.
         y_max_tick_is_1 (bool, optional):
@@ -549,6 +559,8 @@ def plot_one_group_bar_figure(
             statistical_line_color,
             asterisk_fontsize,
             asterisk_color,
+            y_base,
+            interval,
         )
     return ax
 
@@ -577,6 +589,7 @@ def plot_one_group_violin_figure(
     y_label_fontsize: Num = 10,
     y_tick_fontsize: Num = 8,
     y_tick_rotation: Num = 0,
+    y_lim: list[Num] | tuple[Num, Num] | None = None,
     statistic: bool = False,
     test_method: list[str] = ["ttest_ind"],
     popmean: Num = 0,
@@ -584,7 +597,8 @@ def plot_one_group_violin_figure(
     statistical_line_color: str = "0.5",
     asterisk_fontsize: Num = 10,
     asterisk_color: str = "k",
-    y_lim: list[Num] | tuple[Num, Num] | None = None,
+    y_base: float | None = None,
+    interval: float | None = None,
     ax_bottom_is_0: bool = False,
     y_max_tick_is_1: bool = False,
     math_text: bool = True,
@@ -640,6 +654,8 @@ def plot_one_group_violin_figure(
             Y轴刻度字体大小. Defaults to 8.
         y_tick_rotation (Num, optional):
             Y轴刻度旋转角度. Defaults to 0.
+        y_lim (list[Num] | tuple[Num, Num] | None, optional):
+            Y轴的范围限制. Defaults to None.
         statistic (bool, optional):
             是否进行统计显著性分析. Defaults to False.
         test_method (list[str], optional):
@@ -654,8 +670,10 @@ def plot_one_group_violin_figure(
             显著性星号的字体大小. Defaults to 10.
         asterisk_color (str, optional):
             显著性星号的颜色. Defaults to "k".
-        y_lim (list[Num] | tuple[Num, Num] | None, optional):
-            Y轴的范围限制. Defaults to None.
+        y_base (float | None, optional):
+            显著性连线的起始Y轴位置（高度）。如果为None，则使用内部算法自动计算一个合适的位置。Defaults to None.
+        interval (float | None, optional):
+            相邻显著性连线之间的垂直距离（Y轴增量）。如果为None，则使用内部算法根据图表范围和比较对数自动计算。Defaults to None.
         ax_bottom_is_0 (bool, optional):
             Y轴是否从0开始. Defaults to False.
         y_max_tick_is_1 (bool, optional):
@@ -830,6 +848,8 @@ def plot_one_group_violin_figure(
             statistical_line_color,
             asterisk_fontsize,
             asterisk_color,
+            y_base,
+            interval,
         )
 
     return ax
@@ -860,13 +880,15 @@ def plot_multi_group_bar_figure(
     y_label_fontsize=10,
     y_tick_fontsize=8,
     y_tick_rotation=0,
+    y_lim: list[Num] | tuple[Num, Num] | None = None,
     statistic: bool = False,
     test_method: str = "external",
     p_list: list[list[Num]] | None = None,
     line_color="0.5",
     asterisk_fontsize=10,
     asterisk_color="k",
-    y_lim: list[Num] | tuple[Num, Num] | None = None,
+    y_base: float | None = None,
+    interval: float | None = None,
     ax_bottom_is_0: bool = False,
     y_max_tick_is_1: bool = False,
     math_text: bool = True,
@@ -924,6 +946,8 @@ def plot_multi_group_bar_figure(
             Y轴刻度字体大小. Defaults to 8.
         y_tick_rotation (int, optional):
             Y轴刻度旋转角度. Defaults to 0.
+        y_lim (list[Num] | tuple[Num, Num] | None, optional):
+            Y轴的范围限制. Defaults to None.
         statistic (bool, optional):
             是否进行统计显著性分析. Defaults to False.
         test_method (str, optional):
@@ -936,8 +960,10 @@ def plot_multi_group_bar_figure(
             显著性星号的字体大小. Defaults to 10.
         asterisk_color (str, optional):
             显著性星号的颜色. Defaults to "k".
-        y_lim (list[Num] | tuple[Num, Num] | None, optional):
-            Y轴的范围限制. Defaults to None.
+        y_base (float | None, optional):
+            显著性连线的起始Y轴位置（高度）。如果为None，则使用内部算法自动计算一个合适的位置。Defaults to None.
+        interval (float | None, optional):
+            相邻显著性连线之间的垂直距离（Y轴增量）。如果为None，则使用内部算法根据图表范围和比较对数自动计算。Defaults to None.
         ax_bottom_is_0 (bool, optional):
             Y轴是否从0开始. Defaults to False.
         y_max_tick_is_1 (bool, optional):
@@ -1067,11 +1093,13 @@ def plot_multi_group_bar_figure(
                     if p <= 0.05:
                         comparisons.append((x_positions[i], x_positions[j], p))
             y_max = ax.get_ylim()[1]
-            interval = (y_max - np.max(all_values)) / (len(comparisons) + 1)
+            y_base = y_base or np.max(all_values)
+            interval = interval or (y_max - np.max(all_values)) / (len(comparisons) + 1)
+
             _annotate_significance(
                 ax,
                 comparisons,
-                np.max(all_values),
+                y_base,
                 interval,
                 line_color=line_color,
                 star_offset=interval / 5,
