@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.0](https://github.com/RicardoRyn/plotfig/compare/v1.12.1...v1.13.0) (2025-12-08)
+
+
+### Features ✨
+
+* **bar:** add customizable y_base and interval for significance annotations ([b544985](https://github.com/RicardoRyn/plotfig/commit/b544985ac29208885c9ef24d80c30bd17ce25e05)), closes [#61](https://github.com/RicardoRyn/plotfig/issues/61)
+
 ## [1.12.1](https://github.com/RicardoRyn/plotfig/compare/v1.12.0...v1.12.1) (2025-11-24)
 
 
