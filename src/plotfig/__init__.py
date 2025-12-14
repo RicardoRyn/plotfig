@@ -1,10 +1,5 @@
 from importlib.metadata import PackageNotFoundError, version
 
-from .bar import (
-    plot_multi_group_bar_figure,
-    plot_one_group_bar_figure,
-    plot_one_group_violin_figure,
-)
 from .brain_connection import (
     batch_crop_images,
     create_gif_from_images,
@@ -15,6 +10,13 @@ from .brain_surface import plot_brain_surface_figure
 from .circos import plot_circos_figure
 from .correlation import plot_correlation_figure
 from .matrix import plot_matrix_figure
+from .multi_bars import (
+    plot_multi_group_bar_figure,
+)
+from .single_bar import (
+    plot_one_group_bar_figure,
+    plot_one_group_violin_figure,
+)
 from .utils import (
     gen_cmap,
     gen_hex_colors,
