@@ -11,8 +11,8 @@ from numpy.typing import NDArray
 from pycirclize import Circos
 
 from plotfig.utils.color import (
-    gen_cmap,
     gen_hex_colors,
+    gen_white_to_color_cmap,
     value_to_hex,
 )
 from plotfig.utils.matrix import (
@@ -137,7 +137,9 @@ def plot_circos_figure(
         logger.warning("connectome 矩阵所有元素均为0，可能没有有效连接数据")
         vmax = float(0 if vmax is None else vmax)
         vmin = float(0 if vmin is None else vmin)
-        colormap = gen_cmap(edge_color) if cmap is None else plt.get_cmap(cmap)
+        colormap = (
+            gen_white_to_color_cmap(edge_color) if cmap is None else plt.get_cmap(cmap)
+        )
     elif np.any(connectome < 0):
         logger.warning(
             "由于 connectome 存在负值，连线颜色无法自定义，只能正值显示红色，负值显示蓝色"
@@ -149,7 +151,9 @@ def plot_circos_figure(
     else:
         vmin = float(connectome.min() if vmin is None else vmin)
         vmax = float(connectome.max() if vmax is None else vmax)
-        colormap = gen_cmap(edge_color) if cmap is None else plt.get_cmap(cmap)
+        colormap = (
+            gen_white_to_color_cmap(edge_color) if cmap is None else plt.get_cmap(cmap)
+        )
     if vmin > vmax:
         raise ValueError(f"目前{vmin=}，而{vmax=}。但是vmin不得大于vmax，请检查数据")
     norm = mcolors.Normalize(vmin=vmin, vmax=vmax)

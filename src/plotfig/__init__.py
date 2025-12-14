@@ -18,9 +18,9 @@ from .single_bar import (
     plot_one_group_violin_figure,
 )
 from .utils import (
-    gen_cmap,
     gen_hex_colors,
     gen_symmetric_matrix,
+    gen_white_to_color_cmap,
     is_symmetric_square,
     value_to_hex,
 )
@@ -46,7 +46,7 @@ __all__ = [
     # utils
     "gen_hex_colors",
     "gen_symmetric_matrix",
-    "gen_cmap",
+    "gen_white_to_color_cmap",
     "value_to_hex",
     "is_symmetric_square",
 ]
