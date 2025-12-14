@@ -306,11 +306,11 @@ def plot_one_group_bar_figure(
     title_pad: Num = 10,
     x_label_name: str = "",
     x_label_ha: str = "center",
-    x_label_fontsize: Num = 10,
-    x_tick_fontsize: Num = 8,
+    x_label_fontsize: Num = 12,
+    x_tick_fontsize: Num = 12,
     x_tick_rotation: Num = 0,
     y_label_name: str = "",
-    y_label_fontsize: Num = 10,
+    y_label_fontsize: Num = 12,
     y_tick_fontsize: Num = 8,
     y_tick_rotation: Num = 0,
     y_lim: list[Num] | tuple[Num, Num] | None = None,
@@ -371,15 +371,15 @@ def plot_one_group_bar_figure(
         x_label_ha (str, optional):
             X轴标签的水平对齐方式. Defaults to "center".
         x_label_fontsize (Num, optional):
-            X轴标签字体大小. Defaults to 10.
+            X轴标签字体大小. Defaults to 12.
         x_tick_fontsize (Num, optional):
-            X轴刻度字体大小. Defaults to 8.
+            X轴刻度字体大小. Defaults to 12.
         x_tick_rotation (Num, optional):
             X轴刻度旋转角度. Defaults to 0.
         y_label_name (str, optional):
             Y轴标签名称. Defaults to "".
         y_label_fontsize (Num, optional):
-            Y轴标签字体大小. Defaults to 10.
+            Y轴标签字体大小. Defaults to 12.
         y_tick_fontsize (Num, optional):
             Y轴刻度字体大小. Defaults to 8.
         y_tick_rotation (Num, optional):
