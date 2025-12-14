@@ -6,9 +6,14 @@ import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.colors import LinearSegmentedColormap, to_rgba
 from matplotlib.patches import Polygon, Rectangle
-from matplotlib.ticker import FormatStrFormatter, FuncFormatter, ScalarFormatter
 from numpy.typing import NDArray
 from scipy import stats
+
+from .utils.bar import (
+    _annotate_significance,
+    _compute_summary,
+    _set_yaxis,
+)
 
 warnings.simplefilter("always")
 
@@ -22,7 +27,6 @@ DataType = (
 __all__ = [
     "plot_one_group_bar_figure",
     "plot_one_group_violin_figure",
-    "plot_multi_group_bar_figure",
 ]
 
 
@@ -41,14 +45,6 @@ def _is_valid_data(data):
                 return False
         return True
     return False
-
-
-def _compute_summary(data):
-    """计算均值、标准差、标准误"""
-    mean = np.mean(data)
-    sd = np.std(data, ddof=1)
-    se = sd / np.sqrt(len(data))
-    return mean, sd, se
 
 
 def _add_scatter(
@@ -70,57 +66,6 @@ def _add_scatter(
     )
 
 
-def _set_yaxis(
-    ax,
-    data,
-    y_lim,
-    ax_bottom_is_0,
-    y_max_tick_is_1,
-    math_text,
-    one_decimal_place,
-    percentage,
-):
-    """设置Y轴格式"""
-    if y_lim:
-        ax.set_ylim(y_lim)
-    else:
-        y_min, y_max = np.min(data), np.max(data)
-        y_range = y_max - y_min
-        golden_ratio = 5**0.5 - 1
-        ax_min = 0 if ax_bottom_is_0 else y_min - (y_range / golden_ratio - y_range / 2)
-        ax_max = y_max + (y_range / golden_ratio - y_range / 2)
-        ax.set_ylim(ax_min, ax_max)
-
-    if y_max_tick_is_1:
-        ticks = [tick for tick in ax.get_yticks() if tick <= 1]
-        ax.set_yticks(ticks)
-
-    if math_text and (np.min(data) < 0.1 or np.max(data) > 100):
-        formatter = ScalarFormatter(useMathText=True)
-        formatter.set_powerlimits((-2, 2))
-        ax.yaxis.set_major_formatter(formatter)
-
-    if one_decimal_place:
-        if math_text:
-            warnings.warn(
-                "“one_decimal_place”会与“math_text”冲突，请关闭“math_text”后再开启！",
-                UserWarning,
-            )
-        else:
-            ax.yaxis.set_major_formatter(FormatStrFormatter("%.1f"))
-
-    if percentage:
-        if math_text:
-            warnings.warn(
-                "“percentage”会与“math_text”冲突，请关闭“math_text”后再开启！",
-                UserWarning,
-                stacklevel=2,
-            )
-        else:
-            ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x:.0%}"))
-
-
-# 统计相关
 def _perform_stat_test(
     data1=None,
     data2=None,
@@ -168,48 +113,6 @@ def _determine_test_modle(data, method, p_list=None, popmean=0):
             if p <= 0.05:
                 comparisons.append((i, p))
     return comparisons
-
-
-def _annotate_significance(
-    ax,
-    comparisons,
-    y_base,
-    interval,
-    line_color,
-    star_offset,
-    fontsize,
-    color,
-):
-    """添加显著性星号和连线"""
-
-    def _stars(pval, i, y, color, fontsize):
-        stars = "*" if pval > 0.01 else "**" if pval > 0.001 else "***"
-        ax.text(
-            i,
-            y,
-            stars,
-            ha="center",
-            va="center",
-            color=color,
-            fontsize=fontsize,
-        )
-
-    if len(comparisons[0]) == 3:
-        for (i, j, pval), count in zip(comparisons, range(1, len(comparisons) + 1)):
-            y = y_base + count * interval
-            ax.annotate(
-                "",
-                xy=(i, y),
-                xytext=(j, y),
-                arrowprops=dict(
-                    color=line_color, width=0.5, headwidth=0.1, headlength=0.1
-                ),
-            )
-            _stars(pval, (i + j) / 2, y + star_offset, color, fontsize)
-    elif len(comparisons[0]) == 2:
-        for i, pval in comparisons:
-            y = y_base
-            _stars(pval, i, y + star_offset, color, fontsize)
 
 
 def _statistics(
@@ -311,7 +214,7 @@ def plot_one_group_bar_figure(
     y_label_fontsize: Num = 12,
     y_tick_fontsize: Num = 8,
     y_tick_rotation: Num = 0,
-    y_lim: list[Num] | tuple[Num, Num] | None = None,
+    y_lim: tuple[float, float] | None = None,
     statistic: bool = False,
     test_method: list[str] = ["ttest_ind"],
     p_list: list[float] | None = None,
@@ -382,7 +285,7 @@ def plot_one_group_bar_figure(
             Y轴刻度字体大小. Defaults to 8.
         y_tick_rotation (Num, optional):
             Y轴刻度旋转角度. Defaults to 0.
-        y_lim (list[Num] | tuple[Num, Num] | None, optional):
+        y_lim (tuple[Num, Num] | None, optional):
             Y轴的范围限制. Defaults to None.
         statistic (bool, optional):
             是否进行统计显著性分析. Defaults to False.
@@ -587,7 +490,7 @@ def plot_one_group_violin_figure(
     y_label_fontsize: Num = 10,
     y_tick_fontsize: Num = 8,
     y_tick_rotation: Num = 0,
-    y_lim: list[Num] | tuple[Num, Num] | None = None,
+    y_lim: tuple[float, float] | None = None,
     statistic: bool = False,
     test_method: list[str] = ["ttest_ind"],
     popmean: Num = 0,
@@ -652,7 +555,7 @@ def plot_one_group_violin_figure(
             Y轴刻度字体大小. Defaults to 8.
         y_tick_rotation (Num, optional):
             Y轴刻度旋转角度. Defaults to 0.
-        y_lim (list[Num] | tuple[Num, Num] | None, optional):
+        y_lim (tuple[Num, Num] | None, optional):
             Y轴的范围限制. Defaults to None.
         statistic (bool, optional):
             是否进行统计显著性分析. Defaults to False.
@@ -849,260 +752,5 @@ def plot_one_group_violin_figure(
             y_base,
             interval,
         )
-
-    return ax
-
-
-def plot_multi_group_bar_figure(
-    data: DataType,
-    ax: Axes | None = None,
-    group_labels: list[str] | None = None,
-    bar_labels: list[str] | None = None,
-    bar_width: Num = 0.2,
-    bar_gap: Num = 0.1,
-    bar_color: list[str] | None = None,
-    errorbar_type: str = "sd",
-    dots_color: str = "gray",
-    dots_size: int = 35,
-    legend: bool = True,
-    legend_position: tuple[Num, Num] = (1.2, 1),
-    title_name: str = "",
-    title_fontsize=12,
-    title_pad=10,
-    x_label_name: str = "",
-    x_label_ha="center",
-    x_label_fontsize=10,
-    x_tick_fontsize=8,
-    x_tick_rotation=0,
-    y_label_name: str = "",
-    y_label_fontsize=10,
-    y_tick_fontsize=8,
-    y_tick_rotation=0,
-    y_lim: list[Num] | tuple[Num, Num] | None = None,
-    statistic: bool = False,
-    test_method: str = "external",
-    p_list: list[list[Num]] | None = None,
-    line_color="0.5",
-    asterisk_fontsize=10,
-    asterisk_color="k",
-    y_base: float | None = None,
-    interval: float | None = None,
-    ax_bottom_is_0: bool = False,
-    y_max_tick_is_1: bool = False,
-    math_text: bool = True,
-    one_decimal_place: bool = False,
-    percentage: bool = False,
-) -> Axes:
-    """绘制多组柱状图，包含散点、误差条、显著性标注和图例等。
-
-    Args:
-        data (DataType):
-            输入数据，可以是三维numpy数组、二维numpy数组列表或嵌套序列
-        ax (Axes | None, optional):
-            matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
-        group_labels (list[str] | None, optional):
-            组标签名称列表. Defaults to None.
-        bar_labels (list[str] | None, optional):
-            柱状图标签名称列表. Defaults to None.
-        bar_width (Num, optional):
-            柱状图的宽度. Defaults to 0.2.
-        bar_gap (Num, optional):
-            柱状图之间的间隔. Defaults to 0.1.
-        bar_color (list[str] | None, optional):
-            柱状图的颜色列表. Defaults to None.
-        errorbar_type (str, optional):
-            误差条类型，可选 "sd"(标准差) 或 "se"(标准误). Defaults to "sd".
-        dots_color (str, optional):
-            散点的颜色. Defaults to "gray".
-        dots_size (int, optional):
-            散点的大小. Defaults to 35.
-        legend (bool, optional):
-            是否显示图例. Defaults to True.
-        legend_position (tuple[Num, Num], optional):
-            图例位置坐标. Defaults to (1.2, 1).
-        title_name (str, optional):
-            图表标题. Defaults to "".
-        title_fontsize (int, optional):
-            标题字体大小. Defaults to 12.
-        title_pad (int, optional):
-            标题与图表的间距. Defaults to 10.
-        x_label_name (str, optional):
-            X轴标签名称. Defaults to "".
-        x_label_ha (str, optional):
-            X轴标签的水平对齐方式. Defaults to "center".
-        x_label_fontsize (int, optional):
-            X轴标签字体大小. Defaults to 10.
-        x_tick_fontsize (int, optional):
-            X轴刻度字体大小. Defaults to 8.
-        x_tick_rotation (int, optional):
-            X轴刻度旋转角度. Defaults to 0.
-        y_label_name (str, optional):
-            Y轴标签名称. Defaults to "".
-        y_label_fontsize (int, optional):
-            Y轴标签字体大小. Defaults to 10.
-        y_tick_fontsize (int, optional):
-            Y轴刻度字体大小. Defaults to 8.
-        y_tick_rotation (int, optional):
-            Y轴刻度旋转角度. Defaults to 0.
-        y_lim (list[Num] | tuple[Num, Num] | None, optional):
-            Y轴的范围限制. Defaults to None.
-        statistic (bool, optional):
-            是否进行统计显著性分析. Defaults to False.
-        test_method (str, optional):
-            统计检验方法，目前仅支持"external". Defaults to "external".
-        p_list (list[list[Num]] | None, optional):
-            预计算的p值列表，用于显著性标记. Defaults to None.
-        line_color (str, optional):
-            显著性标记线的颜色. Defaults to "0.5".
-        asterisk_fontsize (int, optional):
-            显著性星号的字体大小. Defaults to 10.
-        asterisk_color (str, optional):
-            显著性星号的颜色. Defaults to "k".
-        y_base (float | None, optional):
-            显著性连线的起始Y轴位置（高度）。如果为None，则使用内部算法自动计算一个合适的位置。Defaults to None.
-        interval (float | None, optional):
-            相邻显著性连线之间的垂直距离（Y轴增量）。如果为None，则使用内部算法根据图表范围和比较对数自动计算。Defaults to None.
-        ax_bottom_is_0 (bool, optional):
-            Y轴是否从0开始. Defaults to False.
-        y_max_tick_is_1 (bool, optional):
-            Y轴最大刻度是否限制为1. Defaults to False.
-        math_text (bool, optional):
-            是否将Y轴显示为科学计数法格式. Defaults to True.
-        one_decimal_place (bool, optional):
-            Y轴刻度是否只保留一位小数. Defaults to False.
-        percentage (bool, optional):
-            是否将Y轴显示为百分比格式. Defaults to False.
-
-    Raises:
-        ValueError: 当data数据格式无效时抛出
-        ValueError: 当test_method不是"external"时抛出（多组数据统计测试方法暂时仅支持external方法）
-
-    Returns:
-        Axes: 返回matplotlib的坐标轴对象
-    """
-
-    ax = ax or plt.gca()
-    group_labels = group_labels or [f"Group {i + 1}" for i in range(len(data))]
-    n_groups = len(data)
-
-    # 把所有子列表展开成一个大列表
-    all_values = [x for sublist1 in data for sublist2 in sublist1 for x in sublist2]
-
-    x_positions_all = []
-    for index_group, group_data in enumerate(data):
-        n_bars = len(group_data)
-        if bar_labels is None:
-            bar_labels = [f"Bar {i + 1}" for i in range(n_bars)]
-        if bar_color is None:
-            bar_color = ["gray"] * n_bars
-
-        x_positions = (
-            np.arange(n_bars) * (bar_width + bar_gap)
-            + bar_width / 2
-            + index_group
-            - (n_bars * bar_width + (n_bars - 1) * bar_gap) / 2
-        )
-        x_positions_all.append(x_positions)
-
-        # 计算均值、标准差、标准误
-        means = [_compute_summary(group_data[i])[0] for i in range(n_bars)]
-        sds = [_compute_summary(group_data[i])[1] for i in range(n_bars)]
-        ses = [_compute_summary(group_data[i])[2] for i in range(n_bars)]
-        if errorbar_type == "sd":
-            error_values = sds
-        elif errorbar_type == "se":
-            error_values = ses
-        else:
-            raise ValueError("errorbar_type 只能是 'sd' 或者 'se'")
-        # 绘制柱子
-        bars = ax.bar(
-            x_positions, means, width=bar_width, color=bar_color, alpha=1, edgecolor="k"
-        )
-        ax.errorbar(
-            x_positions,
-            means,
-            error_values,
-            fmt="none",
-            linewidth=1,
-            capsize=3,
-            color="black",
-        )
-        # 绘制散点
-        for index_bar, dot in enumerate(group_data):
-            # 创建随机数生成器
-            rng = np.random.default_rng(seed=42)
-            dot_x_pos = rng.normal(
-                x_positions[index_bar], scale=bar_width / 7, size=len(dot)
-            )
-            _add_scatter(ax, dot_x_pos, dot, dots_color, dots_size=dots_size)
-    if legend:
-        ax.legend(bars, bar_labels, bbox_to_anchor=legend_position)
-
-    # 美化
-    ax.spines[["top", "right"]].set_visible(False)
-    ax.set_title(
-        title_name,
-        fontsize=title_fontsize,
-        pad=title_pad,
-    )
-    # x轴
-    ax.set_xlabel(x_label_name, fontsize=x_label_fontsize)
-    ax.set_xticks(np.arange(n_groups))
-    ax.set_xticklabels(
-        group_labels,
-        ha=x_label_ha,
-        rotation_mode="anchor",
-        fontsize=x_tick_fontsize,
-        rotation=x_tick_rotation,
-    )
-    # y轴
-    ax.tick_params(
-        axis="y",
-        labelsize=y_tick_fontsize,
-        rotation=y_tick_rotation,
-    )
-    ax.set_ylabel(y_label_name, fontsize=y_label_fontsize)
-    _set_yaxis(
-        ax,
-        all_values,
-        y_lim,
-        ax_bottom_is_0,
-        y_max_tick_is_1,
-        math_text,
-        one_decimal_place,
-        percentage,
-    )
-
-    # 添加统计显著性标记
-    if statistic:
-        for index_group, group_data in enumerate(data):
-            x_positions = x_positions_all[index_group]
-            comparisons = []
-            idx = 0
-            for i in range(len(group_data)):
-                for j in range(i + 1, len(group_data)):
-                    if test_method == "external":
-                        if p_list is None:
-                            raise ValueError("p_list不能为空")
-                        p = p_list[index_group][idx]
-                        idx += 1
-                    else:
-                        raise ValueError("多组数据统计测试方法暂时仅支持 external方法")
-                    if p <= 0.05:
-                        comparisons.append((x_positions[i], x_positions[j], p))
-            y_max = ax.get_ylim()[1]
-            y_base = y_base or np.max(all_values)
-            interval = interval or (y_max - np.max(all_values)) / (len(comparisons) + 1)
-
-            _annotate_significance(
-                ax,
-                comparisons,
-                y_base,
-                interval,
-                line_color=line_color,
-                star_offset=interval / 5,
-                fontsize=asterisk_fontsize,
-                color=asterisk_color,
-            )
 
     return ax
