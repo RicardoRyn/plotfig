@@ -5,16 +5,16 @@ from pathlib import Path
 from typing import Literal
 
 import imageio
-from PIL import Image
 import nibabel as nib
 import numpy as np
 import numpy.typing as npt
-from scipy.ndimage import center_of_mass
-from tqdm import tqdm
 import plotly.graph_objects as go
 import plotly.io as pio
-from matplotlib.colors import LinearSegmentedColormap, to_hex
 from loguru import logger
+from matplotlib.colors import LinearSegmentedColormap, to_hex
+from PIL import Image
+from scipy.ndimage import center_of_mass
+from tqdm import tqdm
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 

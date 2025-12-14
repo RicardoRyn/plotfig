@@ -3,17 +3,15 @@ from typing import Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
-from numpy.typing import NDArray
 from matplotlib.axes import Axes
-from matplotlib.ticker import FuncFormatter, ScalarFormatter, FormatStrFormatter
 from matplotlib.colors import LinearSegmentedColormap, to_rgba
 from matplotlib.patches import Polygon, Rectangle
+from matplotlib.ticker import FormatStrFormatter, FuncFormatter, ScalarFormatter
+from numpy.typing import NDArray
 from scipy import stats
 
-# 设置警告过滤器，显示所有警告
 warnings.simplefilter("always")
 
-# 类型别名
 Num = int | float | np.integer | np.floating
 DataType = (
     np.ndarray  # 三维 ndarray
