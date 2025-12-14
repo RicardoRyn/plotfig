@@ -24,8 +24,8 @@ def plot_correlation_figure(
     ax: Axes | None = None,
     stats_method: str = "spearman",
     ci: bool = False,
-    ci_color: str = "salmon",
-    dots_color: str = "steelblue",
+    ci_color: str = "gray",
+    dots_color: str | list[str] = "steelblue",
     dots_size: int | float = 10,
     line_color: str = "r",
     title_name: str = "",
@@ -33,14 +33,14 @@ def plot_correlation_figure(
     title_pad: int = 10,
     x_label_name: str = "",
     x_label_fontsize: int = 10,
-    x_tick_fontsize: int = 10,
+    x_tick_fontsize: int = 8,
     x_tick_rotation: int = 0,
     x_major_locator: float | None = None,
     x_max_tick_to_value: float | None = None,
     x_format: str = "normal",  # 支持 "normal", "sci", "1f", "percent"
     y_label_name: str = "",
     y_label_fontsize: int = 10,
-    y_tick_fontsize: int = 10,
+    y_tick_fontsize: int = 8,
     y_tick_rotation: int = 0,
     y_major_locator: float | None = None,
     y_max_tick_to_value: float | None = None,
@@ -151,7 +151,7 @@ def plot_correlation_figure(
             )
         hb = ax.hexbin(A, B, gridsize=hexbin_gridsize, cmap=hexbin_cmap)
     else:
-        ax.scatter(A, B, c=dots_color, s=dots_size, alpha=0.8)
+        ax.scatter(A, B, c=dots_color, s=dots_size)
     ax.plot(x_seq, y_pred, line_color, lw=1)
 
     if ci:
