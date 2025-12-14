@@ -1,10 +1,10 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1 import make_axes_locatable
+from typing import Any, Sequence
 
+import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.image import AxesImage
-from typing import Sequence, Any
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 Num = int | float
 

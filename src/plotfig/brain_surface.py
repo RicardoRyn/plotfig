@@ -1,29 +1,26 @@
+from collections.abc import Mapping
 from pathlib import Path
 from typing import TypeAlias
-from collections.abc import Mapping
 
-import numpy as np
-import nibabel as nib
 import matplotlib.pyplot as plt
+import nibabel as nib
+import numpy as np
 from matplotlib.axes import Axes
-
 from surfplot import Plot
 
-# 类型别名定义
 Num: TypeAlias = float | int
 
 __all__ = [
     "plot_brain_surface_figure",
 ]
 
-# 路径常量
 NEURODATA = Path(__file__).resolve().parent / "data" / "neurodata"
 
 
 def _map_labels_to_values(data, gifti_file):
     gifti = nib.load(gifti_file)
     # 获取顶点标签编号数组，shape=(顶点数,)
-    labels = gifti.darrays[0].data  
+    labels = gifti.darrays[0].data
     # 构建标签编号到脑区名称的映射字典
     key_to_label = {label.key: label.label for label in gifti.labeltable.labels}
     # 检查数据中是否有在图集中找不到的脑区标签
@@ -64,7 +61,7 @@ def plot_brain_surface_figure(
     title_name: str = "",
     title_fontsize: int = 12,
     as_outline: bool = False,
-) -> Axes: 
+) -> Axes:
     """在大脑皮层表面绘制数值数据的函数。
 
     Args:
@@ -134,7 +131,7 @@ def plot_brain_surface_figure(
             "sulc": {
                 "lh": "surfaces/human_fsLR/100206.L.sulc.32k_fs_LR.shape.gii",
                 "rh": "surfaces/human_fsLR/100206.R.sulc.32k_fs_LR.shape.gii",
-            }
+            },
         },
         "chimpanzee": {
             "surf": {
@@ -146,7 +143,7 @@ def plot_brain_surface_figure(
                     "lh": "atlases/chimpanzee_BNA/ChimpBNA.L.32k_fs_LR.label.gii",
                     "rh": "atlases/chimpanzee_BNA/ChimpBNA.R.32k_fs_LR.label.gii",
                 },
-            }
+            },
         },
         "macaque": {
             "surf": {
@@ -174,14 +171,15 @@ def plot_brain_surface_figure(
             "sulc": {
                 "lh": "surfaces/macaque_BNA/SC_06018.L.sulc.32k_fs_LR.shape.gii",
                 "rh": "surfaces/macaque_BNA/SC_06018.R.sulc.32k_fs_LR.shape.gii",
-            }
-
-        }
+            },
+        },
     }
 
     # 检查物种是否支持
     if species not in atlas_info:
-        raise ValueError(f"Unsupported species: {species}. Supported species are: {list(atlas_info.keys())}")
+        raise ValueError(
+            f"Unsupported species: {species}. Supported species are: {list(atlas_info.keys())}"
+        )
     else:
         # 检查指定物种的图集是否支持
         if atlas not in atlas_info[species]["atlas"]:
@@ -199,7 +197,7 @@ def plot_brain_surface_figure(
             NEURODATA / atlas_info[species]["surf"]["lh"],
             NEURODATA / atlas_info[species]["surf"]["rh"],
             views="dorsal",
-            zoom = 1.2,
+            zoom=1.2,
         )
         lh_sulc_file = NEURODATA / atlas_info[species]["sulc"]["lh"]
         rh_sulc_file = NEURODATA / atlas_info[species]["sulc"]["rh"]
@@ -209,7 +207,7 @@ def plot_brain_surface_figure(
                 "right": nib.load(rh_sulc_file).darrays[0].data,
             },
             cmap="Grays_r",
-            cbar=False
+            cbar=False,
         )
 
     # 分离左半球和右半球的数据

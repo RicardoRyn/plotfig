@@ -1,27 +1,23 @@
-# 标准库
-from typing import Literal, Any
+from typing import Any, Literal
 
-# 第三方库
-import numpy as np
-from numpy.typing import NDArray
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
+import numpy as np
+from loguru import logger
+from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.projections.polar import PolarAxes
-from matplotlib.axes import Axes
+from numpy.typing import NDArray
 from pycirclize import Circos
-from loguru import logger
 
-# 项目内模块
+from plotfig.utils.color import (
+    gen_cmap,
+    gen_hex_colors,
+    value_to_hex,
+)
 from plotfig.utils.matrix import (
     is_symmetric_square,
 )
-from plotfig.utils.color import (
-    gen_hex_colors,
-    gen_cmap,
-    value_to_hex,
-)
-
 
 __all__ = ["plot_circos_figure"]
 
@@ -192,7 +188,9 @@ def plot_circos_figure(
     for sector in circos.sectors:
         if sector.name.startswith("_gap"):
             continue
-        sector.text(sector.name, size=node_label_fontsize, orientation=node_label_orientation)
+        sector.text(
+            sector.name, size=node_label_fontsize, orientation=node_label_orientation
+        )
         track = sector.add_track((95, 100))
         track.axis(fc=name2color[sector.name])
 

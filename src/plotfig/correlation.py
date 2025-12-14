@@ -1,19 +1,18 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.axes import Axes
-from matplotlib.ticker import (
-    ScalarFormatter,
-    FuncFormatter,
-    MultipleLocator,
-    FormatStrFormatter,
-)
-from matplotlib.colors import LinearSegmentedColormap
-from scipy import stats
-
 from typing import TypeAlias
 
-# 类型别名定义
-Num: TypeAlias = float | int  # 可同时接受int和float的类型
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.axes import Axes
+from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.ticker import (
+    FormatStrFormatter,
+    FuncFormatter,
+    MultipleLocator,
+    ScalarFormatter,
+)
+from scipy import stats
+
+Num: TypeAlias = float | int
 
 __all__ = ["plot_correlation_figure"]
 
@@ -96,7 +95,16 @@ def plot_correlation_figure(
     """
 
     def set_axis(
-        ax, axis, label, labelsize, ticksize, rotation, locator, max_tick_value, fmt, lim
+        ax,
+        axis,
+        label,
+        labelsize,
+        ticksize,
+        rotation,
+        locator,
+        max_tick_value,
+        fmt,
+        lim,
     ):
         if axis == "x":
             set_label = ax.set_xlabel
@@ -214,7 +222,9 @@ def plot_correlation_figure(
     if show_p_value:
         asterisk = f" p={p:.3f}"
     else:
-        asterisk = " ***" if p < 0.001 else " **" if p < 0.01 else " *" if p < 0.05 else ""
+        asterisk = (
+            " ***" if p < 0.001 else " **" if p < 0.01 else " *" if p < 0.05 else ""
+        )
     x_start, x_end = ax.get_xlim()
     y_start, y_end = ax.get_ylim()
     ax.text(
