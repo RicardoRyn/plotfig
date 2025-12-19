@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.14.0](https://github.com/RicardoRyn/plotfig/compare/v1.13.0...v1.14.0) (2025-12-19)
+
+
+### Features ✨
+
+* **correlation:** add ci_color parameter and update default y_format ([6070f94](https://github.com/RicardoRyn/plotfig/commit/6070f943051a50fc372f38bbc4184300c8c9fd48))
+
+
+### Code Refactoring ♻️
+
+* **color:** rename gen_cmap to gen_white_to_color_cmap for clarity ([a1e17c1](https://github.com/RicardoRyn/plotfig/commit/a1e17c131947f934489df10bb0227f590f424e24))
+* **plotfig:** reorganize bar plotting modules and extract shared utilities ([db369f1](https://github.com/RicardoRyn/plotfig/commit/db369f1319f9fbe06ac07e0af5cae9841c82f176))
+* **plotfig:** update default font sizes and colors in bar and correlation plots ([102f5e8](https://github.com/RicardoRyn/plotfig/commit/102f5e80f7590e480faeefa7ff39c9a8d8b0f94b))
+
 ## [1.13.0](https://github.com/RicardoRyn/plotfig/compare/v1.12.1...v1.13.0) (2025-12-08)
 
 
