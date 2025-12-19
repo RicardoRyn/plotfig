@@ -1,6 +1,8 @@
 # API
 
-::: plotfig.bar
+::: plotfig.single_bar
+
+::: plotfig.multi_bars
 
 ::: plotfig.correlation
 
