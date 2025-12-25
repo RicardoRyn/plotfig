@@ -6,9 +6,9 @@ import numpy as np
 from matplotlib.axes import Axes
 
 from .utils.bar import (
-    _annotate_significance,
-    _compute_summary,
-    _set_yaxis,
+    annotate_significance,
+    compute_summary,
+    set_yaxis,
 )
 
 warnings.simplefilter("always")
@@ -217,9 +217,9 @@ def plot_multi_group_bar_figure(
         x_positions_all.append(x_positions)
 
         # 计算均值、标准差、标准误
-        means = [_compute_summary(group_data[i])[0] for i in range(n_bars)]
-        sds = [_compute_summary(group_data[i])[1] for i in range(n_bars)]
-        ses = [_compute_summary(group_data[i])[2] for i in range(n_bars)]
+        means = [compute_summary(group_data[i])[0] for i in range(n_bars)]
+        sds = [compute_summary(group_data[i])[1] for i in range(n_bars)]
+        ses = [compute_summary(group_data[i])[2] for i in range(n_bars)]
         if errorbar_type == "sd":
             error_values = sds
         elif errorbar_type == "se":
@@ -283,7 +283,7 @@ def plot_multi_group_bar_figure(
         rotation=y_tick_rotation,
     )
     ax.set_ylabel(y_label_name, fontsize=y_label_fontsize)
-    _set_yaxis(
+    set_yaxis(
         ax,
         all_values,
         y_lim,
@@ -315,7 +315,7 @@ def plot_multi_group_bar_figure(
             y_base = y_base or np.max(all_values)
             interval = interval or (y_max - np.max(all_values)) / (len(comparisons) + 1)
 
-            _annotate_significance(
+            annotate_significance(
                 ax,
                 comparisons,
                 y_base,

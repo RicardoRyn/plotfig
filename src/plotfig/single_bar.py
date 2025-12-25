@@ -10,9 +10,9 @@ from numpy.typing import NDArray
 from scipy import stats
 
 from .utils.bar import (
-    _annotate_significance,
-    _compute_summary,
-    _set_yaxis,
+    annotate_significance,
+    compute_summary,
+    set_yaxis,
 )
 
 warnings.simplefilter("always")
@@ -151,7 +151,7 @@ def _statistics(
                 else asterisk_color
             )
 
-            _annotate_significance(
+            annotate_significance(
                 ax,
                 comparisons,
                 y_base,
@@ -175,7 +175,7 @@ def _statistics(
         y_base = y_base or np.max(all_values)
         interval = interval or (y_max - np.max(all_values)) / (len(comparisons) + 1)
 
-        _annotate_significance(
+        annotate_significance(
             ax,
             comparisons,
             y_base,
@@ -188,7 +188,7 @@ def _statistics(
 
 
 def plot_one_group_bar_figure(
-    data: np.ndarray | Sequence[Sequence[Num] | np.ndarray],
+    data: Sequence[Sequence[Num] | np.ndarray],
     ax: Axes | None = None,
     labels_name: list[str] | None = None,
     colors: list[str] | None = None,
@@ -354,7 +354,7 @@ def plot_one_group_bar_figure(
     means, sds, ses = [], [], []
     scatter_positions = []
     for i, d in enumerate(data):
-        mean, sd, se = _compute_summary(d)
+        mean, sd, se = compute_summary(np.array(d))
         means.append(mean)
         sds.append(sd)
         ses.append(se)
@@ -437,7 +437,7 @@ def plot_one_group_bar_figure(
     )
     ax.set_ylabel(y_label_name, fontsize=y_label_fontsize)
     all_values = np.concatenate([np.asarray(x) for x in data]).ravel()
-    _set_yaxis(
+    set_yaxis(
         ax,
         all_values,
         y_lim=y_lim,
@@ -726,7 +726,7 @@ def plot_one_group_violin_figure(
     )
     ax.set_ylabel(y_label_name, fontsize=y_label_fontsize)
     all_values = [ymin, ymax]
-    _set_yaxis(
+    set_yaxis(
         ax,
         all_values,
         y_lim=y_lim,

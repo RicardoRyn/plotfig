@@ -9,7 +9,7 @@ from numpy.typing import ArrayLike
 Num = int | float | np.integer | np.floating
 
 
-def _compute_summary(data: ArrayLike) -> tuple[float, float, float]:
+def compute_summary(data: ArrayLike) -> tuple[float, float, float]:
     """计算数据的统计摘要信息，包括均值、标准差和标准误。
 
     该函数用于为条形图和小提琴图等可视化提供统计度量，特别是用于绘制误差线。
@@ -26,7 +26,7 @@ def _compute_summary(data: ArrayLike) -> tuple[float, float, float]:
 
     Examples:
         >>> data = [1, 2, 3, 4, 5]
-        >>> mean, sd, se = _compute_summary(data)
+        >>> mean, sd, se = compute_summary(data)
         >>> print(f"Mean: {mean:.2f}, SD: {sd:.2f}, SE: {se:.2f}")
         Mean: 3.00, SD: 1.58, SE: 0.71
     """
@@ -37,7 +37,7 @@ def _compute_summary(data: ArrayLike) -> tuple[float, float, float]:
     return float(mean), float(sd), float(se)
 
 
-def _set_yaxis(
+def set_yaxis(
     ax: Axes,
     data: ArrayLike,
     y_lim: tuple[float, float] | None,
@@ -79,7 +79,7 @@ def _set_yaxis(
         >>> import numpy as np
         >>> fig, ax = plt.subplots()
         >>> data = np.random.randn(100)
-        >>> _set_yaxis(ax, data, None, False, False, True, False, False)
+        >>> set_yaxis(ax, data, None, False, False, True, False, False)
     """
     data = np.asarray(data)
 
@@ -122,7 +122,7 @@ def _set_yaxis(
             ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x:.0%}"))
 
 
-def _annotate_significance(
+def annotate_significance(
     ax: Axes,
     comparisons: Sequence[tuple[int, int, float]] | Sequence[tuple[int, float]],
     y_base: float,
@@ -166,10 +166,10 @@ def _annotate_significance(
         >>> fig, ax = plt.subplots()
         >>> # 组间比较模式
         >>> comparisons = [(0, 1, 0.001), (1, 2, 0.03)]
-        >>> _annotate_significance(ax, comparisons, 5.0, 0.5, 'black', 0.1, 12, 'red')
+        >>> annotate_significance(ax, comparisons, 5.0, 0.5, 'black', 0.1, 12, 'red')
         >>> # 单样本模式
         >>> comparisons = [(0, 0.02), (1, 0.005)]
-        >>> _annotate_significance(ax, comparisons, 5.0, 0.5, 'black', 0.1, 12, 'red')
+        >>> annotate_significance(ax, comparisons, 5.0, 0.5, 'black', 0.1, 12, 'red')
     """
 
     def _stars(pval, i, y, color, fontsize):
