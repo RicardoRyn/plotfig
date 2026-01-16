@@ -1358,7 +1358,7 @@ requires-dist = [
     { name = "plotly", specifier = ">=6.3.0" },
     { name = "pycirclize", specifier = ">=1.10.0" },
     { name = "scipy", specifier = ">=1.16.1" },
-    { name = "surfplot", git = "https://github.com/danjgale/surfplot" },
+    { name = "surfplot", specifier = ">=0.2.0" },
     { name = "tqdm", specifier = ">=4.67.1" },
 ]
 
@@ -1860,7 +1860,7 @@ wheels = [
 [[package]]
 name = "surfplot"
 version = "0.3.0rc0"
-source = { git = "https://github.com/danjgale/surfplot#60c50008bcd0f58e1c132cb7d70aab9151911925" }
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "brainspace" },
     { name = "matplotlib" },
@@ -1868,6 +1868,10 @@ dependencies = [
     { name = "numpy" },
     { name = "scipy" },
     { name = "vtk" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/56/52/b539f0352fcb83f839852ec48030a084f6bb6efae493c8af093f3e758f90/surfplot-0.3.0rc0.tar.gz", hash = "sha256:13e798ec7a08f38f2b3ba8d93b26d52df0ab3b95804630eae128b96e23e604de", size = 72937, upload-time = "2024-12-04T16:53:37.523Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/20/e4/c3f74f5197cae2f704923734cdd3b60cbcf46402bb1e5c76c63ea8ea6133/surfplot-0.3.0rc0-py3-none-any.whl", hash = "sha256:738502557bc0e7bd0eb7f81d25b9870965a1d958bbdb256ac3aefb9a57fa5b52", size = 70427, upload-time = "2024-12-04T16:53:35.339Z" },
 ]
 
 [[package]]

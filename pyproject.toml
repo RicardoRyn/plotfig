@@ -18,7 +18,7 @@ dependencies = [
     "plotly>=6.3.0",
     "pycirclize>=1.10.0",
     "scipy>=1.16.1",
-    "surfplot",
+    "surfplot>=0.2.0",
     "tqdm>=4.67.1",
 ]
 
@@ -35,9 +35,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.metadata]
 allow-direct-references = true
-
-[tool.uv.sources]
-surfplot = { git = "https://github.com/danjgale/surfplot" }
 
 [[tool.uv.index]]
 name = "pypi"
