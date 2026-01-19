@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.3](https://github.com/RicardoRyn/plotfig/compare/v1.14.2...v1.14.3) (2026-01-19)
+
+
+### Bug Fixes 🔧
+
+* **deps:** vendor surfplot to lock specific commit 60c5000 ([f9ad75d](https://github.com/RicardoRyn/plotfig/commit/f9ad75dfaa9d2c81c0605e840c4804f00f5c0933))
+
 ## [1.14.2](https://github.com/RicardoRyn/plotfig/compare/v1.14.1...v1.14.2) (2026-01-19)
 
 
