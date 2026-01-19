@@ -9,6 +9,7 @@ authors = [
     { name = "Ricardo Ryn", email = "ricardoRyn1317@gmail.com" }
 ]
 dependencies = [
+    "brainspace>=0.1.22",
     "imageio>=2.37.2",
     "kaleido>=1.0.0",
     "loguru>=0.7.3",
@@ -18,7 +19,6 @@ dependencies = [
     "plotly>=6.3.0",
     "pycirclize>=1.10.0",
     "scipy>=1.16.1",
-    "surfplot==0.3.0rc0",
     "tqdm>=4.67.1",
 ]
 

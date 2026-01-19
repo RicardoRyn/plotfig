@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import nibabel as nib
 import numpy as np
 from matplotlib.axes import Axes
-from surfplot import Plot
+from plotfig.externals.surfplot import Plot
 
 Num: TypeAlias = float | int
 
