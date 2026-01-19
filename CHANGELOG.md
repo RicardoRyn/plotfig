@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.14.1](https://github.com/RicardoRyn/plotfig/compare/v1.14.0...v1.14.1) (2026-01-19)
+
+
+### Bug Fixes 🔧
+
+* **deps:** update surfplot dependency and gitignore ([fc4c04b](https://github.com/RicardoRyn/plotfig/commit/fc4c04bc04dfe5f7c23aebc4566ba2acb87f332f))
+
+
+### Code Refactoring ♻️
+
+* **plotting:** rename internal utility functions to public API ([5efabad](https://github.com/RicardoRyn/plotfig/commit/5efabadaf4767552f4ff544df39da933429714e1))
+
 ## [1.14.0](https://github.com/RicardoRyn/plotfig/compare/v1.13.0...v1.14.0) (2025-12-19)
 
 
