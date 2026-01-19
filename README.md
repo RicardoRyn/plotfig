@@ -26,61 +26,76 @@
 
 ## 安装
 
-`plotfig` 支持通过 `pip` 或源码安装，要求 Python 3.11 及以上版本。
+`plotfig` 支持通过包管理器安装或直接从源码中安装，要求 Python 3.11 及以上版本。
 
-### 使用 pip 安装 (推荐)
+### 使用包管理器安装 (推荐)
 
-```bash
-pip install plotfig
-```
+=== "uv"
 
-### 使用 GitHub 源码安装
+    ``` bash
+    uv add plotfig
+    ```
 
-```bash
-git clone --depth 1 https://github.com/RicardoRyn/plotfig.git
-cd plotfig
-pip install .
-```
+=== "pip"
 
-## 依赖
+    ``` bash
+    pip install plotfig
+    ```
 
-`plotfig` 依赖若干核心库，这些依赖将在安装过程中自动处理，但需要注意：
+### 从源码中安装
 
-- [surfplot](https://github.com/danjgale/surfplot) 需使用其 GitHub 仓库中的最新版，而非 PyPI 上的版本，因后者尚未包含所需功能。
-
-> ⚠️ **指定 `surfplot` 版本**
->
-> 由于 PyPI 上的 `surfplot` 版本较旧，缺少 `plotfig` 所需功能，建议通过以下步骤安装其 GitHub 仓库的最新版。
->
-> 如果您无须绘制 `brain surface` 图，可以忽略此步骤。
+首先下载源码到某个目录（例如 `/path/to/plotfig`）：
 
 ```bash
-# 卸载旧版本
-pip uninstall surfplot
-
-# 克隆源码并安装
-git clone --depth 1 https://github.com/danjgale/surfplot.git
-cd surfplot
-pip install .
-
-# 安装完成后，返回上级目录并删除源码文件夹
-cd ..
-rm -rf surfplot
+git clone https://github.com/RicardoRyn/plotfig.git /path/to/plotfig
 ```
 
-## 贡献
+然后在您的项目目录中执行：
+
+=== "uv"
+
+    ``` bash
+    uv add /path/to/plotfig
+    ```
+
+=== "pip"
+
+    ``` bash
+    pip install /path/to/plotfig
+    ```
+
+> **注意**：`/path/to/plotfig` 应替换为实际的路径。
+
+### 贡献
 
 如果您希望体验这些功能或参与 `plotfig` 的开发，可以选择以 开发模式（editable mode） 安装项目。
 
 这种安装方式允许您对本地源码的修改立即生效，非常适合调试、开发和贡献代码。
 
-推荐先 Fork 仓库，然后克隆您自己的 Fork 并安装 `main` 分支：
+推荐流程：
+
+1. Fork 本仓库到您的 GitHub 账号
+2. 克隆您的 Fork 到本地：
 
 ```bash
-git clone https://github.com/USERNAME/plotfig.git
-cd plotfig
-pip install -e .
+git clone https://github.com/USERNAME/plotfig.git /path/to/plotfig
 ```
+
+3. 在您的项目目录中以开发模式安装：
+
+=== "uv"
+
+    ``` bash
+    uv add --editable /path/to/plotfig
+    ```
+
+=== "pip"
+
+    ``` bash
+    pip install -e /path/to/plotfig
+    ```
+
+> **注意**：`/path/to/plotfig` 应替换为实际的路径。
 
 ---
 
