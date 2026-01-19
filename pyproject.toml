@@ -18,7 +18,7 @@ dependencies = [
     "plotly>=6.3.0",
     "pycirclize>=1.10.0",
     "scipy>=1.16.1",
-    "surfplot>=0.2.0",
+    "surfplot==0.3.0rc0",
     "tqdm>=4.67.1",
 ]
 
@@ -47,3 +47,8 @@ name = "testpypi"
 url = "https://test.pypi.org/simple/"
 publish-url = "https://test.pypi.org/legacy/"
 explicit = true
+
+[tool.uv.workspace]
+members = [
+    "test",
+]
