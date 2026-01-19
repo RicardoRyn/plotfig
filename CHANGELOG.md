@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.2](https://github.com/RicardoRyn/plotfig/compare/v1.14.1...v1.14.2) (2026-01-19)
+
+
+### Bug Fixes 🔧
+
+* **deps:** pin surfplot to 0.3.0rc0 and add uv workspace config ([b6e179f](https://github.com/RicardoRyn/plotfig/commit/b6e179faf878027d983239d14418f8b5ad4d6053))
+
 ## [1.14.1](https://github.com/RicardoRyn/plotfig/compare/v1.14.0...v1.14.1) (2026-01-19)
 
 
