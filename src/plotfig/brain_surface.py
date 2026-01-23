@@ -178,12 +178,12 @@ def plot_brain_surface_figure(
     # 检查物种是否支持
     if species not in atlas_info:
         raise ValueError(
-            f"Unsupported species: {species}. Supported species are: {list(atlas_info.keys())}"
+            f"不支持的物种：{species}。支持的物种列表为：{list(atlas_info.keys())}"
         )
     else:
         # 检查指定物种的图集是否支持
         if atlas not in atlas_info[species]["atlas"]:
-            raise ValueError(f"Unsupported {atlas} atlas for {species}")
+            raise ValueError(f"不支持的图集：{atlas}。支持的图集列表为：{list(atlas_info[species]['atlas'].keys())}")
 
     # 创建Plot对象，用于绘制大脑皮层
     if surf != "flat":
