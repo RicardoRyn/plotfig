@@ -2,60 +2,61 @@
 
 # plotfig
 
+[English](README.md) | [中文文档](README_zh.md)
+
 [![PyPI version](https://badge.fury.io/py/plotfig.svg)](https://badge.fury.io/py/plotfig)
 [![Python version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-一个专为认知神经科学研究设计的 Python 可视化库，提供高效、易用且美观的绘图工具。
+A Python visualization library designed for cognitive neuroscience research, providing efficient, easy-to-use, and beautiful plotting tools.
 
 ![plotfig](./docs/assets/plotfig.png)
 
 </div>
 
-## 功能特性
+## Features
 
-- 📊 **多种图表类型**：条形图、矩阵、相关性图、弦图、脑表面图、脑连接图
-- 🎨 **专业科研风格**：内置多种配色方案，符合学术发表标准
-- 📈 **自动显著性检验**：内置多种统计方法，自动绘制显著性标记
-- 🔬 **专为神经科学设计**：支持常见灵长类脑区 atlas、脑网络可视化等特定场景
-- 🚀 **简单易用**：简洁的 API，快速上手
+- 📊 **Multiple Chart Types**: Bar charts, matrix plots, correlation plots, circos plots, brain surface plots, brain connectivity plots
+- 🎨 **Professional Research Style**: Built-in color schemes that meet academic publication standards
+- 📈 **Automatic Significance Testing**: Built-in statistical methods with automatic significance annotations
+- 🔬 **Designed for Neuroscience**: Supports common primate brain atlases and brain network visualization
+- 🚀 **Easy to Use**: Simple API for quick getting started
 
-## 快速开始
+## Quick Start
 
 ```python
 import matplotlib.pyplot as plt
 
 from plotfig import plot_one_group_bar_figure
 
-# 绘制单组条形图
+# Plot single group bar chart
 data = [[1.2, 2.3, 3.1], [4.5, 5.6, 6.2]]
 plot_one_group_bar_figure(data)
 plt.show()
 ```
 
-## 安装
+## Installation
 
-`plotfig` 要求 Python 3.11 及以上版本。
+`plotfig` requires Python 3.11 or higher.
 
-**使用 uv 安装：**
+**Install with uv:**
 
-**使用 uv 安装：**
 ```bash
 uv add plotfig
 ```
 
-**使用 pip 安装：**
+**Install with pip:**
 
 ```bash
 pip install plotfig
 ```
 
-## 文档
+## Documentation
 
-详细文档和使用示例请访问 [plotfig 文档](https://ricardoryn.github.io/plotfig/)。
+For detailed documentation and usage examples, please visit the [plotfig documentation](https://ricardoryn.github.io/plotfig/).
 
-## 贡献
+## Contributing
 
-欢迎提交 Issue 或 PR！无论是 Bug 报告、功能建议还是文档改进，都非常欢迎在 [Issue](https://github.com/RicardoRyn/plotfig/issues) 中提出。
+We welcome Issues and PRs! Whether it's bug reports, feature suggestions, or documentation improvements, please feel free to open an [Issue](https://github.com/RicardoRyn/plotfig/issues).
 
-开发贡献流程请参见[贡献指南](https://ricardoryn.github.io/plotfig/)。
+For contribution guidelines, please see the [contribution guide](https://ricardoryn.github.io/plotfig/).
