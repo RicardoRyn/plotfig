@@ -1,108 +1,73 @@
+<div align="center">
+
 # plotfig
 
-## 简介
+[![PyPI version](https://badge.fury.io/py/plotfig.svg)](https://badge.fury.io/py/plotfig)
+[![Python version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-`plotfig` 是一个专为科学数据可视化设计的 Python 库，
-致力于为认知神经科研工作人员提供高效、易用且美观的图形绘制工具。
-该项目基于业界主流的可视化库—— `matplotlib`、`surfplot` 和 `plotly`等库开发，
-融合了三者的强大功能，能够满足神经科学以及脑连接组学中多种场景下的复杂绘图需求。
+一个专为科学数据可视化设计的 Python 库，致力于为认知神经科研工作人员提供高效、易用且美观的图形绘制工具。
 
-![plotfig](https://github.com/RicardoRyn/plotfig/blob/main/docs/assets/plotfig.png)
+</div>
 
-### 项目结构
+## 功能特性
 
-项目采用模块化设计，核心代码位于 `src/plotfig/` 目录下，包含如下主要功能模块：
+- 📊 **多种图表类型**：条形图、矩阵、相关性图、弦图、脑表面图、脑连接图
+- 🎨 **专业科研风格**：内置多种配色方案，符合学术发表标准
+- 🔬 **专为神经科学设计**：支持脑区 atlas、脑网络可视化等特定场景
+- 🚀 **简单易用**：简洁的 API，快速上手
 
-- `bar.py`：条形图绘制，适用于分组数据的对比展示。
-- `matrix.py`：通用矩阵可视化，支持多种配色和注释方式。
-- `correlation.py`：相关性矩阵可视化，便于分析变量间的相关性分布。
-- `circos.py`：弦图可视化，适合平面展示脑区之间的连接关系。
-- `brain_surface.py`：脑表面可视化，实现三维脑表面图集结构的绘制。
-- `brain_connection.py`：玻璃脑连接可视化，支持复杂的脑网络结构展示。
+## 示例展示
 
-### 文档与示例
+### 单组条形图
+![Single Group Bar](https://github.com/RicardoRyn/plotfig/blob/main/docs/usage/single_group_files/single_group_11_0.png)
 
-`plotfig` 提供了网页文档和使用示例。具体参见[使用教程](https://ricardoryn.github.io/plotfig/)。
+### 多组条形图
+![Multi Groups Bar](https://github.com/RicardoRyn/plotfig/blob/main/docs/usage/multi_groups_files/multi_groups_2_0.png)
+
+### 相关性矩阵
+![Correlation Matrix](https://github.com/RicardoRyn/plotfig/blob/main/docs/usage/correlation_files/correlation_10_0.png)
+
+### 脑连接图
+![Brain Connectivity](https://github.com/RicardoRyn/plotfig/blob/main/docs/usage/brain_connectivity_files/output.gif)
+
+### 脑表面图
+![Brain Surface](https://github.com/RicardoRyn/plotfig/blob/main/docs/usage/brain_surface_files/brain_surface_10_0.png)
+
+## 快速开始
+
+```python
+from plotfig import plot_one_group_bar_figure
+import matplotlib.pyplot as plt
+
+# 绘制单组条形图
+data = [[1.2, 2.3, 3.1], [4.5, 5.6, 6.2]]
+plot_one_group_bar_figure(data)
+plt.show()
+```
 
 ## 安装
 
-`plotfig` 支持通过包管理器安装或直接从源码中安装，要求 Python 3.11 及以上版本。
+`plotfig` 要求 Python 3.11 及以上版本。
 
-### 使用包管理器安装 (推荐)
-
-=== "uv"
-
-    ``` bash
-    uv add plotfig
-    ```
-
-=== "pip"
-
-    ``` bash
-    pip install plotfig
-    ```
-
-### 从源码中安装
-
-首先下载源码到某个目录（例如 `/path/to/plotfig`）：
-
+**使用 uv 安装：**
 ```bash
-git clone https://github.com/RicardoRyn/plotfig.git /path/to/plotfig
+uv add plotfig
 ```
 
-然后在您的项目目录中执行：
-
-=== "uv"
-
-    ``` bash
-    uv add /path/to/plotfig
-    ```
-
-=== "pip"
-
-    ``` bash
-    pip install /path/to/plotfig
-    ```
-
-> **注意**：`/path/to/plotfig` 应替换为实际的路径。
-
-### 贡献
-
-如果您希望体验这些功能或参与 `plotfig` 的开发，可以选择以 开发模式（editable mode） 安装项目。
-
-这种安装方式允许您对本地源码的修改立即生效，非常适合调试、开发和贡献代码。
-
-推荐流程：
-
-1. Fork 本仓库到您的 GitHub 账号
-2. 克隆您的 Fork 到本地：
-
+**使用 pip 安装：**
 ```bash
-git clone https://github.com/USERNAME/plotfig.git /path/to/plotfig
+pip install plotfig
 ```
 
-3. 在您的项目目录中以开发模式安装：
+其他安装方式请参见[详细安装教程](https://ricardoryn.github.io/plotfig/installation/)。
 
-=== "uv"
+## 文档
 
-    ``` bash
-    uv add --editable /path/to/plotfig
-    ```
+详细文档和使用示例请访问 [plotfig 文档](https://ricardoryn.github.io/plotfig/)。
 
-=== "pip"
+## 贡献
 
-    ``` bash
-    pip install -e /path/to/plotfig
-    ```
+欢迎提交 Issue 或 PR！无论是 Bug 报告、功能建议还是文档改进，都非常欢迎在 [Issue](https://github.com/RicardoRyn/plotfig/issues) 中提出。
 
-> **注意**：`/path/to/plotfig` 应替换为实际的路径。
-
----
-
-**欢迎提交 Issue 或 PR！**
-
-无论是 Bug 报告、功能建议、还是文档改进。
-
-都非常欢迎在 [Issue](https://github.com/RicardoRyn/plotfig/issues) 中提出。
-
-也可以直接提交 [PR](https://github.com/RicardoRyn/plotfig/pulls)，一起变得更强 💪！
+开发贡献流程请参见[贡献指南](https://ricardoryn.github.io/plotfig/)。
