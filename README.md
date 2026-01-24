@@ -39,6 +39,7 @@ plt.show()
 
 **使用 uv 安装：**
 
+**使用 uv 安装：**
 ```bash
 uv add plotfig
 ```
