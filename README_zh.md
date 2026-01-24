@@ -53,7 +53,7 @@ pip install plotfig
 
 ## 文档
 
-详细文档和使用示例请访问 [plotfig 文档](https://ricardoryn.github.io/plotfig/)。
+详细文档和使用示例请访问 [plotfig 文档](https://ricardoryn.github.io/plotfig/zh/)。
 
 ## 贡献
 

@@ -3,7 +3,7 @@
 `plotfig` 是一个专为科学数据可视化设计的 Python 库，致力于为认知神经科研工作人员提供高效、易用且美观的图形绘制工具。
 该项目基于业界主流的可视化库—— `matplotlib`、`surfplot` 和 `plotly`等库开发，融合了三者的强大功能，能够满足神经科学以及脑连接组学中多种场景下的复杂绘图需求。
 
-![plotfig](./assets/plotfig.png)
+![plotfig](../assets/plotfig.png)
 
 ## 项目结构
 

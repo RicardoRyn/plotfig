@@ -37,7 +37,7 @@ fig = plot_brain_connection_figure(
 
 ## 结果展示
 
-![output](brain_connectivity_files/output.gif)
+![output](../../assets/usage/../../assets/usage/brain_connectivity_files/output.gif)
 
 html文件可以在浏览器中交互。可以手动截图，也可以使用以下命令来批量生成多视角生成图片。
 

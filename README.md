@@ -53,7 +53,7 @@ pip install plotfig
 
 ## Documentation
 
-For detailed documentation and usage examples, please visit the [plotfig documentation](https://ricardoryn.github.io/plotfig/).
+For detailed documentation and usage examples, please visit the [plotfig documentation](https://ricardoryn.github.io/plotfig/en/).
 
 ## Contributing
 

@@ -10,26 +10,43 @@ copyright = """
 Copyright &copy; 2025 Ricardo Ryn
 """
 nav = [
-  { "🧭 简介" = "index.md" },
-  { "📦 安装" = "installation.md" },
-  { "🔄 更新" = "changelog.md" },
-  { "🚀 使用" = [
-    "usage/single_group.md",
-    "usage/multi_groups.md",
-    "usage/matrix.md",
-    "usage/correlation.md",
-    "usage/circos.md",
-    "usage/brain_surface.md",
-    "usage/brain_connectivity.md"
+  { "English" = [
+    { "🧭 Introduction" = "en/index.md" },
+    { "📦 Installation" = "en/installation.md" },
+    { "🔄 Changelog" = "en/changelog.md" },
+    { "🚀 Usage" = [
+      "en/usage/single_group.md",
+      "en/usage/multi_groups.md",
+      "en/usage/matrix.md",
+      "en/usage/correlation.md",
+      "en/usage/circos.md",
+      "en/usage/brain_surface.md",
+      "en/usage/brain_connectivity.md"
+    ]},
+    { "🔌 API" = "en/api/index.md" }
   ]},
-  { "🔌 API" = "api/index.md" }
+  { "中文" = [
+    { "🧭 简介" = "zh/index.md" },
+    { "📦 安装" = "zh/installation.md" },
+    { "🔄 更新" = "zh/changelog.md" },
+    { "🚀 使用" = [
+      "zh/usage/single_group.md",
+      "zh/usage/multi_groups.md",
+      "zh/usage/matrix.md",
+      "zh/usage/correlation.md",
+      "zh/usage/circos.md",
+      "zh/usage/brain_surface.md",
+      "zh/usage/brain_connectivity.md"
+    ]},
+    { "🔌 API" = "zh/api/index.md" }
+  ]}
 ]
 
 [project.theme]
 # variant = "classic"
 # custom_dir = "overrides"
 # favicon = "assets/images/favicon.png"
-language = "zh"
+language = "en"
 features = [
     "announce.dismiss",
     "content.action.edit",

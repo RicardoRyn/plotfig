@@ -1,46 +1,40 @@
-# 弦图
+# Circos Plot
 
-## 快速出图
+## Quick Plot
 
-弦图是一种用于展示大脑不同区域之间连接关系的可视化图表。
-通过弧线将脑区相连，可以快速了解脑区之间的连接。
-
+Circos plot is a visualization chart used to display connectivity relationships between different brain regions.
+By connecting brain regions with arcs, you can quickly understand the connections between brain regions.
 
 ```python
 from plotfig import plot_circos_figure
 from plotfig.utils import gen_symmetric_matrix
 
-# 随机生成对称加权矩阵（对角线为0）
+# Randomly generate symmetric weighted matrix (diagonal is 0)
 connectome = gen_symmetric_matrix(30, mode="nonneg", sparsity=0.1)
 
-# 画图
+# Plot
 fig = plot_circos_figure(connectome)
 
-# 保存图片
+# Save image
 # fig.savefig("./figures/circos1.png")
 ```
 
+![png](../../assets/usage/circos_files/circos_1_0.png)
 
-    
-![png](circos_files/circos_1_0.png)
-    
+## Parameter Settings
 
-
-## 参数设置
-
-全部参数见[`plot_circos_figure`](../api/#plotfig.circos.plot_circos_figure)的 API 文档。
-
+For all parameters, see the API documentation for [`plot_circos_figure`](../api/#plotfig.circos.plot_circos_figure).
 
 ```python
 from plotfig import plot_circos_figure
 from plotfig.utils import gen_symmetric_matrix
 
-# 随机生成一个10x10的对称加权矩阵（对角线为0）
+# Randomly generate a 10x10 symmetric weighted matrix (diagonal is 0)
 connectome = gen_symmetric_matrix(10, mode="nonneg", sparsity=0.2)
 node_names = ["lh_A", "lh_B", "lh_C", "lh_D", "lh_E", "rh_A", "rh_B", "rh_C", "rh_D", "rh_E"]
 node_colors = ["#ff0000", "blue", "green", "yellow", "orange", "red", "blue", "green", "yellow", "orange"]
 
-# 画图
+# Plot
 fig = plot_circos_figure(
     connectome,
     symmetric=True,
@@ -57,22 +51,17 @@ fig = plot_circos_figure(
     colorbar_label="Conncetivity",
 )
 
-# 保存图片
+# Save image
 # fig.savefig("./figures/circos.png")
 ```
 
+![png](../../assets/usage/circos_files/circos_3_0.png)
 
-    
-![png](circos_files/circos_3_0.png)
-    
+### Combining with Other Plots
 
+By default, the `plot_circos_figure` function returns a `fig`, which can be directly used for saving, such as `fig.savefig("./figures/circos.png")`.
 
-### 与其他图组合
-
-在默认情况下，`plot_circos_figure` 函数会返回一个 `fig`，可以直接用于保存，例如 `fig.savefig("./figures/circos.png")`。
-
-在特殊情况下，我们也可以返回 `ax`，以便将其与其他图组合使用。
-
+In special cases, we can also return `ax` to combine it with other plots.
 
 ```python
 import matplotlib.pyplot as plt
@@ -88,20 +77,15 @@ ax2 = fig.add_subplot(1, 2, 2, projection="polar")
 connectome = gen_symmetric_matrix(10, mode="nonneg", sparsity=0.1)
 ax2 = plot_circos_figure(connectome, ax=ax2)
 
-# 保存图片
+# Save image
 # fig.savefig("./figures/circos.png")
 ```
 
+![png](../../assets/usage/circos_files/circos_5_0.png)
 
-    
-![png](circos_files/circos_5_0.png)
-    
+### Symmetric and Asymmetric Circos Plots
 
-
-### 对称与非对称弦图
-
-`plotfig` 可以绘制对称或不对称两种样式的弦图。只需通过 `symmetric` 参数进行设置。
-
+`plotfig` can plot both symmetric and asymmetric styles of circos plots. Simply set it through the `symmetric` parameter.
 
 ```python
 import matplotlib.pyplot as plt
@@ -117,20 +101,15 @@ connectome = gen_symmetric_matrix(10, mode="nonneg", sparsity=0.1)
 ax1 = plot_circos_figure(connectome, symmetric=True, ax=ax1, colorbar=False)
 ax2 = plot_circos_figure(connectome, symmetric=False, ax=ax2)
 
-# 保存图片
+# Save image
 # fig.savefig("./figures/circos.png")
 ```
 
+![png](../../assets/usage/circos_files/circos_7_0.png)
 
-    
-![png](circos_files/circos_7_0.png)
-    
+### Edge Colors
 
-
-### 边的颜色
-
-`edge_color` 参数可用于设置边的颜色，但无论如何，边的深浅仍会根据连接权重自动调整。
-
+The `edge_color` parameter can be used to set the color of edges, but regardless, the shade of edges will still be automatically adjusted based on connection weights.
 
 ```python
 import matplotlib.pyplot as plt
@@ -148,21 +127,16 @@ ax1 = plot_circos_figure(connectome, ax=ax1, edge_color="red")
 ax2 = plot_circos_figure(connectome, ax=ax2, edge_color="green")
 ax3 = plot_circos_figure(connectome, ax=ax3, edge_color="blue")
 
-# 保存图片
+# Save image
 # fig.savefig("./figures/circos.png")
 ```
 
+![png](../../assets/usage/circos_files/circos_9_0.png)
 
-    
-![png](circos_files/circos_9_0.png)
-    
-
-
-也可以通过 `cmap` 参数应用 Matplotlib 内置的常用颜色映射（Colormap）。
+You can also apply Matplotlib's built-in common color maps (Colormap) through the `cmap` parameter.
 
 !!! warning
-    当使用`cmap`时，`edge_color`参数将不再生效。
-
+    When using `cmap`, the `edge_color` parameter will no longer take effect.
 
 ```python
 import matplotlib.pyplot as plt
@@ -180,37 +154,27 @@ ax1 = plot_circos_figure(connectome, ax=ax1, cmap="Reds")
 ax2 = plot_circos_figure(connectome, ax=ax2, cmap="viridis")
 ax3 = plot_circos_figure(connectome, ax=ax3, cmap="bwr")
 
-# 保存图片
+# Save image
 # fig.savefig("./figures/circos.png")
 ```
 
+![png](../../assets/usage/circos_files/circos_11_0.png)
 
-    
-![png](circos_files/circos_11_0.png)
-    
-
-
-当 connectome 数据中存在负值时，无法自定义边的颜色，系统将默认使用 Matplotlib 的 `bwr` 颜色映射。
-
+When negative values exist in the connectome data, edge colors cannot be customized, and the system will default to using Matplotlib's `bwr` color map.
 
 ```python
 from plotfig import plot_circos_figure
 from plotfig.utils import gen_symmetric_matrix
 
-# 生成带负值的对称矩阵
+# Generate symmetric matrix with negative values
 connectome = gen_symmetric_matrix(10, mode="all", sparsity=0.1)
 
 fig = plot_circos_figure(connectome)
 
-# 保存图片
+# Save image
 # fig.savefig("./figures/circos.png")
 ```
 
-    [32m2025-09-05 15:09:37.347[0m | [33m[1mWARNING [0m | [36mplotfig.circos[0m:[36mplot_circos_figure[0m:[36m116[0m - [33m[1m由于 connectome 存在负值，连线颜色无法自定义，只能正值显示红色，负值显示蓝色[0m
-    
+    2025-09-05 15:09:37.347 | WARNING  | plotfig.circos:plot_circos_figure:116 - Due to negative values in connectome, connection colors cannot be customized; positive values will be displayed in red and negative values in blue
 
-
-    
-![png](circos_files/circos_13_1.png)
-    
-
+![png](../../assets/usage/circos_files/circos_13_1.png)

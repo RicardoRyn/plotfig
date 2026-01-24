@@ -7,13 +7,14 @@
 `plot_brain_surface_figure` 函数基于 `surfplot` 库开发，提供了一个统一且简化的接口来绘制人脑、猕猴脑和黑猩猩脑的脑区图。
 目前支持多种脑图谱包括：
 
-1. 人 Glasser (HCP-MMP) 图集[^1]。[图集 CSV 文件](../assets/atlas_csv/human_glasser.csv)。
-1. 人 BNA 图集[^2]。[图集 CSV 文件](../assets/atlas_csv/human_bna.csv)。
-1. 黑猩猩 BNA 图集[^3]。[图集 CSV 文件](../assets/atlas_csv/chimpanzee_bna.csv)。
-1. 猕猴 CHARM 5-level [^4]。[图集 CSV 文件](../assets/atlas_csv/macaque_charm5.csv)。
-1. 猕猴 CHARM 6-level [^4]。[图集 CSV 文件](../assets/atlas_csv/macaque_charm6.csv)。
-1. 猕猴 BNA 图集[^5]。[图集 CSV 文件](../assets/atlas_csv/macaque_bna.csv)。
-1. 猕猴 D99 图集[^6]。[图集 CSV 文件](../assets/atlas_csv/macaque_d99.csv)。
+1. 人 Glasser (HCP-MMP) 图集[^1]。[图集 CSV 文件](../../assets/atlas_csv/human_glasser.csv)。
+1. 人 BNA 图集[^2]。[图集 CSV 文件](../../assets/atlas_csv/human_bna.csv)。
+1. 黑猩猩 BNA 图集[^3]。[图集 CSV 文件](../../assets/atlas_csv/chimpanzee_bna.csv)。
+1. 猕猴 CHARM 4-level [^4]。[图集 CSV 文件](../../assets/atlas_csv/macaque_charm5.csv)。
+1. 猕猴 CHARM 5-level [^4]。[图集 CSV 文件](../../assets/atlas_csv/macaque_charm5.csv)。
+1. 猕猴 CHARM 6-level [^4]。[图集 CSV 文件](../../assets/atlas_csv/macaque_charm6.csv)。
+1. 猕猴 BNA 图集[^5]。[图集 CSV 文件](../../assets/atlas_csv/macaque_bna.csv)。
+1. 猕猴 D99 图集[^6]。[图集 CSV 文件](../../assets/atlas_csv/macaque_d99.csv)。
 
 [^1]:
     Glasser, M. F., Coalson, T. S., Robinson, E. C., Hacker, C. D., Harwell, J., Yacoub, E., Ugurbil, K., Andersson, J., Beckmann, C. F., Jenkinson, M., Smith, S. M., & Van Essen, D. C. (2016). A multi-modal parcellation of human cerebral cortex. Nature, 536(7615), Article 7615. https://doi.org/10.1038/nature18933
@@ -44,7 +45,7 @@ ax = plot_brain_surface_figure(data, species="human", atlas="glasser")
 
 
     
-![png](brain_surface_files/brain_surface_4_0.png)
+![png](../../assets/usage/../../assets/usage/brain_surface_files/brain_surface_4_0.png)
     
 
 
@@ -68,7 +69,7 @@ ax2 = plot_brain_surface_figure(
 
 
     
-![png](brain_surface_files/brain_surface_5_0.png)
+![png](../../assets/usage/../../assets/usage/brain_surface_files/brain_surface_5_0.png)
     
 
 
@@ -101,7 +102,7 @@ ax5 = plot_brain_surface_figure(plot_data, surf="flat", ax=axes[1,1], title_name
 
 
     
-![png](brain_surface_files/brain_surface_8_0.png)
+![png](../../assets/usage/../../assets/usage/brain_surface_files/brain_surface_8_0.png)
     
 
 
@@ -125,7 +126,7 @@ ax3 = plot_brain_surface_figure(plot_data, species="chimpanzee", atlas="bna", su
 
 
     
-![png](brain_surface_files/brain_surface_10_0.png)
+![png](../../assets/usage/../../assets/usage/brain_surface_files/brain_surface_10_0.png)
     
 
 
@@ -157,7 +158,7 @@ ax6 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", su
 
 
     
-![png](brain_surface_files/brain_surface_12_0.png)
+![png](../../assets/usage/../../assets/usage/brain_surface_files/brain_surface_12_0.png)
     
 
 
@@ -186,6 +187,6 @@ ax = plot_brain_surface_figure(
 
 
     
-![png](brain_surface_files/brain_surface_15_0.png)
+![png](../../assets/usage/../../assets/usage/brain_surface_files/brain_surface_15_0.png)
     
 

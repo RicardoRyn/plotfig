@@ -28,7 +28,7 @@ ax = plot_correlation_figure(data1,data2)
 
 
     
-![png](correlation_files/correlation_4_0.png)
+![png](../../assets/usage/../../assets/usage/correlation_files/correlation_4_0.png)
     
 
 
@@ -67,7 +67,7 @@ cb = fig.colorbar(hb, ax=ax2, label='counts')
 
 
     
-![png](correlation_files/correlation_7_0.png)
+![png](../../assets/usage/../../assets/usage/correlation_files/correlation_7_0.png)
     
 
 
@@ -107,6 +107,6 @@ ax = plot_correlation_figure(
 
 
     
-![png](correlation_files/correlation_10_0.png)
+![png](../../assets/usage/../../assets/usage/correlation_files/correlation_10_0.png)
     
 
