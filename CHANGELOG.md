@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.15.0](https://github.com/RicardoRyn/plotfig/compare/v1.14.3...v1.15.0) (2026-01-24)
+
+
+### Features ✨
+
+* **brain-surface:** add CHARM4 atlas support for macaque species ([ec300f3](https://github.com/RicardoRyn/plotfig/commit/ec300f3613a36fe624a122dfd34808b06616bc47))
+
+
+### Code Refactoring ♻️
+
+* **plotfig:** add validation for single-element data groups and comprehensive tests ([4b72fcc](https://github.com/RicardoRyn/plotfig/commit/4b72fcccd9a5e8a32ab993f92b6e579e6db85315))
+
 ## [1.14.3](https://github.com/RicardoRyn/plotfig/compare/v1.14.2...v1.14.3) (2026-01-19)
 
 

@@ -1,6 +1,6 @@
 [project]
 name = "plotfig"
-version = "1.14.3"
+version = "1.15.0"
 description = "Scientific plotting package for Cognitive neuroscience"
 keywords = ["neuroscience", "plotting", "visualization"]
 readme = "README.md"
