@@ -31,6 +31,10 @@ def compute_summary(data: ArrayLike) -> tuple[float, float, float]:
         Mean: 3.00, SD: 1.58, SE: 0.71
     """
     data = np.asarray(data)
+    if len(data) <= 1:
+        raise ValueError(
+            f"数据组只有 {len(data)} 个元素，无法计算标准差和标准误。每组数据至少需要 2 个元素。"
+        )
     mean = np.mean(data)
     sd = np.std(data, ddof=1)
     se = sd / np.sqrt(len(data))
