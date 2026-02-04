@@ -44,6 +44,8 @@ def plot_brain_surface_figure(
     data: Mapping[str, Num],
     species: str = "human",
     atlas: str = "glasser",
+    only_lh: bool = False,
+    only_rh: bool = False,
     surf: str = "veryinflated",
     ax: Axes | None = None,
     vmin: Num | None = None,
@@ -69,6 +71,8 @@ def plot_brain_surface_figure(
         data (dict[str, float]): 包含脑区名称和对应数值的字典，键为脑区名称（如"lh_bankssts"），值为数值
         species (str, optional): 物种名称，支持"human"、"chimpanzee"、"macaque". Defaults to "human".
         atlas (str, optional): 脑图集名称，根据物种不同可选不同图集。人上包括"glasser"、"bna"，黑猩猩上包括"bna"，猕猴上包括"charm4"、"charm5"、"charm6"、"bna"以及"d99". Defaults to "glasser".
+        only_lh (bool, optional): 是否只显示左半球. Defaults to False.
+        only_rh (bool, optional): 是否只显示右半球. Defaults to False.
         surf (str, optional): 大脑皮层表面类型，如"inflated"、"veryinflated"、"midthickness"等. Defaults to "veryinflated".
         ax (Axes | None, optional): matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
         vmin (Num | None, optional): 颜色映射的最小值，None表示使用数据中的最小值. Defaults to None.
@@ -188,14 +192,27 @@ def plot_brain_surface_figure(
     else:
         # 检查指定物种的图集是否支持
         if atlas not in atlas_info[species]["atlas"]:
-            raise ValueError(f"不支持的图集：{atlas}。支持的图集列表为：{list(atlas_info[species]['atlas'].keys())}")
+            raise ValueError(
+                f"不支持的图集：{atlas}。支持的图集列表为：{list(atlas_info[species]['atlas'].keys())}"
+            )
 
     # 创建Plot对象，用于绘制大脑皮层
     if surf != "flat":
-        p = Plot(
-            NEURODATA / atlas_info[species]["surf"]["lh"],
-            NEURODATA / atlas_info[species]["surf"]["rh"],
-        )
+        if only_lh:
+            p = Plot(
+                NEURODATA / atlas_info[species]["surf"]["lh"],
+                zoom=1.2,
+            )
+        elif only_rh:
+            p = Plot(
+                NEURODATA / atlas_info[species]["surf"]["rh"],
+                zoom=1.2,
+            )
+        else:
+            p = Plot(
+                NEURODATA / atlas_info[species]["surf"]["lh"],
+                NEURODATA / atlas_info[species]["surf"]["rh"],
+            )
     else:
         # NOTE: 目前只有人和猕猴具有flat surface，暂时不支持黑猩猩
         p = Plot(
