@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.16.0](https://github.com/RicardoRyn/plotfig/compare/v1.15.0...v1.16.0) (2026-03-05)
+
+
+### Features ✨
+
+* **surface:** add support for plotting only left or right hemisphere ([b128766](https://github.com/RicardoRyn/plotfig/commit/b128766a39b75fae9b3dc9d2b8bd613f77bd7d10))
+
+
+### Code Refactoring ♻️
+
+* **bar:** enable dots by default and reduce size in single_bar ([487d8c8](https://github.com/RicardoRyn/plotfig/commit/487d8c8d56654b54dbc3321aedaa32500e178172))
+
 ## [1.15.0](https://github.com/RicardoRyn/plotfig/compare/v1.14.3...v1.15.0) (2026-01-24)
 
 
