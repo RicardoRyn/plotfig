@@ -494,7 +494,7 @@ def plot_one_group_violin_figure(
     statistic: bool = False,
     test_method: list[str] = ["ttest_ind"],
     popmean: Num = 0,
-    p_list: list[float] | None = None,
+    p_list: list[int | float] | None = None,
     statistical_line_color: str = "0.5",
     asterisk_fontsize: Num = 10,
     asterisk_color: str = "k",
@@ -664,6 +664,7 @@ def plot_one_group_violin_figure(
         q1 = np.percentile(data, 25)
         q3 = np.percentile(data, 75)
         median = np.median(data)
+        mean = np.mean(data)
         # 添加 IQR box（黑色矩形）
         ax.add_patch(
             Rectangle(
@@ -674,8 +675,25 @@ def plot_one_group_violin_figure(
                 alpha=0.7,
             )
         )
-        # 添加白色中位数点
-        ax.plot(pos, median, "o", color="white", markersize=5, zorder=3)
+        # 添加白色均值点
+        ax.plot(
+            pos,
+            mean,
+            "o",
+            color="white",
+            markersize=5,
+            markeredgecolor="black",
+            markeredgewidth=1,
+            zorder=3,
+        )
+        # 添加白色中位数线
+        ax.plot(
+            [pos - width / 16, pos + width / 16],
+            [median, median],
+            color="white",
+            linewidth=2,
+            zorder=3,
+        )
         return ymax, ymin
 
     ymax_lst, ymin_lst = [], []
