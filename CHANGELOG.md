@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.0](https://github.com/RicardoRyn/plotfig/compare/v1.16.0...v1.17.0) (2026-03-25)
+
+
+### Features ✨
+
+* **plotfig:** add mean point and median line to single bar plots ([485a1c4](https://github.com/RicardoRyn/plotfig/commit/485a1c494376e5346e802a449b58fe01701d1d35))
+
 ## [1.16.0](https://github.com/RicardoRyn/plotfig/compare/v1.15.0...v1.16.0) (2026-03-05)
 
 
