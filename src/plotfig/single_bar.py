@@ -679,7 +679,7 @@ def plot_one_group_violin_figure(
         ax.plot(
             pos,
             mean,
-            "o",
+            "D",
             color="white",
             markersize=5,
             markeredgecolor="black",
@@ -691,7 +691,7 @@ def plot_one_group_violin_figure(
             [pos - width / 16, pos + width / 16],
             [median, median],
             color="white",
-            linewidth=2,
+            linewidth=1,
             zorder=3,
         )
         return ymax, ymin
