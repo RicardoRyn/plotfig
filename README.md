@@ -25,8 +25,6 @@ A Python visualization library designed for cognitive neuroscience research, pro
 ## Quick Start
 
 ```python
-import matplotlib.pyplot as plt
-
 from plotfig import plot_one_group_bar_figure
 
 # Plot single group bar chart

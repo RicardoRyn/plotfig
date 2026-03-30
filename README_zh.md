@@ -25,8 +25,6 @@
 ## 快速开始
 
 ```python
-import matplotlib.pyplot as plt
-
 from plotfig import plot_one_group_bar_figure
 
 # 绘制单组条形图

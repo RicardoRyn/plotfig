@@ -8,12 +8,12 @@
 在科研和数据分析中，柱状图常用于呈现实验组与对照组之间的差异。
 `plotfig` 基于强大的 `matplotlib` 开发，简化了画图流程，使得多组数据的对比更加直观。
 
-例如，我们有3组数据 （分别有9个样本、10个样本、11个样本）通过柱状图展示它们之间的差异。
+例如，我们有3组数据（分别有9个样本、10个样本、11个样本）通过柱状图展示它们之间的差异。
 
 
 ```python
 import numpy as np
-from plotfig import *
+from plotfig import plot_one_group_bar_figure
 
 data1 = np.random.normal(1, 1, 9)
 data2 = np.random.normal(2, 1, 10)
@@ -37,7 +37,7 @@ ax = plot_one_group_bar_figure([data1, data2, data3])
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
+from plotfig import plot_one_group_bar_figure
 
 ax1_bar1 = np.random.normal(0, 1, 7)
 ax1_bar2 = np.random.normal(0, 1, 8)
@@ -45,10 +45,9 @@ ax2_bar1 = np.random.normal(0, 1, 9)
 ax2_bar2 = np.random.normal(0, 1, 10)
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
-fig.subplots_adjust()
 
-ax1 = plot_one_group_bar_figure([ax1_bar1, ax1_bar2], ax=axes.flatten()[0])
-ax2 = plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes.flatten()[1])
+ax1 = plot_one_group_bar_figure([ax1_bar1, ax1_bar2], ax=axes[0])
+ax2 = plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes[1])
 ```
 
 
@@ -63,20 +62,21 @@ ax2 = plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes.flatten()[1])
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
+from plotfig import plot_one_group_bar_figure
 
 ax1_bar1 = np.random.normal(3, 1, 7)
 ax1_bar2 = np.random.normal(3, 1, 8)
 ax2_bar1 = np.random.normal(3, 1, 9)
 ax2_bar2 = np.random.normal(3, 1, 10)
-ax3_bar1 = np.random.normal(3, 1, 9)
-ax3_bar2 = np.random.normal(3, 1, 10)
-ax4_bar1 = np.random.normal(3, 1, 9)
-ax4_bar2 = np.random.normal(3, 1, 10)
+ax3_bar1 = np.random.normal(3, 1, 11)
+ax3_bar2 = np.random.normal(3, 1, 12)
+ax4_bar1 = np.random.normal(3, 1, 13)
+ax4_bar2 = np.random.normal(3, 1, 14)
 
 
 fig, axes = plt.subplots(2, 2, figsize=(6, 6))
 fig.subplots_adjust(wspace=0.5, hspace=0.5)
+
 ax1 = plot_one_group_bar_figure([ax1_bar1, ax1_bar2], ax=axes[0,0], labels_name=["A", "B"])
 ax2 = plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes[0,1], labels_name=["C", "D"])
 ax3 = plot_one_group_bar_figure([ax3_bar1, ax3_bar2], ax=axes[1,0], labels_name=["E", "F"])
@@ -97,18 +97,19 @@ ax4 = plot_one_group_bar_figure([ax4_bar1, ax4_bar2], ax=axes[1,1], labels_name=
 `plotfig` 提供了丰富的选项用于自定义图形样式。
 下面展示的是 `plot_one_group_bar_figure` 函数中部分常用参数的示例用法。
 
-完整参数说明请参阅 [`plot_one_group_bar_figure`](../api/#plotfig.bar.plot_one_group_bar_figure) 的 API 文档。
+完整参数说明请参阅 [`plot_one_group_bar_figure`](../api/index.md/#plotfig.bar.plot_one_group_bar_figure) 的 API 文档。
 
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
+from plotfig import plot_one_group_bar_figure
 
 data1 = np.random.normal(7, 1, 10)
 data2 = np.random.normal(8, 1, 9)
 
 fig, ax = plt.subplots(figsize=(3, 3))
+
 ax = plot_one_group_bar_figure(
     [data1, data2],
     ax=ax,
@@ -117,12 +118,12 @@ ax = plot_one_group_bar_figure(
     y_label_name="y",
     title_name="Title name",
     title_fontsize=15,
-    width=0.5,
+    width=0.8,
+    show_dots=True,
     dots_size=15,
     colors=["#4573a5", "orange"],
     color_alpha=0.7,
     errorbar_type="sd",
-    edgecolor="r",
 )
 ```
 
@@ -134,36 +135,35 @@ ax = plot_one_group_bar_figure(
 
 `plot_one_group_bar_figure` 支持将柱状图绘制为渐变色样式，适用于展示不同对象之间的关联结果。
 
-例如，当我们计算了“人-黑猩猩、人-猕猴、黑猩猩-猕猴”之间的同源脑区（共 20 个）结构连接的 Spearman 相关性时，可以考虑使用这种方式进行可视化展示。
+例如，当我们计算了“人-黑猩猩、人-猕猴、黑猩猩-猕猴”之间的同源脑区（共 20 个）结构连接的 Pearson 相关性时，可以考虑使用这种方式进行可视化展示。
 
 
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
+from plotfig import plot_one_group_bar_figure
 
 
 human_color = "#e38a48"
 chimp_color = "#919191"
 macaque_color = "#4573a5"
 
-np.random.seed(42)
-human_chimp = np.random.normal(7, 1, 20)
-human_macaque = np.random.normal(7, 1, 20)
-chimp_macaque = np.random.normal(7, 1, 20)
+human_chimp = np.random.random(20)
+human_macaque = np.random.random(20)
+chimp_macaque = np.random.random(20)
 
-fig, ax = plt.subplots(figsize=(5,5))
+fig, ax = plt.subplots(figsize=(7, 5))
+
 ax = plot_one_group_bar_figure(
     [human_chimp, human_macaque, chimp_macaque],
     ax=ax,
     labels_name=["Human-Chimp", "Human-Macaque", "Chimp-Macaque"],
-    y_label_name="Spearman correlation",
+    y_label_name="Pearson Correlation",
     width=0.7,
-    errorbar_type="sd",
     gradient_color=True,
-    colors_start= [human_color, human_color, chimp_color],
-    colors_end= [chimp_color, macaque_color, macaque_color]
+    colors_start=[human_color, human_color, chimp_color],
+    colors_end=[chimp_color, macaque_color, macaque_color],
 )
 ```
 
@@ -181,32 +181,29 @@ ax = plot_one_group_bar_figure(
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
-
-# 设置中文字体
-plt.rcParams['font.family'] = "Microsoft YaHei"  # 微软雅黑
-plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
+from plotfig import plot_one_group_bar_figure
 
 data1 = np.random.normal(3, 1, 10)
 data2 = np.random.normal(4, 1, 9)
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
+
 ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0],
+    x_tick_fontsize=10,
     labels_name=["AAAAAAAAAAA", "BBBBBBBBBB"],
     y_label_name="y",
-    title_name="名字过长",
-    title_fontsize=15,
+    title_name="Long labels\nwith default rotation",
 )
 ax2 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[1],
+    x_tick_fontsize=10,
     labels_name=["AAAAAAAAAAA", "BBBBBBBBBB"],
     y_label_name="y",
-    title_name="锚定中间旋转",
-    title_fontsize=15,
+    title_name="Long labels\nwith custom rotation",
     x_tick_rotation=10,
     x_label_ha="center",
 )
@@ -227,33 +224,28 @@ ax2 = plot_one_group_bar_figure(
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
-
-# 设置中文字体
-plt.rcParams['font.family'] = "Microsoft YaHei"  # 微软雅黑
-plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
+from plotfig import plot_one_group_bar_figure
 
 data1 = np.random.normal(3, 1, 10)
 data2 = np.random.normal(4, 1, 9)
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
+
 ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="黄金比例显示",
-    title_fontsize=15,
+    title_name="Golden ratio",
 )
 ax2 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[1],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="手动设置y轴",
-    title_fontsize=15,
-    y_lim=(2, 6)  # 设置y轴范围
+    title_name="Custom y-axis limit",
+    y_lim=(2, 6)
 )
 ```
 
@@ -269,33 +261,28 @@ ax2 = plot_one_group_bar_figure(
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
-
-# 设置中文字体
-plt.rcParams['font.family'] = "Microsoft YaHei"  # 微软雅黑
-plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
+from plotfig import plot_one_group_bar_figure
 
 data1 = np.random.normal(1,  1, 10)
 data2 = np.random.normal(2, 1, 9)
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
+
 ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="黄金比例显示",
-    title_fontsize=15,
+    title_name="Golden ratio",
 )
 ax2 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[1],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="不显示负值",
-    title_fontsize=15,
-    ax_bottom_is_0=True,  # 不显示负值
+    title_name="No negative values",
+    ax_bottom_is_0=True,
 )
 ```
 
@@ -311,33 +298,28 @@ ax2 = plot_one_group_bar_figure(
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
+from plotfig import plot_one_group_bar_figure
 
-# 设置中文字体
-plt.rcParams['font.family'] = "Microsoft YaHei"  # 微软雅黑
-plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
-
-data1 = np.random.normal(0.9,  0.1, 10)
+data1 = np.random.normal(0.9, 0.1, 10)
 data2 = np.random.normal(0.9, 0.1, 9)
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
+
 ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="黄金比例显示",
-    title_fontsize=15,
+    title_name="Golden ratio",
 )
 ax2 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[1],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="y轴最大刻度取1",
-    title_fontsize=15,
-    y_max_tick_is_1=True,  # y轴最大刻度取1
+    title_name="y-axis max tick is 1",
+    y_max_tick_is_1=True,
 )
 ```
 
@@ -353,52 +335,45 @@ ax2 = plot_one_group_bar_figure(
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
-
-# 设置中文字体
-plt.rcParams['font.family'] = "Microsoft YaHei"  # 微软雅黑
-plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
+from plotfig import plot_one_group_bar_figure
 
 data1 = np.random.normal(10000, 1000, 10)
 data2 = np.random.normal(11000, 1000, 9)
 data3 = np.random.normal(0.0001, 0.0001, 11)
-data4 = np.random.normal(0.0001, 0.0001, 12)
+data4 = np.random.normal(0.001, 0.0001, 12)
 
 fig, axes = plt.subplots(2, 2, figsize=(6, 6))
 fig.subplots_adjust(wspace=0.5, hspace=0.5)
+
 ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0,0],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="科学计数法",
-    title_fontsize=15,
-)  # 默认y轴使用科学计数法
+    title_name="Scientific notation",
+)
 ax2 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0,1],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="无科学计数法",
-    title_fontsize=15,
-    math_text=False,  # 手动关闭科学计数法
+    title_name="No scientific notation",
+    math_text=False,
 )
 ax3 = plot_one_group_bar_figure(
     [data3, data4],
     ax=axes[1,0],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="科学计数法",
-    title_fontsize=15,
-)  # 默认y轴使用科学计数法
+    title_name="Scientific notation",
+)
 ax4 = plot_one_group_bar_figure(
     [data3, data4],
     ax=axes[1,1],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="无科学计数法",
-    title_fontsize=15,
-    math_text=False,  # 手动关闭科学计数法
+    title_name="No scientific notation",
+    math_text=False,
 )
 ```
 
@@ -418,32 +393,27 @@ ax4 = plot_one_group_bar_figure(
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
-
-# 设置中文字体
-plt.rcParams['font.family'] = "Microsoft YaHei"  # 微软雅黑
-plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
+from plotfig import plot_one_group_bar_figure
 
 data1 = np.random.normal(0.5,  0.1, 10)
 data2 = np.random.normal(0.5, 0.1, 9)
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
+
 ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="常规显示",
-    title_fontsize=15,
+    title_name="Default",
 )
 ax2 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[1],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="显示百分比",
-    title_fontsize=15,
+    title_name="Show percentages",
     math_text=False,
     percentage=True,
 )
@@ -457,32 +427,29 @@ ax2 = plot_one_group_bar_figure(
 
 ### 关于散点
 
-`plot_one_group_bar_figure` 允许为每个散点分配颜色，常用于区分不同来源的数据。
+`plot_one_group_bar_figure` 允许为每个散点分配颜色，可用于区分不同来源的数据。
 
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
-
-# 设置中文字体
-plt.rcParams['font.family'] = "Microsoft YaHei"  # 微软雅黑
-plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
+from plotfig import plot_one_group_bar_figure
 
 data1 = np.random.normal(0.5,  0.1, 10)
 data2 = np.random.normal(0.5, 0.1, 9)
+
 dots_color1 = [["blue"]*10, ["red"]*9]
 dots_color2 = [["green"]*5+["pink"]*5, ["orange"]*4+["purple"]*5]
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 fig.subplots_adjust(wspace=0.5)
+
 ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="散点统一颜色",
-    title_fontsize=15,
+    title_name="Scatter points\nwith the same color",
     dots_color=dots_color1,  # 散点颜色
 )
 ax2 = plot_one_group_bar_figure(
@@ -490,9 +457,8 @@ ax2 = plot_one_group_bar_figure(
     ax=axes[1],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="散点各自分配颜色",
-    title_fontsize=15,
-    dots_color=dots_color2,  # 散点颜色
+    title_name="Scatter points\nwith different colors",
+    dots_color=dots_color2,
 )
 ```
 
@@ -508,7 +474,7 @@ ax2 = plot_one_group_bar_figure(
 
 1. 独立样本 t 检验（`ttest_ind`）
 2. 配对样本 t 检验（`ttest_rel`）
-3. 单样本t检验（`ttest_1samp`）
+3. 单样本 t 检验（`ttest_1samp`）
 4. Mann-Whitney U 检验（`mannwhitneyu`）
 5. 外部统计检验 （`external`）
 
@@ -518,30 +484,25 @@ ax2 = plot_one_group_bar_figure(
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
-
-# 设置中文字体
-plt.rcParams['font.family'] = "Microsoft YaHei"  # 微软雅黑
-plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
+from plotfig import plot_one_group_bar_figure
 
 np.random.seed(42)
+
 data1 = np.random.normal(3, 1, 30)
 data2 = np.random.normal(4, 1, 31)
 data3 = np.random.normal(5, 1, 31)
 data4 = np.random.normal(2, 1, 9)
 data5 = np.random.normal(4, 1, 10)
-data6 = np.random.normal(0, 1, 20)
-data7 = np.random.normal(1, 1, 20)
 
 fig, axes = plt.subplots(2, 2, figsize=(6, 6))
 fig.subplots_adjust(wspace=0.5, hspace=0.5)
+
 ax1 = plot_one_group_bar_figure(
     [data1, data2],
     ax=axes[0,0],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="独立样本t检验",
-    title_fontsize=15,
+    title_name="Independent samples t-test",
     statistic=True, 
     test_method=["ttest_ind"]
 )
@@ -550,29 +511,26 @@ ax2 = plot_one_group_bar_figure(
     ax=axes[0,1],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="配对样本t检验",
-    title_fontsize=15,
+    title_name="Paired samples t-test",
     statistic=True, 
     test_method=["ttest_rel"]
 )
 ax3 = plot_one_group_bar_figure(
-    [data6, data7],
+    [data1, data2],
     ax=axes[1,0],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="单样本t检验",
-    title_fontsize=15,
+    title_name="One-sample t-test",
     statistic=True,
     test_method=["ttest_1samp"],
-    popmean=0,
+    popmean=3,
 )
 ax4 = plot_one_group_bar_figure(
     [data4, data5],
     ax=axes[1,1],
     labels_name=["A", "B"],
     y_label_name="y",
-    title_name="Mann-Whitney U检验",
-    title_fontsize=15,
+    title_name="Mann-Whitney U test",
     statistic=True, 
     test_method=["mannwhitneyu"]
 )
@@ -598,13 +556,10 @@ ax4 = plot_one_group_bar_figure(
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
-
-# 设置中文字体
-plt.rcParams['font.family'] = "Microsoft YaHei"  # 微软雅黑
-plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
+from plotfig import plot_one_group_bar_figure
 
 np.random.seed(42)
+
 data1 = np.random.normal(5,  1, 20)
 data2 = np.random.normal(7, 1, 20)
 data3 = np.random.normal(7, 1, 20)
@@ -613,12 +568,12 @@ data4 = np.random.normal(9, 1, 20)
 p_list = [0.05, 0.01, 0.001, 1, 0.05, 0.01]
 
 fig, ax = plt.subplots(figsize=(6, 6))
+
 ax = plot_one_group_bar_figure(
     [data1, data2, data3, data4],
     ax=ax,
     y_label_name="y",
-    title_name="外部检验",
-    title_fontsize=15,
+    title_name="External test",
     statistic=True,
     test_method=["external"],
     p_list=p_list,
@@ -631,46 +586,123 @@ ax = plot_one_group_bar_figure(
     
 
 
+以下4种统计均可以与单样本t检验`ttest_1samp`同时执行：
+1. 独立样本 t 检验（`ttest_ind`）
+2. 配对样本 t 检验（`ttest_rel`）
+3. Mann-Whitney U 检验（`mannwhitneyu`）
+4. 外部统计检验 （`external`）
+
+即在同一张子图中执行2种检验。
+
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from plotfig import plot_one_group_bar_figure
+
+np.random.seed(42)
+
+data1 = np.random.normal(3, 1, 30)
+data2 = np.random.normal(4, 1, 31)
+data3 = np.random.normal(5, 1, 31)
+data4 = np.random.normal(2, 1, 9)
+data5 = np.random.normal(4, 1, 10)
+
+fig, axes = plt.subplots(2, 2, figsize=(6, 6))
+fig.subplots_adjust(wspace=0.5, hspace=0.5)
+
+ax1 = plot_one_group_bar_figure(
+    [data1, data2],
+    ax=axes[0,0],
+    labels_name=["A", "B"],
+    y_label_name="y",
+    title_name="Independent samples t-test",
+    statistic=True, 
+    test_method=["ttest_ind", "ttest_1samp"],
+    popmean=0
+)
+ax2 = plot_one_group_bar_figure(
+    [data2, data3],
+    ax=axes[0,1],
+    labels_name=["A", "B"],
+    y_label_name="y",
+    title_name="Paired samples t-test",
+    statistic=True, 
+    test_method=["ttest_rel", "ttest_1samp"],
+    popmean=4,
+)
+ax3 = plot_one_group_bar_figure(
+    [data4, data5],
+    ax=axes[1,0],
+    labels_name=["A", "B"],
+    y_label_name="y",
+    title_name="Mann-Whitney U test",
+    statistic=True, 
+    test_method=["mannwhitneyu", "ttest_1samp"],
+    popmean=2,
+)
+ax4 = plot_one_group_bar_figure(
+    [data1, data2],
+    ax=axes[1,1],
+    labels_name=["A", "B"],
+    y_label_name="y",
+    title_name="External test",
+    statistic=True,
+    test_method=["external", "ttest_1samp"],
+    p_list=[0.05],
+    popmean=0,
+)
+```
+
+
+    
+![png](../../assets/usage/../../assets/usage/single_group_files/single_group_38_0.png)
+    
+
+
 # 单组小提琴图
 
 小提琴图（violin plot）是一种结合箱线图（box plot）和核密度估计图（density plot）特点的可视化工具，用于展示数据的分布情况。
-它不仅显示数据的中位数、四分位数等统计信息，还通过对称的核密度曲线，直观反映数据在不同取值区间的分布形态。
+它不仅显示数据的均值（白色菱形）、中位数（白线）、四分位数等统计信息（黑色矩形），
+还通过对称的核密度曲线，直观反映数据在不同取值区间的分布形态。
+
 相比传统箱线图，小提琴图能更全面揭示数据的多峰性、偏态等特征，适合比较多个组别的分布差异。
 当数据分布不均匀，且采用非参数统计方法时，使用小琴图展示往往更为合适。
 
 在 plotfig 中，绘制小提琴图的函数名为 `plot_one_group_violin_figure`。
 其大部分参数与 `plot_one_group_bar_figure` 相似，以下是部分演示。
 
-完整参数说明请参阅 [`plot_one_group_violin_figure`](../api/#plotfig.bar.plot_one_group_violin_figure) 的 API 文档。
+完整参数说明请参阅 [`plot_one_group_violin_figure`](../api/index.md/#plotfig.bar.plot_one_group_violin_figure) 的 API 文档。
 
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
-
+from plotfig import plot_one_group_violin_figure
 
 human_color = "#e38a48"
 chimp_color = "#919191"
 macaque_color = "#4573a5"
 
 np.random.seed(42)
-human_chimp = 1 + np.random.normal(0, 1, 100)
-human_macaque = 2 + np.random.normal(0, 1, 100)
-chimp_macaque = 3 + np.random.normal(0, 1, 100)
+
+human_chimp = 0.1 + np.random.normal(0, 0.1, 30)
+human_macaque = 0.4 + np.random.normal(0, 0.1, 30)
+chimp_macaque = 0.6 + np.random.normal(0, 0.1, 30)
 
 fig, ax = plt.subplots(figsize=(5,5))
+
 ax = plot_one_group_violin_figure(
     [human_chimp, human_macaque, chimp_macaque],
     ax=ax,
     labels_name=["Human-Chimp", "Human-Macaque", "Chimp-Macaque"],
-    y_label_name="Spearman correlation",
-    width=0.7,
+    y_label_name="Pearson Correlation",
+    width=0.9,
+    show_dots=True,
+    dots_size=10,
     gradient_color=True,
     colors_start= [human_color, human_color, chimp_color],
     colors_end= [chimp_color, macaque_color, macaque_color],
-    show_dots=True,
-    dots_size=7,
     statistic=True,
     test_method=["mannwhitneyu"]
 )
@@ -678,6 +710,6 @@ ax = plot_one_group_violin_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_39_0.png)
+![png](../../assets/usage/../../assets/usage/single_group_files/single_group_41_0.png)
     
 
