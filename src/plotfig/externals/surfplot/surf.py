@@ -1,15 +1,14 @@
 """Surface plotting functions.
 
-NB: Code in this module is a copied subset from: 
+NB: Code in this module is a copied subset from:
 https://github.com/MICA-MNI/BrainSpace/blob/master/brainspace/plotting/surface_plotting.py
 
-Code has been modified (lines 30-31) just to accommodate extra orientations 
+Code has been modified (lines 30-31) just to accommodate extra orientations
 ('anterior', 'posterior').
 """
 
 # Author: Oualid Benkarim <oualid.benkarim@mcgill.ca>
 # License: BSD 3 clause
-
 
 from itertools import product as iter_prod
 
@@ -20,16 +19,23 @@ import numpy as np
 from brainspace.plotting.base import Plotter
 from brainspace.plotting.colormaps import colormaps
 import brainspace.plotting.defaults_plotting as dp
-from brainspace.plotting.utils import (_broadcast, _expand_arg, _grep_args, 
-                                       _gen_grid, _get_ranges)
+from brainspace.plotting.utils import (
+    _broadcast,
+    _expand_arg,
+    _grep_args,
+    _gen_grid,
+    _get_ranges,
+)
 
 
-ORIENTATIONS = {'medial': (0, -90, -90),
-                'lateral': (0, 90, 90),
-                'ventral': (0, 180, 0),
-                'dorsal': (0, 0, 0), 
-                'anterior': (90, -90, -90), 
-                'posterior': (-90, -90, -90)}
+ORIENTATIONS = {
+    "medial": (0, -90, -90),
+    "lateral": (0, 90, 90),
+    "ventral": (0, 180, 0),
+    "dorsal": (0, 0, 0),
+    "anterior": (90, -90, -90),
+    "posterior": (-90, -90, -90),
+}
 
 
 def _add_colorbar(ren, lut, location, **cb_kwds):
@@ -37,29 +43,29 @@ def _add_colorbar(ren, lut, location, **cb_kwds):
     kwds = dp.scalarBarActor_kwds.copy()
     kwds = {k.lower(): v for k, v in kwds.items()}
 
-    orientation = 'vertical'
-    if location in {'top', 'bottom'}:
-        orientation = 'horizontal'
-        kwds['width'], kwds['height'] = kwds['height'], kwds['width']
+    orientation = "vertical"
+    if location in {"top", "bottom"}:
+        orientation = "horizontal"
+        kwds["width"], kwds["height"] = kwds["height"], kwds["width"]
 
     if lut.GetIndexedLookup():
-        if location == 'left':
-            kwds['position'] = (.32, 0.25)
-        elif location == 'right':
-            kwds['position'] = (-.32, 0.25)
-        elif location == 'bottom':
-            kwds['position'] = (0.25, 0.73)
+        if location == "left":
+            kwds["position"] = (0.32, 0.25)
+        elif location == "right":
+            kwds["position"] = (-0.32, 0.25)
+        elif location == "bottom":
+            kwds["position"] = (0.25, 0.73)
         else:
-            kwds['position'] = (0.25, -.43)
-    elif location in {'top', 'bottom'}:
-        kwds['position'] = kwds['position'][::-1]
+            kwds["position"] = (0.25, -0.43)
+    elif location in {"top", "bottom"}:
+        kwds["position"] = kwds["position"][::-1]
 
-    text_pos = 'precedeScalarBar'
+    text_pos = "precedeScalarBar"
     if lut.GetIndexedLookup():
-        if location in {'left', 'bottom'}:
-            text_pos = 'succeedScalarBar'
-    elif location in {'right', 'top'}:
-        text_pos = 'succeedScalarBar'
+        if location in {"left", "bottom"}:
+            text_pos = "succeedScalarBar"
+    elif location in {"right", "top"}:
+        text_pos = "succeedScalarBar"
 
     for k, v in cb_kwds.items():
         if isinstance(kwds.get(k, None), dict):
@@ -67,17 +73,18 @@ def _add_colorbar(ren, lut, location, **cb_kwds):
         else:
             kwds[k] = v
 
-    kwds.update({'lookuptable': lut, 'orientation': orientation,
-                 'textPosition': text_pos})
+    kwds.update(
+        {"lookuptable": lut, "orientation": orientation, "textPosition": text_pos}
+    )
 
     return ren.AddScalarBarActor(**kwds)
 
 
 def _add_text(ren, text, location, **lt_kwds):
     orientation = 0
-    if location == 'left':
+    if location == "left":
         orientation = 90
-    elif location == 'right':
+    elif location == "right":
         orientation = -90
 
     kwds = dp.textActor_kwds.copy()
@@ -88,21 +95,34 @@ def _add_text(ren, text, location, **lt_kwds):
         else:
             kwds[k] = v
 
-    kwds.update({'input': text, 'orientation': orientation})
+    kwds.update({"input": text, "orientation": orientation})
     return ren.AddTextActor(**kwds)
 
 
 def _set_table(cm, lut):
     cm = plt.get_cmap(cm)
-    nvals = lut['numberOfTableValues']
+    nvals = lut["numberOfTableValues"]
     table = cm(np.linspace(0, 1, nvals)) * 255
     return table.astype(np.uint8)
 
 
-def build_plotter(surfs, layout, array_name=None, view=None, color_bar=None,
-                  color_range=None, share=False, label_text=None,
-                  cmap='viridis', nan_color=(0, 0, 0, 1), zoom=1,
-                  background=(1, 1, 1), size=(400, 400), try_qt=False, **kwargs):
+def build_plotter(
+    surfs,
+    layout,
+    array_name=None,
+    view=None,
+    color_bar=None,
+    color_range=None,
+    share=False,
+    label_text=None,
+    cmap="viridis",
+    nan_color=(0, 0, 0, 1),
+    zoom=1,
+    background=(1, 1, 1),
+    size=(400, 400),
+    try_qt=False,
+    **kwargs,
+):
     """Build plotter arranged according to the `layout`.
 
     Parameters
@@ -186,68 +206,67 @@ def build_plotter(surfs, layout, array_name=None, view=None, color_bar=None,
 
     # Share
     if share is True:
-        share = 'b'
+        share = "b"
     elif share is None or share is False:
         share = None
-    elif share in {'row', 'r', 'col', 'c', 'both', 'b'}:
+    elif share in {"row", "r", "col", "c", "both", "b"}:
         share = share[0]
     else:
         raise ValueError("Unknown share=%s" % share)
 
     # Color bar
     if color_bar is True:
-        color_bar = 'right'
+        color_bar = "right"
     elif color_bar is None or color_bar is False:
         color_bar = None
-    elif color_bar not in {'left', 'right', 'top', 'bottom'}:
+    elif color_bar not in {"left", "right", "top", "bottom"}:
         raise ValueError("Unknown color_bar=%s" % color_bar)
 
-    if share == 'c' and color_bar in {'left', 'right'}:
-        raise ValueError("Incompatible color_bar=%s and "
-                         "share=%s" % (color_bar, share))
+    if share == "c" and color_bar in {"left", "right"}:
+        raise ValueError("Incompatible color_bar=%s and share=%s" % (color_bar, share))
 
-    if share == 'r' and color_bar in {'top', 'bottom'}:
-        raise ValueError("Incompatible color_bar=%s and "
-                         "share=%s" % (color_bar, share))
+    if share == "r" and color_bar in {"top", "bottom"}:
+        raise ValueError("Incompatible color_bar=%s and share=%s" % (color_bar, share))
 
     layout = np.atleast_2d(layout)
     nrow, ncol = shape = layout.shape
 
-    view = _broadcast(view, 'view', shape)
-    zoom = _broadcast(zoom, 'zoom', shape)
+    view = _broadcast(view, "view", shape)
+    zoom = _broadcast(zoom, "zoom", shape)
 
-    array_name = _expand_arg(array_name, 'array_name', shape)
-    cmap = _expand_arg(cmap, 'cmap', shape, ref=array_name)
-    color_range = _expand_arg(color_range, 'cbar_range', shape, ref=array_name)
+    array_name = _expand_arg(array_name, "array_name", shape)
+    cmap = _expand_arg(cmap, "cmap", shape, ref=array_name)
+    color_range = _expand_arg(color_range, "cbar_range", shape, ref=array_name)
 
-    ren_kwds = _grep_args('renderer', kwargs, shape=shape)
-    actor_kwds = _grep_args('actor', kwargs, shape=shape, ref=array_name)
-    mapper_kwds = _grep_args('mapper', kwargs, shape=shape, ref=array_name)
-    cb_kwds = _grep_args('cb', kwargs)
-    text_kwds = _grep_args('text', kwargs)
+    ren_kwds = _grep_args("renderer", kwargs, shape=shape)
+    actor_kwds = _grep_args("actor", kwargs, shape=shape, ref=array_name)
+    mapper_kwds = _grep_args("mapper", kwargs, shape=shape, ref=array_name)
+    cb_kwds = _grep_args("cb", kwargs)
+    text_kwds = _grep_args("text", kwargs)
     # lut_kwds = _grep_args('lut', kwargs)
 
     # Label text
     if label_text is None:
         label_text = {}
     elif isinstance(label_text, (list, np.ndarray)):
-        label_text = {'left': label_text}
+        label_text = {"left": label_text}
 
     # Array ranges
     specs = _get_ranges(layout, surfs, array_name, share, color_range)
 
     # Grid
-    grid_row, grid_col, ridx, cidx, entries = \
-        _gen_grid(nrow, ncol, label_text, color_bar, share)
+    grid_row, grid_col, ridx, cidx, entries = _gen_grid(
+        nrow, ncol, label_text, color_bar, share
+    )
 
-    kwargs.update({'nrow': grid_row, 'ncol': grid_col, 'size': size})
+    kwargs.update({"nrow": grid_row, "ncol": grid_col, "size": size})
     p = Plotter(try_qt=try_qt, **kwargs)
 
     for iren, jren in iter_prod(range(len(ridx)), range(len(cidx))):
         i, j = ridx[iren], cidx[jren]
 
         kwds = dp.renderer_kwds.copy()
-        kwds.update({'row': iren, 'col': jren, 'background': background})
+        kwds.update({"row": iren, "col": jren, "background": background})
 
         # Renderers for empty entries
         if isinstance(i, str) or isinstance(j, str):
@@ -256,7 +275,7 @@ def build_plotter(surfs, layout, array_name=None, view=None, color_bar=None,
             continue
 
         kwds.update({k: v[i, j] for k, v in ren_kwds.items()})
-        kwds['background'] = background  # just in case
+        kwds["background"] = background  # just in case
         ren = p.AddRenderer(**kwds)
 
         if layout[i, j] is None:
@@ -275,48 +294,49 @@ def build_plotter(surfs, layout, array_name=None, view=None, color_bar=None,
             if view[i, j] is not None:
                 orient = view[i, j]
                 if isinstance(orient, tuple):
-                    actor['orientation'] = orient
+                    actor["orientation"] = orient
                 else:
-                    actor['orientation'] = ORIENTATIONS[view[i, j]]
+                    actor["orientation"] = ORIENTATIONS[view[i, j]]
 
             # Mapper
             mapper = dp.mapper_kwds.copy()
-            mapper['scalarVisibility'] = name is not True
-            mapper['interpolateScalarsBeforeMapping'] = not sp['disc']
+            mapper["scalarVisibility"] = name is not True
+            mapper["interpolateScalarsBeforeMapping"] = not sp["disc"]
             mapper.update({k: v[i, j][ia] for k, v in mapper_kwds.items()})
-            mapper['inputDataObject'] = s
+            mapper["inputDataObject"] = s
             if name is not True:
-                mapper['arrayName'] = name
+                mapper["arrayName"] = name
 
             # Lut
             lut = dp.lookuptable_kwds.copy()
-            lut['numberOfTableValues'] = sp['nval']
-            lut['range'] = (sp['min'], sp['max'])
+            lut["numberOfTableValues"] = sp["nval"]
+            lut["range"] = (sp["min"], sp["max"])
 
             cm = cmap[i, j][ia]
             if cm is not None:
-                if (isinstance(cm, (LinearSegmentedColormap, ListedColormap)) or 
-                    cm not in colormaps):
-                    
+                if (
+                    isinstance(cm, (LinearSegmentedColormap, ListedColormap))
+                    or cm not in colormaps
+                ):
                     cm = plt.get_cmap(cm)
-                    nvals = lut['numberOfTableValues']
+                    nvals = lut["numberOfTableValues"]
                     table = cm(np.linspace(0, 1, nvals)) * 255
                     table = table.astype(np.uint8)
                 else:
                     table = _set_table(cm, lut)
 
-                lut['table'] = table
+                lut["table"] = table
             if nan_color:
-                lut['nanColor'] = nan_color
+                lut["nanColor"] = nan_color
 
             # Do not support indexed lut for now
             # if sp['disc']:
-                # lut['IndexedLookup'] = True
-                # color_idx = sp['val']
-                # lut['annotations'] = (color_idx, color_idx.astype(str))
-                # cb_kwds['labelFormat'] = '%-4.0f'
+            # lut['IndexedLookup'] = True
+            # color_idx = sp['val']
+            # lut['annotations'] = (color_idx, color_idx.astype(str))
+            # cb_kwds['labelFormat'] = '%-4.0f'
 
-            mapper['lookuptable'] = lut
+            mapper["lookuptable"] = lut
 
             ren.AddActor(**actor, mapper=mapper)
 
@@ -327,7 +347,7 @@ def build_plotter(surfs, layout, array_name=None, view=None, color_bar=None,
     # Plot renderers for color bar, text
     for e in entries:
         kwds = dp.renderer_kwds.copy()
-        kwds.update({'row': e.row, 'col': e.col, 'background': background})
+        kwds.update({"row": e.row, "col": e.col, "background": background})
         ren1 = p.AddRenderer(**kwds)
         if isinstance(e.label, str):
             _add_text(ren1, e.label, e.loc, **text_kwds)
@@ -339,13 +359,30 @@ def build_plotter(surfs, layout, array_name=None, view=None, color_bar=None,
     return p
 
 
-def plot_surf(surfs, layout, array_name=None, view=None, color_bar=None,
-              color_range=None, share=False, label_text=None, cmap='viridis',
-              nan_color=(0, 0, 0, 1), zoom=1, background=(1, 1, 1),
-              size=(400, 400), embed_nb=False, interactive=True, scale=(1, 1),
-              transparent_bg=True, screenshot=False, filename=None,
-              return_plotter=False, try_qt=False, **kwargs):
-
+def plot_surf(
+    surfs,
+    layout,
+    array_name=None,
+    view=None,
+    color_bar=None,
+    color_range=None,
+    share=False,
+    label_text=None,
+    cmap="viridis",
+    nan_color=(0, 0, 0, 1),
+    zoom=1,
+    background=(1, 1, 1),
+    size=(400, 400),
+    embed_nb=False,
+    interactive=True,
+    scale=(1, 1),
+    transparent_bg=True,
+    screenshot=False,
+    filename=None,
+    return_plotter=False,
+    try_qt=False,
+    **kwargs,
+):
     """Plot surfaces arranged according to the `layout`.
 
     Parameters
@@ -437,21 +474,36 @@ def plot_surf(surfs, layout, array_name=None, view=None, color_bar=None,
     """
 
     if screenshot and filename is None:
-        raise ValueError('Filename is required.')
+        raise ValueError("Filename is required.")
 
     if screenshot or embed_nb:
-        kwargs.update({'offscreen': True})
+        kwargs.update({"offscreen": True})
 
-    p = build_plotter(surfs, layout, array_name=array_name, view=view,
-                      color_bar=color_bar, color_range=color_range,
-                      share=share, label_text=label_text, cmap=cmap,
-                      nan_color=nan_color, zoom=zoom, background=background,
-                      size=size, try_qt=try_qt, **kwargs)
+    p = build_plotter(
+        surfs,
+        layout,
+        array_name=array_name,
+        view=view,
+        color_bar=color_bar,
+        color_range=color_range,
+        share=share,
+        label_text=label_text,
+        cmap=cmap,
+        nan_color=nan_color,
+        zoom=zoom,
+        background=background,
+        size=size,
+        try_qt=try_qt,
+        **kwargs,
+    )
     if return_plotter:
         return p
     if screenshot:
-        return p.screenshot(filename, transparent_bg=transparent_bg,
-                            scale=scale)
+        return p.screenshot(filename, transparent_bg=transparent_bg, scale=scale)
 
-    return p.show(embed_nb=embed_nb, interactive=interactive, scale=scale,
-                  transparent_bg=transparent_bg)
+    return p.show(
+        embed_nb=embed_nb,
+        interactive=interactive,
+        scale=scale,
+        transparent_bg=transparent_bg,
+    )

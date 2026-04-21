@@ -61,17 +61,17 @@ def gen_white_to_color_cmap(color: str = "red") -> Colormap:
     Examples:
         >>> # 生成红色渐变色图
         >>> cmap = gen_cmap("red")
-        >>> 
+        >>>
         >>> # 在热力图中使用
         >>> import matplotlib.pyplot as plt
         >>> import numpy as np
         >>> data = np.random.rand(10, 10)
         >>> plt.imshow(data, cmap=gen_cmap("blue"))
         >>> plt.colorbar()
-        >>> 
+        >>>
         >>> # 使用十六进制颜色
         >>> cmap = gen_cmap("#FF5733")
-        >>> 
+        >>>
         >>> # 在散点图中使用
         >>> x = np.random.rand(100)
         >>> y = np.random.rand(100)
@@ -112,22 +112,22 @@ def value_to_hex(value: float, cmap: Colormap, norm: Normalize) -> str:
     Examples:
         >>> import matplotlib.pyplot as plt
         >>> from matplotlib.colors import Normalize
-        >>> 
+        >>>
         >>> # 创建色图和归一化对象
         >>> cmap = gen_cmap("red")
         >>> norm = Normalize(vmin=0, vmax=100)
-        >>> 
+        >>>
         >>> # 将数值映射为颜色
         >>> color1 = value_to_hex(25, cmap, norm)  # 浅红色
         >>> color2 = value_to_hex(75, cmap, norm)  # 深红色
         >>> print(color1, color2)
         '#ffbfbf' '#bf4040'
-        >>> 
+        >>>
         >>> # 在脑连接图中使用
         >>> connection_strengths = [0.1, 0.5, 0.9]
         >>> norm = Normalize(vmin=0, vmax=1)
         >>> colors = [value_to_hex(s, cmap, norm) for s in connection_strengths]
-        >>> 
+        >>>
         >>> # 使用对数归一化
         >>> from matplotlib.colors import LogNorm
         >>> norm_log = LogNorm(vmin=1, vmax=1000)

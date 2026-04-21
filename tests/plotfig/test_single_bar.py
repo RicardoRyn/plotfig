@@ -81,7 +81,9 @@ class TestPlotSingleBarFigureErrors:
     def test_invalid_errorbar_type(self):
         """测试无效的 errorbar_type 应抛出 ValueError"""
         with pytest.raises(ValueError, match="errorbar_type 只能是"):
-            plot_one_group_bar_figure(self.basic_data, ax=self.ax, errorbar_type="invalid")
+            plot_one_group_bar_figure(
+                self.basic_data, ax=self.ax, errorbar_type="invalid"
+            )
 
     def test_invalid_test_method(self):
         """测试无效的 test_method 应抛出 ValueError"""
@@ -162,12 +164,16 @@ class TestPlotSingleBarFigureFeatures:
 
     def test_errorbar_sd(self):
         """测试标准差误差条"""
-        result = plot_one_group_bar_figure(self.basic_data, ax=self.ax, errorbar_type="sd")
+        result = plot_one_group_bar_figure(
+            self.basic_data, ax=self.ax, errorbar_type="sd"
+        )
         assert isinstance(result, Axes)
 
     def test_errorbar_se(self):
         """测试标准误误差条"""
-        result = plot_one_group_bar_figure(self.basic_data, ax=self.ax, errorbar_type="se")
+        result = plot_one_group_bar_figure(
+            self.basic_data, ax=self.ax, errorbar_type="se"
+        )
         assert isinstance(result, Axes)
 
     def test_without_dots(self):
@@ -177,7 +183,9 @@ class TestPlotSingleBarFigureFeatures:
 
     def test_gradient_color_defaults(self):
         """测试渐变色默认行为"""
-        result = plot_one_group_bar_figure(self.basic_data, ax=self.ax, gradient_color=True)
+        result = plot_one_group_bar_figure(
+            self.basic_data, ax=self.ax, gradient_color=True
+        )
         assert isinstance(result, Axes)
 
     def test_gradient_color_custom(self):
@@ -216,7 +224,10 @@ class TestPlotSingleBarFigureStatistics:
     def test_statistic_mannwhitneyu(self):
         """测试 Mann-Whitney U 检验"""
         result = plot_one_group_bar_figure(
-            self.statistic_data, ax=self.ax, statistic=True, test_method=["mannwhitneyu"]
+            self.statistic_data,
+            ax=self.ax,
+            statistic=True,
+            test_method=["mannwhitneyu"],
         )
         assert isinstance(result, Axes)
 

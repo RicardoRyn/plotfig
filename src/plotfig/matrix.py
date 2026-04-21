@@ -3,7 +3,6 @@ from typing import Any, Sequence
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
-from matplotlib.image import AxesImage
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 Num = int | float
