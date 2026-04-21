@@ -2,7 +2,6 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import TypeAlias
 
-import matplotlib.pyplot as plt
 import nibabel as nib
 import numpy as np
 from matplotlib.axes import Axes
@@ -64,7 +63,8 @@ def plot_brain_surface_figure(
     title_name: str = "",
     title_fontsize: int = 12,
     as_outline: bool = False,
-) -> Axes:
+    return_vertices_data: bool = False,
+) -> Axes | dict[str, np.ndarray]:
     """在大脑皮层表面绘制数值数据的函数。
 
     Args:
@@ -91,6 +91,8 @@ def plot_brain_surface_figure(
         title_name (str, optional): 图形标题. Defaults to "".
         title_fontsize (int, optional): 标题字体大小. Defaults to 12.
         as_outline (bool, optional): 是否以轮廓线形式显示. Defaults to False.
+        return_vertices_data (bool, optional):
+            是否返回左右半球的顶点级映射数据；为True时不绘图，直接返回数据字典. Defaults to False.
 
     Raises:
         ValueError: 当指定的物种不支持时抛出
@@ -99,11 +101,8 @@ def plot_brain_surface_figure(
         ValueError: 当vmin大于vmax时抛出
 
     Returns:
-        Axes: 包含绘制图像的matplotlib坐标轴对象
+        Axes | dict[str, np.ndarray]: 绘图模式返回Axes；数据模式返回包含"lh"和"rh"键的顶点数据字典
     """
-    # 获取或创建坐标轴对象
-    ax = ax or plt.gca()
-
     # 提取所有数值用于确定vmin和vmax
     values = list(data.values())
     if not values:
@@ -240,6 +239,8 @@ def plot_brain_surface_figure(
             hemi_data, NEURODATA / atlas_info[species]["atlas"][atlas][hemi]
         )
         hemisphere_data[hemi] = hemi_parc
+    if return_vertices_data:
+        return hemisphere_data
 
     # 画图
     # colorbar参数设置（用列表统一管理，便于维护）

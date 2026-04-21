@@ -6,7 +6,6 @@ import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.colors import LinearSegmentedColormap, to_rgba
 from matplotlib.patches import Polygon, Rectangle
-from numpy.typing import NDArray
 from scipy import stats
 
 from .utils.bar import (
@@ -18,11 +17,6 @@ from .utils.bar import (
 warnings.simplefilter("always")
 
 Num = int | float | np.integer | np.floating
-DataType = (
-    np.ndarray  # 三维 ndarray
-    | Sequence[np.ndarray]  # list[二维 ndarray]
-    | Sequence[Sequence[Sequence[Num] | np.ndarray]]  # 纯 list 嵌套数字
-)
 
 __all__ = [
     "plot_one_group_bar_figure",
@@ -188,7 +182,7 @@ def _statistics(
 
 
 def plot_one_group_bar_figure(
-    data: Sequence[Sequence[Num] | np.ndarray],
+    data: np.ndarray | Sequence[Sequence[Num] | np.ndarray],
     ax: Axes | None = None,
     labels_name: list[str] | None = None,
     colors: list[str] | None = None,
@@ -216,8 +210,8 @@ def plot_one_group_bar_figure(
     y_tick_rotation: Num = 0,
     y_lim: tuple[float, float] | None = None,
     statistic: bool = False,
-    test_method: list[str] = ["ttest_ind"],
-    p_list: list[float] | None = None,
+    test_method: list[str] | None = None,
+    p_list: Sequence[Num] | None = None,
     popmean: Num = 0,
     statistical_line_color: str = "0.5",
     asterisk_fontsize: Num = 10,
@@ -229,7 +223,7 @@ def plot_one_group_bar_figure(
     math_text: bool = True,
     one_decimal_place: bool = False,
     percentage: bool = False,
-) -> Axes | None:
+) -> Axes:
     """绘制单组柱状图，包含散点、误差条和统计显著性标记。
 
     Args:
@@ -285,7 +279,7 @@ def plot_one_group_bar_figure(
             Y轴刻度字体大小. Defaults to 8.
         y_tick_rotation (Num, optional):
             Y轴刻度旋转角度. Defaults to 0.
-        y_lim (tuple[Num, Num] | None, optional):
+        y_lim (tuple[float, float] | None, optional):
             Y轴的范围限制. Defaults to None.
         statistic (bool, optional):
             是否进行统计显著性分析. Defaults to False.
@@ -297,7 +291,7 @@ def plot_one_group_bar_figure(
             4. `mannwhitneyu`,
             5. `external`.
             Defaults to ["ttest_ind"].
-        p_list (list[float] | None, optional):
+        p_list (Sequence[Num] | None, optional):
             预计算的p值列表，用于显著性标记. Defaults to None.
         popmean (Num, optional):
             单样本t检验的假设均值. Defaults to 0.
@@ -327,7 +321,7 @@ def plot_one_group_bar_figure(
         ValueError: 当errorbar_type不是"sd"或"se"时抛出
 
     Returns:
-        Axes | None: 返回matplotlib的坐标轴对象或None
+        Axes: 返回matplotlib的坐标轴对象
     """
     # 处理None值
     if not _is_valid_data(data):
@@ -335,6 +329,7 @@ def plot_one_group_bar_figure(
     ax = ax or plt.gca()
     labels_name = labels_name or [str(i) for i in range(len(data))]
     colors = colors or ["gray"] * len(data)
+    test_method = test_method or ["ttest_ind"]
     # 统一参数型
     width = float(width)
     color_alpha = float(color_alpha)
@@ -467,7 +462,7 @@ def plot_one_group_bar_figure(
 
 
 def plot_one_group_violin_figure(
-    data: Sequence[list[float] | NDArray[np.float64]],
+    data: np.ndarray | Sequence[Sequence[Num] | np.ndarray],
     ax: Axes | None = None,
     labels_name: list[str] | None = None,
     width: Num = 0.8,
@@ -492,9 +487,9 @@ def plot_one_group_violin_figure(
     y_tick_rotation: Num = 0,
     y_lim: tuple[float, float] | None = None,
     statistic: bool = False,
-    test_method: list[str] = ["ttest_ind"],
+    test_method: list[str] | None = None,
     popmean: Num = 0,
-    p_list: list[int | float] | None = None,
+    p_list: Sequence[Num] | None = None,
     statistical_line_color: str = "0.5",
     asterisk_fontsize: Num = 10,
     asterisk_color: str = "k",
@@ -505,11 +500,11 @@ def plot_one_group_violin_figure(
     math_text: bool = True,
     one_decimal_place: bool = False,
     percentage: bool = False,
-) -> Axes | None:
+) -> Axes:
     """绘制单组小提琴图，可选散点叠加、渐变填色和统计显著性标注。
 
     Args:
-        data (Sequence[list[float] | NDArray[np.float64]]):
+        data (np.ndarray | Sequence[Sequence[Num] | np.ndarray]):
             输入数据，可以是二维numpy数组或嵌套序列，每个子序列代表一个小提琴的数据点
         ax (Axes | None, optional):
             matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
@@ -555,7 +550,7 @@ def plot_one_group_violin_figure(
             Y轴刻度字体大小. Defaults to 8.
         y_tick_rotation (Num, optional):
             Y轴刻度旋转角度. Defaults to 0.
-        y_lim (tuple[Num, Num] | None, optional):
+        y_lim (tuple[float, float] | None, optional):
             Y轴的范围限制. Defaults to None.
         statistic (bool, optional):
             是否进行统计显著性分析. Defaults to False.
@@ -563,7 +558,7 @@ def plot_one_group_violin_figure(
             统计检验方法列表. Defaults to ["ttest_ind"].
         popmean (Num, optional):
             单样本t检验的假设均值. Defaults to 0.
-        p_list (list[float] | None, optional):
+        p_list (Sequence[Num] | None, optional):
             预计算的p值列表，用于显著性标记. Defaults to None.
         statistical_line_color (str, optional):
             显著性标记线的颜色. Defaults to "0.5".
@@ -590,7 +585,7 @@ def plot_one_group_violin_figure(
         ValueError: 当data数据格式无效时抛出
 
     Returns:
-        Axes | None: 返回matplotlib的坐标轴对象或None
+        Axes: 返回matplotlib的坐标轴对象
     """
     # 处理None值
     if not _is_valid_data(data):
@@ -598,6 +593,7 @@ def plot_one_group_violin_figure(
     ax = ax or plt.gca()
     labels_name = labels_name or [str(i) for i in range(len(data))]
     colors = colors or ["gray"] * len(data)
+    test_method = test_method or ["ttest_ind"]
     # 统一参数型
     width = float(width)
     color_alpha = float(color_alpha)

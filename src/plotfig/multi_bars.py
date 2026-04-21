@@ -95,7 +95,7 @@ def plot_multi_group_bar_figure(
     y_lim: tuple[float, float] | None = None,
     statistic: bool = False,
     test_method: str = "external",
-    p_list: list[list[Num]] | None = None,
+    p_list: Sequence[Sequence[Num]] | None = None,
     line_color="0.5",
     asterisk_fontsize=10,
     asterisk_color="k",
