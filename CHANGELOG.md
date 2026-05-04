@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.18.0](https://github.com/RicardoRyn/plotfig/compare/v1.17.0...v1.18.0) (2026-05-04)
+
+
+### Features ✨
+
+* **plotfig:** add data-only mode to brain_surface and improve type hints in bar plots ([dc8d039](https://github.com/RicardoRyn/plotfig/commit/dc8d0394b9d43e1cc3cc35f61a9e0054b51954ac))
+
 ## [1.17.0](https://github.com/RicardoRyn/plotfig/compare/v1.16.0...v1.17.0) (2026-03-25)
 
 
