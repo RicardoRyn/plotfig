@@ -10,7 +10,7 @@
 
 一个专为认知神经科学研究设计的 Python 可视化库，提供高效、易用且美观的绘图工具。
 
-![plotfig](./docs/assets/plotfig.png)
+![plotfig](./docs/zh/assets/plotfig.png)
 
 </div>
 
@@ -56,6 +56,3 @@ pip install plotfig
 ## 贡献
 
 欢迎提交 Issue 或 PR！无论是 Bug 报告、功能建议还是文档改进，都非常欢迎在 [Issue](https://github.com/RicardoRyn/plotfig/issues) 中提出。
-
-开发贡献流程请参见[贡献指南](https://ricardoryn.github.io/plotfig/)。
-

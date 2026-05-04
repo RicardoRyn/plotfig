@@ -1,51 +1,35 @@
 [project]
 site_name = "plotfig"
-site_description = "一个用于认知神经领域科研绘图的python包。"
+site_description = "A Python package for scientific plotting in cognitive neuroscience research."
 site_author = "Ricardo Ryn"
-site_url = "https://ricardoryn.github.io/plotfig"
-repo_url = "https://github.com/RicardoRyn/plotfig"
+
+site_url = "https://ricardoryn.github.io/plotfig/"
+docs_dir = "docs/en"
+
+repo_url = "https://github.com/RicardoRyn/plotfig/"
 repo_name = "RicardoRyn/plotfig"
-edit_uri = "edit/main/docs/"
+edit_uri = "edit/main/docs/en/"
+
 copyright = """
-Copyright &copy; 2025 Ricardo Ryn
+Copyright &copy; 2026 Ricardo Ryn
 """
 nav = [
-  { "English" = [
-    { "🧭 Introduction" = "en/index.md" },
-    { "📦 Installation" = "en/installation.md" },
-    { "🔄 Changelog" = "en/changelog.md" },
+    { "🧭 Introduction" = "index.md" },
+    { "📦 Installation" = "installation.md" },
+    { "🔄 Changelog" = "changelog.md" },
     { "🚀 Usage" = [
-      "en/usage/single_group.md",
-      "en/usage/multi_groups.md",
-      "en/usage/matrix.md",
-      "en/usage/correlation.md",
-      "en/usage/circos.md",
-      "en/usage/brain_surface.md",
-      "en/usage/brain_connectivity.md"
+      "usage/single_group.md",
+      "usage/multi_groups.md",
+      "usage/matrix.md",
+      "usage/correlation.md",
+      "usage/circos.md",
+      "usage/brain_surface.md",
+      "usage/brain_connectivity.md"
     ]},
-    { "🔌 API" = "en/api/index.md" }
-  ]},
-  { "中文" = [
-    { "🧭 简介" = "zh/index.md" },
-    { "📦 安装" = "zh/installation.md" },
-    { "🔄 更新" = "zh/changelog.md" },
-    { "🚀 使用" = [
-      "zh/usage/single_group.md",
-      "zh/usage/multi_groups.md",
-      "zh/usage/matrix.md",
-      "zh/usage/correlation.md",
-      "zh/usage/circos.md",
-      "zh/usage/brain_surface.md",
-      "zh/usage/brain_connectivity.md"
-    ]},
-    { "🔌 API" = "zh/api/index.md" }
-  ]}
+    { "🔌 API" = "api/index.md" }
 ]
 
 [project.theme]
-# variant = "classic"
-# custom_dir = "overrides"
-# favicon = "assets/images/favicon.png"
 language = "en"
 features = [
     "announce.dismiss",
@@ -96,15 +80,15 @@ scheme = "slate"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to system preference"
 
-# [project.theme.font]
-# text = "Inter"
-# code = "Jetbrains Mono"
-
 [project.theme.icon]
-# logo = "lucide/smile"
-# repo = "lucide/smile"
 edit = "material/pencil"
 view = "material/eye"
+
+[project.extra]
+alternate = [
+    { name = "English", link = "/plotfig/", lang = "en" },
+    { name = "中文", link = "/plotfig/zh/", lang = "zh" }
+]
 
 [[project.extra.social]]
 icon = "fontawesome/brands/github"
@@ -147,4 +131,3 @@ show_signature_type_parameters = true
 backlinks = "tree"
 show_bases = false
 show_inheritance_diagram = true
-

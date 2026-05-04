@@ -1,0 +1,134 @@
+[project]
+site_name = "plotfig"
+site_description = "一个用于认知神经领域科研绘图的python包。"
+site_author = "Ricardo Ryn"
+
+site_url = "https://ricardoryn.github.io/plotfig/"
+site_dir = "site/zh"
+docs_dir = "docs/zh"
+
+repo_url = "https://github.com/RicardoRyn/plotfig/"
+repo_name = "RicardoRyn/plotfig"
+edit_uri = "edit/main/docs/zh/"
+
+copyright = """
+Copyright &copy; 2026 Ricardo Ryn
+"""
+nav = [
+    { "🧭 简介" = "index.md" },
+    { "📦 安装" = "installation.md" },
+    { "🔄 更新" = "changelog.md" },
+    { "🚀 使用" = [
+      "usage/single_group.md",
+      "usage/multi_groups.md",
+      "usage/matrix.md",
+      "usage/correlation.md",
+      "usage/circos.md",
+      "usage/brain_surface.md",
+      "usage/brain_connectivity.md"
+    ]},
+    { "🔌 API" = "api/index.md" }
+]
+
+[project.theme]
+language = "zh"
+features = [
+    "announce.dismiss",
+    "content.action.edit",
+    "content.action.view",
+    "content.code.annotate",
+    "content.code.copy",
+    "content.code.select",
+    "content.footnote.tooltips",
+    "content.tabs.link",
+    "content.tooltips",
+    # "header.autohide",
+    "navigation.expand",
+    "navigation.footer",
+    "navigation.indexes",
+    "navigation.instant",
+    "navigation.instant.prefetch",
+    # "navigation.instant.progress",
+    # "navigation.path",
+    # "navigation.prune",
+    # "navigation.sections",
+    # "navigation.tabs",
+    # "navigation.tabs.sticky",
+    "navigation.top",
+    "navigation.tracking",
+    "search.highlight",
+    # "toc.follow",
+    #"toc.integrate",
+]
+
+# Palette toggle for automatic mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+# Palette toggle for light mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+# Palette toggle for dark mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"
+
+[project.theme.icon]
+edit = "material/pencil"
+view = "material/eye"
+
+[project.extra]
+alternate = [
+    { name = "English", link = "/plotfig/", lang = "en" },
+    { name = "中文", link = "/plotfig/zh/", lang = "zh" }
+]
+
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/RicardoRyn"
+
+[project.plugins.mkdocstrings.handlers.python]
+inventories = ["https://docs.python.org/3/objects.inv"]
+paths = ["src"]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+docstring_style = "google"
+show_source = true
+# DOCSTRINGS -------------------------------------------------------------
+docstring_options.ignore_init_summary = true
+# docstring_section_style = "list"
+# CROSS-REFERENCES -------------------------------------------------------
+relative_crossrefs = true  # Sponsors only!
+scoped_crossrefs = true  # Sponsors only!
+signature_crossrefs = true
+unwrap_annotated = true
+# MEMBERS ----------------------------------------------------------------
+filters = "public"  # Sponsors only!
+inherited_members = true
+summary = true
+# HEADINGS ---------------------------------------------------------------
+# heading_level = 1
+# parameter_headings = true
+# type_parameter_headings = true
+show_root_heading = true
+show_root_full_path = false
+show_symbol_type_heading = true
+show_symbol_type_toc = true
+# SIGNATURES -------------------------------------------------------------
+# line_length = 88
+merge_init_into_class = true
+separate_signature = true
+show_signature_annotations = true
+show_signature_type_parameters = true
+# OTHER ------------------------------------------------------------------
+backlinks = "tree"
+show_bases = false
+show_inheritance_diagram = true

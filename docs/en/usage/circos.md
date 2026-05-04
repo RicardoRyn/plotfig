@@ -19,7 +19,7 @@ fig = plot_circos_figure(connectome)
 # fig.savefig("./figures/circos1.png")
 ```
 
-![png](../../assets/usage/circos_files/circos_1_0.png)
+![png](../assets/usage/circos_files/circos_1_0.png)
 
 ## Parameter Settings
 
@@ -55,7 +55,7 @@ fig = plot_circos_figure(
 # fig.savefig("./figures/circos.png")
 ```
 
-![png](../../assets/usage/circos_files/circos_3_0.png)
+![png](../assets/usage/circos_files/circos_3_0.png)
 
 ### Combining with Other Plots
 
@@ -81,7 +81,7 @@ ax2 = plot_circos_figure(connectome, ax=ax2)
 # fig.savefig("./figures/circos.png")
 ```
 
-![png](../../assets/usage/circos_files/circos_5_0.png)
+![png](../assets/usage/circos_files/circos_5_0.png)
 
 ### Symmetric and Asymmetric Circos Plots
 
@@ -105,7 +105,7 @@ ax2 = plot_circos_figure(connectome, symmetric=False, ax=ax2)
 # fig.savefig("./figures/circos.png")
 ```
 
-![png](../../assets/usage/circos_files/circos_7_0.png)
+![png](../assets/usage/circos_files/circos_7_0.png)
 
 ### Edge Colors
 
@@ -131,7 +131,7 @@ ax3 = plot_circos_figure(connectome, ax=ax3, edge_color="blue")
 # fig.savefig("./figures/circos.png")
 ```
 
-![png](../../assets/usage/circos_files/circos_9_0.png)
+![png](../assets/usage/circos_files/circos_9_0.png)
 
 You can also apply Matplotlib's built-in common color maps (Colormap) through the `cmap` parameter.
 
@@ -158,7 +158,7 @@ ax3 = plot_circos_figure(connectome, ax=ax3, cmap="bwr")
 # fig.savefig("./figures/circos.png")
 ```
 
-![png](../../assets/usage/circos_files/circos_11_0.png)
+![png](../assets/usage/circos_files/circos_11_0.png)
 
 When negative values exist in the connectome data, edge colors cannot be customized, and the system will default to using Matplotlib's `bwr` color map.
 
@@ -177,4 +177,4 @@ fig = plot_circos_figure(connectome)
 
     2025-09-05 15:09:37.347 | WARNING  | plotfig.circos:plot_circos_figure:116 - Due to negative values in connectome, connection colors cannot be customized; positive values will be displayed in red and negative values in blue
 
-![png](../../assets/usage/circos_files/circos_13_1.png)
+![png](../assets/usage/circos_files/circos_13_1.png)

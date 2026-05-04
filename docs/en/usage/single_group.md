@@ -24,7 +24,7 @@ ax = plot_one_group_bar_figure([data1, data2, data3])
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_3_0.png)
+![png](../assets/usage/single_group_files/single_group_3_0.png)
     
 
 
@@ -52,7 +52,7 @@ ax2 = plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes[1])
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_6_0.png)
+![png](../assets/usage/single_group_files/single_group_6_0.png)
     
 
 
@@ -85,7 +85,7 @@ ax4 = plot_one_group_bar_figure([ax4_bar1, ax4_bar2], ax=axes[1,1], labels_name=
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_8_0.png)
+![png](../assets/usage/single_group_files/single_group_8_0.png)
     
 
 
@@ -97,7 +97,7 @@ We can create a `fig` object externally to flexibly control figure size.
 `plotfig` provides rich options for customizing plot styles.
 Below is an example showing some commonly used parameters of `plot_one_group_bar_figure`.
 
-For complete parameter descriptions, see the API documentation for [`plot_one_group_bar_figure`](../api/index.md/#plotfig.bar.plot_one_group_bar_figure).
+For complete parameter descriptions, see the API documentation for [`plot_one_group_bar_figure`](../api/#plotfig.single_bar.plot_one_group_bar_figure).
 
 
 ```python
@@ -129,7 +129,7 @@ ax = plot_one_group_bar_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_12_0.png)
+![png](../assets/usage/single_group_files/single_group_12_0.png)
     
 
 
@@ -169,7 +169,7 @@ ax = plot_one_group_bar_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_14_0.png)
+![png](../assets/usage/single_group_files/single_group_14_0.png)
     
 
 
@@ -211,7 +211,7 @@ ax2 = plot_one_group_bar_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_17_0.png)
+![png](../assets/usage/single_group_files/single_group_17_0.png)
     
 
 
@@ -251,7 +251,7 @@ ax2 = plot_one_group_bar_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_20_0.png)
+![png](../assets/usage/single_group_files/single_group_20_0.png)
     
 
 
@@ -288,7 +288,7 @@ ax2 = plot_one_group_bar_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_22_0.png)
+![png](../assets/usage/single_group_files/single_group_22_0.png)
     
 
 
@@ -325,7 +325,7 @@ ax2 = plot_one_group_bar_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_24_0.png)
+![png](../assets/usage/single_group_files/single_group_24_0.png)
     
 
 
@@ -379,7 +379,7 @@ ax4 = plot_one_group_bar_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_26_0.png)
+![png](../assets/usage/single_group_files/single_group_26_0.png)
     
 
 
@@ -421,7 +421,7 @@ ax2 = plot_one_group_bar_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_28_0.png)
+![png](../assets/usage/single_group_files/single_group_28_0.png)
     
 
 
@@ -464,7 +464,7 @@ ax2 = plot_one_group_bar_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_31_0.png)
+![png](../assets/usage/single_group_files/single_group_31_0.png)
     
 
 
@@ -538,7 +538,7 @@ ax4 = plot_one_group_bar_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_34_0.png)
+![png](../assets/usage/single_group_files/single_group_34_0.png)
     
 
 
@@ -582,7 +582,7 @@ ax = plot_one_group_bar_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_36_0.png)
+![png](../assets/usage/single_group_files/single_group_36_0.png)
     
 
 
@@ -656,7 +656,7 @@ ax4 = plot_one_group_bar_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_38_0.png)
+![png](../assets/usage/single_group_files/single_group_38_0.png)
     
 
 
@@ -710,6 +710,6 @@ ax = plot_one_group_violin_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/single_group_files/single_group_41_0.png)
+![png](../assets/usage/single_group_files/single_group_41_0.png)
     
 

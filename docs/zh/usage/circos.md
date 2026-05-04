@@ -22,7 +22,7 @@ fig = plot_circos_figure(connectome)
 
 
     
-![png](../../assets/usage/../../assets/usage/circos_files/circos_1_0.png)
+![png](../assets/usage/circos_files/circos_1_0.png)
     
 
 
@@ -63,7 +63,7 @@ fig = plot_circos_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/circos_files/circos_3_0.png)
+![png](../assets/usage/circos_files/circos_3_0.png)
     
 
 
@@ -94,7 +94,7 @@ ax2 = plot_circos_figure(connectome, ax=ax2)
 
 
     
-![png](../../assets/usage/../../assets/usage/circos_files/circos_5_0.png)
+![png](../assets/usage/circos_files/circos_5_0.png)
     
 
 
@@ -123,7 +123,7 @@ ax2 = plot_circos_figure(connectome, symmetric=False, ax=ax2)
 
 
     
-![png](../../assets/usage/../../assets/usage/circos_files/circos_7_0.png)
+![png](../assets/usage/circos_files/circos_7_0.png)
     
 
 
@@ -154,7 +154,7 @@ ax3 = plot_circos_figure(connectome, ax=ax3, edge_color="blue")
 
 
     
-![png](../../assets/usage/../../assets/usage/circos_files/circos_9_0.png)
+![png](../assets/usage/circos_files/circos_9_0.png)
     
 
 
@@ -186,7 +186,7 @@ ax3 = plot_circos_figure(connectome, ax=ax3, cmap="bwr")
 
 
     
-![png](../../assets/usage/../../assets/usage/circos_files/circos_11_0.png)
+![png](../assets/usage/circos_files/circos_11_0.png)
     
 
 
@@ -211,6 +211,5 @@ fig = plot_circos_figure(connectome)
 
 
     
-![png](../../assets/usage/../../assets/usage/circos_files/circos_13_1.png)
+![png](../assets/usage/circos_files/circos_13_1.png)
     
-

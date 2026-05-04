@@ -7,14 +7,14 @@ This type of chart is commonly used to display various brain region metrics in n
 The `plot_brain_surface_figure` function is developed based on the `surfplot` library, providing a unified and simplified interface for plotting brain surface maps for human, macaque, and chimpanzee brains.
 Currently supports multiple brain atlases including:
 
-1. Human Glasser (HCP-MMP) atlas[^1]. [Atlas CSV file](../../assets/atlas_csv/human_glasser.csv).
-1. Human BNA atlas[^2]. [Atlas CSV file](../../assets/atlas_csv/human_bna.csv).
-1. Chimpanzee BNA atlas[^3]. [Atlas CSV file](../../assets/atlas_csv/chimpanzee_bna.csv).
-1. Macaque CHARM 4-level[^4]. [Atlas CSV file](../../assets/atlas_csv/macaque_charm4.csv).
-1. Macaque CHARM 5-level[^4]. [Atlas CSV file](../../assets/atlas_csv/macaque_charm5.csv).
-1. Macaque CHARM 6-level[^4]. [Atlas CSV file](../../assets/atlas_csv/macaque_charm6.csv).
-1. Macaque BNA atlas[^5]. [Atlas CSV file](../../assets/atlas_csv/macaque_bna.csv).
-1. Macaque D99 atlas[^6]. [Atlas CSV file](../../assets/atlas_csv/macaque_d99.csv).
+1. Human Glasser (HCP-MMP) atlas[^1]. [Atlas CSV file](../assets/atlas_csv/human_glasser.csv).
+1. Human BNA atlas[^2]. [Atlas CSV file](../assets/atlas_csv/human_bna.csv).
+1. Chimpanzee BNA atlas[^3]. [Atlas CSV file](../assets/atlas_csv/chimpanzee_bna.csv).
+1. Macaque CHARM 4-level[^4]. [Atlas CSV file](../assets/atlas_csv/macaque_charm4.csv).
+1. Macaque CHARM 5-level[^4]. [Atlas CSV file](../assets/atlas_csv/macaque_charm5.csv).
+1. Macaque CHARM 6-level[^4]. [Atlas CSV file](../assets/atlas_csv/macaque_charm6.csv).
+1. Macaque BNA atlas[^5]. [Atlas CSV file](../assets/atlas_csv/macaque_bna.csv).
+1. Macaque D99 atlas[^6]. [Atlas CSV file](../assets/atlas_csv/macaque_d99.csv).
 
 [^1]:
     Glasser, M. F., Coalson, T. S., Robinson, E. C., Hacker, C. D., Harwell, J., Yacoub, E., Ugurbil, K., Andersson, J., Beckmann, C. F., Jenkinson, M., Smith, S. M., & Van Essen, D. C. (2016). A multi-modal parcellation of human cerebral cortex. Nature, 536(7615), Article 7615. https://doi.org/10.1038/nature18933
@@ -42,7 +42,7 @@ data = {"lh_V1": 1, "rh_MT": 1.5}
 ax = plot_brain_surface_figure(data, species="human", atlas="glasser")
 ```
 
-![png](../../assets/usage/brain_surface_files/brain_surface_4_0.png)
+![png](../assets/usage/brain_surface_files/brain_surface_4_0.png)
 
 ```python
 from plotfig import plot_brain_surface_figure
@@ -61,7 +61,7 @@ ax2 = plot_brain_surface_figure(
 )
 ```
 
-![png](../../assets/usage/brain_surface_files/brain_surface_5_0.png)
+![png](../assets/usage/brain_surface_files/brain_surface_5_0.png)
 
 ## Different Surface Files
 
@@ -89,7 +89,7 @@ ax4 = plot_brain_surface_figure(plot_data, surf="sphere", ax=axes[1,0], title_na
 ax5 = plot_brain_surface_figure(plot_data, surf="flat", ax=axes[1,1], title_name="flat")
 ```
 
-![png](../../assets/usage/brain_surface_files/brain_surface_8_0.png)
+![png](../assets/usage/brain_surface_files/brain_surface_8_0.png)
 
 For chimpanzees, the following surface files are provided:
 
@@ -108,7 +108,7 @@ ax1 = plot_brain_surface_figure(plot_data, species="chimpanzee", atlas="bna", su
 ax3 = plot_brain_surface_figure(plot_data, species="chimpanzee", atlas="bna", surf="midthickness", ax=axes[1], title_name="midthickness")
 ```
 
-![png](../../assets/usage/brain_surface_files/brain_surface_10_0.png)
+![png](../assets/usage/brain_surface_files/brain_surface_10_0.png)
 
 For macaques, the following surface files are provided:
 
@@ -135,7 +135,7 @@ ax5 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", su
 ax6 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", surf="flat", ax=axes[1,2], title_name="flat")
 ```
 
-![png](../../assets/usage/brain_surface_files/brain_surface_12_0.png)
+![png](../assets/usage/brain_surface_files/brain_surface_12_0.png)
 
 ## More Settings
 
@@ -159,4 +159,4 @@ ax = plot_brain_surface_figure(
 )
 ```
 
-![png](../../assets/usage/brain_surface_files/brain_surface_15_0.png)
+![png](../assets/usage/brain_surface_files/brain_surface_15_0.png)

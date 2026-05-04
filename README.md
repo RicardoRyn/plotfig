@@ -10,7 +10,7 @@
 
 A Python visualization library designed for cognitive neuroscience research, providing efficient, easy-to-use, and beautiful plotting tools.
 
-![plotfig](./docs/assets/plotfig.png)
+![plotfig](./docs/en/assets/plotfig.png)
 
 </div>
 
@@ -51,10 +51,8 @@ pip install plotfig
 
 ## Documentation
 
-For detailed documentation and usage examples, please visit the [plotfig documentation](https://ricardoryn.github.io/plotfig/en/).
+For detailed documentation and usage examples, please visit the [plotfig documentation](https://ricardoryn.github.io/plotfig/).
 
 ## Contributing
 
 We welcome Issues and PRs! Whether it's bug reports, feature suggestions, or documentation improvements, please feel free to open an [Issue](https://github.com/RicardoRyn/plotfig/issues).
-
-For contribution guidelines, please see the [contribution guide](https://ricardoryn.github.io/plotfig/).

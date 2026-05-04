@@ -3,7 +3,7 @@
 `plotfig` is a Python library designed specifically for scientific data visualization, dedicated to providing efficient, easy-to-use, and beautiful plotting tools for cognitive neuroscience researchers.
 This project is developed based on mainstream visualization libraries in the industry—`matplotlib`, `surfplot`, and `plotly`, integrating their powerful features to meet the complex plotting needs in neuroscience and brain connectomics across various scenarios.
 
-![plotfig](../assets/plotfig.png)
+![plotfig](assets/plotfig.png)
 
 ## Project Structure
 

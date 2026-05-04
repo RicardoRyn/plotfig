@@ -29,14 +29,14 @@ group2_bar3 = np.random.normal(3, 1, 10)
 ax = plot_multi_group_bar_figure([[group1_bar1, group1_bar2, group1_bar3], [group2_bar1, group2_bar2, group2_bar3]])
 ```
 
-![png](../../assets/usage/multi_groups_files/multi_groups_3_0.png)
+![png](../assets/usage/multi_groups_files/multi_groups_3_0.png)
 
 ## Plot Beautification
 
 Similar to single-group bar charts, multi-group bar charts also provide a large number of adjustable parameters for flexible control of the chart appearance.
 This section only shows a portion of these parameters.
 
-For the complete parameter list, please refer to the API documentation for [`plot_multi_group_bar_figure`](../api/#plotfig.bar.plot_multi_group_bar_figure).
+For the complete parameter list, please refer to the API documentation for [`plot_multi_group_bar_figure`](../api/#plotfig.multi_bars.plot_multi_group_bar_figure).
 
 ```python
 import numpy as np
@@ -69,7 +69,7 @@ ax = plot_multi_group_bar_figure(
 )
 ```
 
-![png](../../assets/usage/multi_groups_files/multi_groups_6_0.png)
+![png](../assets/usage/multi_groups_files/multi_groups_6_0.png)
 
 ## Statistics
 
@@ -111,4 +111,4 @@ ax = plot_multi_group_bar_figure(
 )
 ```
 
-![png](../../assets/usage/multi_groups_files/multi_groups_9_0.png)
+![png](../assets/usage/multi_groups_files/multi_groups_9_0.png)

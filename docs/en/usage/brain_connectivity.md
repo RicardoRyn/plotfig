@@ -35,7 +35,7 @@ fig = plot_brain_connection_figure(
 
 ## Result Display
 
-![output](../../assets/usage/brain_connectivity_files/output.gif)
+![output](../assets/usage/brain_connectivity_files/output.gif)
 
 The HTML file can be interactively viewed in a browser. You can manually take screenshots, or use the following command to batch generate multi-view images.
 

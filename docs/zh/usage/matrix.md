@@ -21,7 +21,7 @@ ax = plot_matrix_figure(data)
 
 
     
-![png](../../assets/usage/../../assets/usage/matrix_files/matrix_4_0.png)
+![png](../assets/usage/matrix_files/matrix_4_0.png)
     
 
 
@@ -52,6 +52,5 @@ ax = plot_matrix_figure(
 
 
     
-![png](../../assets/usage/../../assets/usage/matrix_files/matrix_7_0.png)
+![png](../assets/usage/matrix_files/matrix_7_0.png)
     
-

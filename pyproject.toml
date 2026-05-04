@@ -28,7 +28,7 @@ dev = [
     "mkdocstrings-python>=2.0.1",
     "pytest>=9.0.2",
     "ruff>=0.15.12",
-    "zensical==0.0.13",
+    "zensical>=0.0.39",
 ]
 
 [build-system]

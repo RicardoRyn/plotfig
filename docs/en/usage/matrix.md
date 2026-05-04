@@ -18,7 +18,7 @@ data = np.random.rand(10, 19)
 ax = plot_matrix_figure(data)
 ```
 
-![png](../../assets/usage/matrix_files/matrix_4_0.png)
+![png](../assets/usage/matrix_files/matrix_4_0.png)
 
 ## Parameter Settings
 
@@ -44,4 +44,4 @@ ax = plot_matrix_figure(
 )
 ```
 
-![png](../../assets/usage/matrix_files/matrix_7_0.png)
+![png](../assets/usage/matrix_files/matrix_7_0.png)
