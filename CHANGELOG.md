@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.18.1](https://github.com/RicardoRyn/plotfig/compare/v1.18.0...v1.18.1) (2026-05-07)
+
+
+### Code Refactoring ♻️
+
+* **plotfig:** improve type hints for test_method and x_label_ha parameters ([d6fe349](https://github.com/RicardoRyn/plotfig/commit/d6fe349644a92c7ce89b980c7c67d36fc71ac2e3))
+
 ## [1.18.0](https://github.com/RicardoRyn/plotfig/compare/v1.17.0...v1.18.0) (2026-05-04)
 
 
