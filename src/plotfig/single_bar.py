@@ -1,5 +1,5 @@
 import warnings
-from typing import Sequence
+from typing import Literal, Sequence, TypeAlias
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -17,6 +17,10 @@ from .utils.bar import (
 warnings.simplefilter("always")
 
 Num = int | float | np.integer | np.floating
+TestMethod: TypeAlias = Literal[
+    "ttest_ind", "ttest_rel", "ttest_1samp", "mannwhitneyu", "external"
+]
+TestMethodSpec: TypeAlias = Sequence[str]
 
 __all__ = [
     "plot_one_group_bar_figure",
@@ -200,7 +204,7 @@ def plot_one_group_bar_figure(
     title_fontsize: Num = 12,
     title_pad: Num = 10,
     x_label_name: str = "",
-    x_label_ha: str = "center",
+    x_label_ha: Literal["center", "right", "left"] = "center",
     x_label_fontsize: Num = 12,
     x_tick_fontsize: Num = 12,
     x_tick_rotation: Num = 0,
@@ -210,7 +214,7 @@ def plot_one_group_bar_figure(
     y_tick_rotation: Num = 0,
     y_lim: tuple[float, float] | None = None,
     statistic: bool = False,
-    test_method: list[str] | None = None,
+    test_method: TestMethodSpec | None = None,
     p_list: Sequence[Num] | None = None,
     popmean: Num = 0,
     statistical_line_color: str = "0.5",
@@ -263,8 +267,8 @@ def plot_one_group_bar_figure(
             标题与图表的间距. Defaults to 10.
         x_label_name (str, optional):
             X轴标签名称. Defaults to "".
-        x_label_ha (str, optional):
-            X轴标签的水平对齐方式. Defaults to "center".
+        x_label_ha (Literal["center", "right", "left"], optional):
+            X轴标签的水平对齐方式，可选 "center"、"right" 或 "left". Defaults to "center".
         x_label_fontsize (Num, optional):
             X轴标签字体大小. Defaults to 12.
         x_tick_fontsize (Num, optional):
@@ -284,12 +288,11 @@ def plot_one_group_bar_figure(
         statistic (bool, optional):
             是否进行统计显著性分析. Defaults to False.
         test_method (list[str], optional):
-            统计检验方法列表，包括
-            1. `ttest_ind`,
-            2. `ttest_rel`,
-            3. `ttest_1samp`,
-            4. `mannwhitneyu`,
-            5. `external`.
+            统计检验方法列表，仅支持两种形式：
+            1. 长度为1：`["ttest_ind"]`、`["ttest_rel"]`、`["ttest_1samp"]`、
+                `["mannwhitneyu"]` 或 `["external"]`。
+            2. 长度为2：必须包含 `ttest_1samp`，另一个元素为
+                `ttest_ind`、`ttest_rel`、`mannwhitneyu` 或 `external` 之一。
             Defaults to ["ttest_ind"].
         p_list (Sequence[Num] | None, optional):
             预计算的p值列表，用于显著性标记. Defaults to None.
@@ -477,7 +480,7 @@ def plot_one_group_violin_figure(
     title_fontsize: Num = 12,
     title_pad: Num = 10,
     x_label_name: str = "",
-    x_label_ha: str = "center",
+    x_label_ha: Literal["center", "right", "left"] = "center",
     x_label_fontsize: Num = 10,
     x_tick_fontsize: Num = 8,
     x_tick_rotation: Num = 0,
@@ -487,7 +490,7 @@ def plot_one_group_violin_figure(
     y_tick_rotation: Num = 0,
     y_lim: tuple[float, float] | None = None,
     statistic: bool = False,
-    test_method: list[str] | None = None,
+    test_method: TestMethodSpec | None = None,
     popmean: Num = 0,
     p_list: Sequence[Num] | None = None,
     statistical_line_color: str = "0.5",
@@ -534,8 +537,8 @@ def plot_one_group_violin_figure(
             标题与图表的间距. Defaults to 10.
         x_label_name (str, optional):
             X轴标签名称. Defaults to "".
-        x_label_ha (str, optional):
-            X轴标签的水平对齐方式. Defaults to "center".
+        x_label_ha (Literal["center", "right", "left"], optional):
+            X轴标签的水平对齐方式，可选 "center"、"right" 或 "left". Defaults to "center".
         x_label_fontsize (Num, optional):
             X轴标签字体大小. Defaults to 10.
         x_tick_fontsize (Num, optional):
@@ -555,7 +558,12 @@ def plot_one_group_violin_figure(
         statistic (bool, optional):
             是否进行统计显著性分析. Defaults to False.
         test_method (list[str], optional):
-            统计检验方法列表. Defaults to ["ttest_ind"].
+            统计检验方法列表，仅支持两种形式：
+            1. 长度为1：`["ttest_ind"]`、`["ttest_rel"]`、`["ttest_1samp"]`、
+                `["mannwhitneyu"]` 或 `["external"]`。
+            2. 长度为2：必须包含 `ttest_1samp`，另一个元素为
+                `ttest_ind`、`ttest_rel`、`mannwhitneyu` 或 `external` 之一。
+            Defaults to ["ttest_ind"].
         popmean (Num, optional):
             单样本t检验的假设均值. Defaults to 0.
         p_list (Sequence[Num] | None, optional):
