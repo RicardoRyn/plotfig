@@ -64,6 +64,54 @@ def _add_scatter(
     )
 
 
+def _draw_errorbars(
+    ax: Axes,
+    x_positions: np.ndarray,
+    means: list[float],
+    error_values: list[float],
+    *,
+    errorbar_mode: Literal["both", "upper"],
+    errorbar_color: str,
+    errorbar_elinewidth: Num,
+    errorbar_capsize: Num,
+    errorbar_capthick: Num,
+) -> None:
+    if errorbar_mode == "upper":
+        lower_err = [0] * len(x_positions)
+        ax.errorbar(
+            x_positions,
+            means,
+            yerr=(lower_err, error_values),
+            fmt="none",
+            color=errorbar_color,
+            capsize=0,
+            capthick=0,
+            elinewidth=errorbar_elinewidth,
+        )
+        y_upper = [yi + ui for yi, ui in zip(means, error_values)]
+        ax.plot(
+            x_positions,
+            y_upper,
+            "_",
+            c=errorbar_color,
+            markersize=errorbar_capsize * 2,
+            mew=errorbar_capthick,
+            linestyle="none",
+        )
+        return
+
+    ax.errorbar(
+        x_positions,
+        means,
+        yerr=error_values,
+        fmt="none",
+        color=errorbar_color,
+        capsize=errorbar_capsize,
+        capthick=errorbar_capthick,
+        elinewidth=errorbar_elinewidth,
+    )
+
+
 def _perform_stat_test(
     data1=None,
     data2=None,
@@ -200,6 +248,11 @@ def plot_one_group_bar_figure(
     color_alpha: Num = 1,
     dots_size: Num = 35,
     errorbar_type: str = "sd",
+    errorbar_mode: Literal["both", "upper"] = "both",
+    errorbar_color: str = "k",
+    errorbar_elinewidth: Num = 1,
+    errorbar_capsize: Num = 3,
+    errorbar_capthick: Num = 1,
     title_name: str = "",
     title_fontsize: Num = 12,
     title_pad: Num = 10,
@@ -259,6 +312,16 @@ def plot_one_group_bar_figure(
             散点的大小. Defaults to 35.
         errorbar_type (str, optional):
             误差条类型，可选 "sd"(标准差) 或 "se"(标准误). Defaults to "sd".
+        errorbar_mode (Literal["both", "upper"], optional):
+            误差条模式，"both" 显示上下误差条，"upper" 只显示上误差条。Defaults to "both".
+        errorbar_color (str, optional):
+            误差条颜色. Defaults to "k".
+        errorbar_capsize (Num, optional):
+            误差帽的长度. Defaults to 3.
+        errorbar_capthick (Num, optional):
+            误差帽线条粗细. Defaults to 1.
+        errorbar_elinewidth (Num, optional):
+            误差线宽度. Defaults to 1.
         title_name (str, optional):
             图表标题. Defaults to "".
         title_fontsize (Num, optional):
@@ -360,12 +423,15 @@ def plot_one_group_bar_figure(
         rng = np.random.default_rng(seed=42)
         scatter_x = rng.normal(i, 0.1, len(d))
         scatter_positions.append(scatter_x)
+
     if errorbar_type == "sd":
         error_values = sds
     elif errorbar_type == "se":
         error_values = ses
     else:
         raise ValueError("errorbar_type 只能是 'sd' 或者 'se'")
+    if errorbar_mode not in {"both", "upper"}:
+        raise ValueError("errorbar_mode 只能是 'both' 或者 'upper'")
 
     # 绘制柱子
     if gradient_color:
@@ -391,14 +457,17 @@ def plot_one_group_bar_figure(
             edgecolor=edgecolor,
         )
 
-    ax.errorbar(
+    # 绘制误差条
+    _draw_errorbars(
+        ax,
         x_positions,
         means,
         error_values,
-        fmt="none",
-        linewidth=1,
-        capsize=3,
-        color="black",
+        errorbar_mode=errorbar_mode,
+        errorbar_color=errorbar_color,
+        errorbar_elinewidth=errorbar_elinewidth,
+        errorbar_capsize=errorbar_capsize,
+        errorbar_capthick=errorbar_capthick,
     )
 
     # 绘制散点
