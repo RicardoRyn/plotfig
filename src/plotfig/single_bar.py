@@ -51,6 +51,7 @@ def _add_scatter(
     data,
     color,
     dots_size,
+    dots_alpha,
 ):
     """添加散点"""
     ax.scatter(
@@ -60,7 +61,7 @@ def _add_scatter(
         s=dots_size,
         edgecolors="white",
         linewidths=1,
-        alpha=0.5,
+        alpha=dots_alpha,
     )
 
 
@@ -244,6 +245,7 @@ def plot_one_group_bar_figure(
     colors_end: list[str] | None = None,
     show_dots: bool = True,
     dots_color: list[list[str]] | None = None,
+    dots_alpha: Num = 0.5,
     width: Num = 0.5,
     color_alpha: Num = 1,
     dots_size: Num = 35,
@@ -304,6 +306,8 @@ def plot_one_group_bar_figure(
             是否显示散点. Defaults to True.
         dots_color (list[list[str]] | None, optional):
             散点的颜色列表. Defaults to None.
+        dots_alpha (Num, optional):
+            散点的透明度. Defaults to 0.5.
         width (Num, optional):
             柱状图的宽度. Defaults to 0.5.
         color_alpha (Num, optional):
@@ -474,9 +478,18 @@ def plot_one_group_bar_figure(
     if show_dots:
         for i, d in enumerate(data):
             if dots_color is None:
-                _add_scatter(ax, scatter_positions[i], d, ["gray"] * len(d), dots_size)
+                _add_scatter(
+                    ax,
+                    scatter_positions[i],
+                    d,
+                    ["gray"] * len(d),
+                    dots_size,
+                    dots_alpha,
+                )
             else:
-                _add_scatter(ax, scatter_positions[i], d, dots_color[i], dots_size)
+                _add_scatter(
+                    ax, scatter_positions[i], d, dots_color[i], dots_size, dots_alpha
+                )
 
     # 美化
     ax.spines[["top", "right"]].set_visible(False)
@@ -545,6 +558,7 @@ def plot_one_group_violin_figure(
     colors_end: list[str] | None = None,
     show_dots: bool = True,
     dots_size: Num = 15,
+    dots_alpha: Num = 0.5,
     title_name: str = "",
     title_fontsize: Num = 12,
     title_pad: Num = 10,
@@ -598,6 +612,8 @@ def plot_one_group_violin_figure(
             是否显示散点. Defaults to False.
         dots_size (Num, optional):
             散点的大小. Defaults to 35.
+        dots_alpha (Num, optional):
+            散点的透明度. Defaults to 0.5.
         title_name (str, optional):
             图表标题. Defaults to "".
         title_fontsize (Num, optional):
@@ -793,7 +809,7 @@ def plot_one_group_violin_figure(
         rng = np.random.default_rng(seed=42)
         scatter_positions = [rng.normal(i, 0.1, len(d)) for i, d in enumerate(data)]
         for i, d in enumerate(data):
-            _add_scatter(ax, scatter_positions[i], d, colors[i], dots_size)
+            _add_scatter(ax, scatter_positions[i], d, colors[i], dots_size, dots_alpha)
 
     # 美化
     ax.spines[["top", "right"]].set_visible(False)
