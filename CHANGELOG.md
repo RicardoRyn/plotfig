@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.19.0](https://github.com/RicardoRyn/plotfig/compare/v1.18.1...v1.19.0) (2026-05-10)
+
+
+### Features ✨
+
+* **single_bar/violin:** add dots_alpha parameter for scatter transparency ([aa5eef1](https://github.com/RicardoRyn/plotfig/commit/aa5eef104f74c259b051175832517b5cbe0af562))
+* **single_bar:** add errorbar customization and upper-only mode ([57100b3](https://github.com/RicardoRyn/plotfig/commit/57100b302eeb6a5009da33ce296980f71b94b766))
+
 ## [1.18.1](https://github.com/RicardoRyn/plotfig/compare/v1.18.0...v1.18.1) (2026-05-07)
 
 
