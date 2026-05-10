@@ -121,9 +121,12 @@ ax = plot_one_group_bar_figure(
     width=0.8,
     show_dots=True,
     dots_size=15,
+    dots_alpha=0.9,
     colors=["#4573a5", "orange"],
     color_alpha=0.7,
     errorbar_type="sd",
+    errorbar_mode="upper",
+    errorbar_capsize=10,
 )
 ```
 
@@ -169,7 +172,6 @@ ax = plot_one_group_bar_figure(
 
 
     
-![png](../assets/usage/single_group_files/single_group_14_0.png)
     
 
 
