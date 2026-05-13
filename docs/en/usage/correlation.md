@@ -14,7 +14,7 @@ This is usually achieved through point-line correlation plots, plotting each pai
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
+from plotfig import plot_correlation_figure
 
 np.random.seed(42)
 data1 = np.arange(100)
@@ -34,7 +34,7 @@ Using `hexbin=True`. We can display the density distribution of a large number o
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
+from plotfig import plot_correlation_figure
 
 np.random.seed(42)
 n = 100_000
@@ -68,7 +68,7 @@ For all parameters, see the API documentation for [`plot_correlation_figure`](..
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
+from plotfig import plot_correlation_figure
 
 np.random.seed(42)
 data1 = np.arange(100)
@@ -76,21 +76,22 @@ data2 = data1 + np.random.normal(1,50, 100)
 # data2 adds noise on top of data1.
 # Serious people know that data1 and data2 are correlated, so does plotfig know?
 
-fig, ax = plt.subplots(figsize=(3, 3))
 ax = plot_correlation_figure(
     data1,
     data2,
-    stats_method="spearman",  # Only "spearman, pearson", default is spearman
-    ci=True,  # Display 95% confidence interval
-    dots_color="green",
+    stats_method="spearman",
+    ci=True,
+    dots_color=dots_color,
+    dots_edgecolor=dots_edgecolor,
+    dots_size=dots_size,
     line_color="pink",
     title_name="Correlation between data1 and data2",
     title_fontsize=10,
-    title_pad=20,  # Control the distance between title and plot, default is 10
+    title_pad=20,
     x_label_name="Data1",
     y_label_name="Data2",
-    xlim=(0,100),
-    ylim=(-100,150),
+    xlim=(-10, 120),
+    ylim=(-100, 200),
 )
 ```
 

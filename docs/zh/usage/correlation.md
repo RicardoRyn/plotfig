@@ -15,7 +15,7 @@
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
+from plotfig import plot_correlation_figure
 
 np.random.seed(42)
 data1 = np.arange(100)
@@ -40,7 +40,7 @@ ax = plot_correlation_figure(data1,data2)
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
+from plotfig import plot_correlation_figure
 
 np.random.seed(42)
 n = 100_000
@@ -79,29 +79,36 @@ cb = fig.colorbar(hb, ax=ax2, label='counts')
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotfig import *
+from plotfig import plot_correlation_figure
 
 np.random.seed(42)
 data1 = np.arange(100)
-data2 = data1 + np.random.normal(1,50, 100)
+data2 = data1 + np.random.normal(1, 50, 100)
 # data2是在data1的基础上加上了噪声。
 # 正经人都知道data1和data2相关，那么plotfig知不知道呢？
 
-fig, ax = plt.subplots(figsize=(3, 3))
+fig, ax = plt.subplots()
+
+dots_color = ["blue"] * 10 + ["orange"] * 20 + ["green"] * 30 + ["red"] * 40
+dots_edgecolor = ["red"] * 10 + ["blue"] * 20 + ["orange"] * 30 + ["green"] * 40
+dots_size = [10] * 10 + [50] * 20 + [90] * 30 + [130] * 40
+
 ax = plot_correlation_figure(
     data1,
     data2,
-    stats_method="spearman",  # 仅有“spearman, pearson”，默认是spearman
-    ci=True,  # 显示95%置信区间
-    dots_color="green",
+    stats_method="spearman",
+    ci=True,
+    dots_color=dots_color,
+    dots_edgecolor=dots_edgecolor,
+    dots_size=dots_size,
     line_color="pink",
     title_name="Correlation between data1 and data2",
     title_fontsize=10,
-    title_pad=20,  # 控制释标题和图的距离，默认是10
+    title_pad=20,
     x_label_name="Data1",
     y_label_name="Data2",
-    xlim=(0,100),
-    ylim=(-100,150),
+    xlim=(-10, 120),
+    ylim=(-100, 200),
 )
 ```
 

@@ -1,9 +1,10 @@
-from typing import TypeAlias
+from typing import Literal, Sequence, TypeAlias
 
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
-from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.collections import PolyCollection
+from matplotlib.colors import Colormap, LinearSegmentedColormap
 from matplotlib.ticker import (
     FormatStrFormatter,
     FuncFormatter,
@@ -12,20 +13,23 @@ from matplotlib.ticker import (
 )
 from scipy import stats
 
-Num: TypeAlias = float | int
+Num: TypeAlias = int | float | np.integer | np.floating
+StatsMethod: TypeAlias = Literal["spearman", "pearson"]
+AxisFormat: TypeAlias = Literal["normal", "sci", "1f", "percent"]
 
 __all__ = ["plot_correlation_figure"]
 
 
 def plot_correlation_figure(
-    data1: list[Num] | np.ndarray,
-    data2: list[Num] | np.ndarray,
+    data1: Sequence[Num] | np.ndarray,
+    data2: Sequence[Num] | np.ndarray,
     ax: Axes | None = None,
-    stats_method: str = "spearman",
+    stats_method: StatsMethod = "spearman",
     ci: bool = False,
     ci_color: str = "gray",
     dots_color: str | list[str] = "steelblue",
-    dots_size: int | float = 10,
+    dots_size: int | list[int] = 10,
+    dots_edgecolor: str | list[str] = "gray",
     line_color: str = "r",
     title_name: str = "",
     title_fontsize: int = 12,
@@ -36,76 +40,77 @@ def plot_correlation_figure(
     x_tick_rotation: int = 0,
     x_major_locator: float | None = None,
     x_max_tick_to_value: float | None = None,
-    x_format: str = "normal",  # 支持 "normal", "sci", "1f", "percent"
+    x_format: AxisFormat = "normal",
     y_label_name: str = "",
     y_label_fontsize: int = 10,
     y_tick_fontsize: int = 8,
     y_tick_rotation: int = 0,
     y_major_locator: float | None = None,
     y_max_tick_to_value: float | None = None,
-    y_format: str = "sci",  # 支持 "normal", "sci", "1f", "percent"
+    y_format: AxisFormat = "sci",
     asterisk_fontsize: int = 10,
     show_p_value: bool = False,
     hexbin: bool = False,
-    hexbin_cmap: LinearSegmentedColormap | None = None,
+    hexbin_cmap: Colormap | None = None,
     hexbin_gridsize: int = 50,
     xlim: list[Num] | tuple[Num, Num] | None = None,
     ylim: list[Num] | tuple[Num, Num] | None = None,
-) -> Axes:
+) -> Axes | PolyCollection:
     """
     绘制两个数据集之间的相关性图，支持线性回归、置信区间和统计方法（Spearman 或 Pearson）。
 
     Args:
-        data1 (list[Num] | np.ndarray): 第一个数据集，可以是整数或浮点数列表或数组。
-        data2 (list[Num] | np.ndarray): 第二个数据集，可以是整数或浮点数列表或数组。
-        ax (plt.Axes | None, optional): matplotlib 的 Axes 对象，用于绘图。默认为 None，使用当前 Axes。
-        stats_method (str, optional): 相关性统计方法，支持 "spearman" 和 "pearson"。默认为 "spearman"。
+        data1 (Sequence[Num] | np.ndarray): 第一个数据集。
+        data2 (Sequence[Num] | np.ndarray): 第二个数据集。
+        ax (Axes | None, optional): matplotlib 的 Axes 对象。默认为 None（使用当前 Axes）。
+        stats_method (StatsMethod, optional): 相关性统计方法，支持 "spearman" 和 "pearson"。默认为 "spearman"。
         ci (bool, optional): 是否绘制置信区间带。默认为 False。
-        ci_color (str, optional): 置信区间带颜色。默认为 "salmon"。
-        dots_color (str, optional): 散点的颜色。默认为 "steelblue"。
-        dots_size (int | float, optional): 散点的大小。默认为 1。
-        line_color (str, optional): 回归线的颜色。默认为 "r"（红色）。
+        ci_color (str, optional): 置信区间带颜色。默认为 "gray"。
+        dots_color (str | list[str], optional): 散点颜色。默认为 "steelblue"。
+        dots_size (int | list[int], optional): 散点大小。默认为 10。
+        dots_edgecolor (str | list[str], optional): 散点边框颜色。默认为 "gray"。
+        line_color (str, optional): 回归线颜色。默认为 "r"（红色）。
         title_name (str, optional): 图形标题。默认为空字符串。
-        title_fontsize (int, optional): 标题字体大小。默认为 10。
+        title_fontsize (int, optional): 标题字体大小。默认为 12。
         title_pad (int, optional): 标题与图形之间的间距。默认为 10。
         x_label_name (str, optional): X 轴标签名称。默认为空字符串。
         x_label_fontsize (int, optional): X 轴标签字体大小。默认为 10。
-        x_tick_fontsize (int, optional): X 轴刻度标签字体大小。默认为 10。
+        x_tick_fontsize (int, optional): X 轴刻度标签字体大小。默认为 8。
         x_tick_rotation (int, optional): X 轴刻度标签旋转角度。默认为 0。
-        x_major_locator (float | None, optional): 设置 X 轴主刻度间隔。默认为 None。
-        x_max_tick_to_value (float | None, optional): 设置 X 轴最大显示刻度值。默认为 None。
-        x_format (str, optional): X 轴格式化方式，支持 "normal", "sci", "1f", "percent"。默认为 "normal"。
+        x_major_locator (float | None, optional): X 轴主刻度间隔。默认为 None。
+        x_max_tick_to_value (float | None, optional): X 轴最大显示刻度值。默认为 None。
+        x_format (AxisFormat, optional): X 轴格式化方式，支持 "normal"、"sci"、"1f"、"percent"。默认为 "normal"。
         y_label_name (str, optional): Y 轴标签名称。默认为空字符串。
         y_label_fontsize (int, optional): Y 轴标签字体大小。默认为 10。
-        y_tick_fontsize (int, optional): Y 轴刻度标签字体大小。默认为 10。
+        y_tick_fontsize (int, optional): Y 轴刻度标签字体大小。默认为 8。
         y_tick_rotation (int, optional): Y 轴刻度标签旋转角度。默认为 0。
-        y_major_locator (float | None, optional): 设置 Y 轴主刻度间隔。默认为 None。
-        y_max_tick_to_value (float | None, optional): 设置 Y 轴最大显示刻度值。默认为 None。
-        y_format (str, optional): Y 轴格式化方式，支持 "normal", "sci", "1f", "percent"。默认为 "normal"。
+        y_major_locator (float | None, optional): Y 轴主刻度间隔。默认为 None。
+        y_max_tick_to_value (float | None, optional): Y 轴最大显示刻度值。默认为 None。
+        y_format (AxisFormat, optional): Y 轴格式化方式，支持 "normal"、"sci"、"1f"、"percent"。默认为 "sci"。
         asterisk_fontsize (int, optional): 显著性星号字体大小。默认为 10。
-        show_p_value (bool, optional): 是否显示 p 值。默认为 True。
+        show_p_value (bool, optional): 是否显示 p 值；否则显示显著性星号。默认为 False。
         hexbin (bool, optional): 是否使用六边形箱图。默认为 False。
-        hexbin_cmap (LinearSegmentedColormap | None, optional): 六边形箱图的颜色映射。默认为 None。
-        hexbin_gridsize (int, optional): 六边形箱图的网格大小。默认为 50。
+        hexbin_cmap (Colormap | None, optional): 六边形箱图的颜色映射。默认为 None。
+        hexbin_gridsize (int, optional): 六边形箱图网格大小。默认为 50。
         xlim (list[Num] | tuple[Num, Num] | None, optional): X 轴范围限制。默认为 None。
         ylim (list[Num] | tuple[Num, Num] | None, optional): Y 轴范围限制。默认为 None。
 
     Returns:
-        None
+        Axes | PolyCollection: 默认返回 Axes；当 hexbin=True 时返回 hexbin 对象。
     """
 
     def set_axis(
-        ax,
-        axis,
-        label,
-        labelsize,
-        ticksize,
-        rotation,
-        locator,
-        max_tick_value,
-        fmt,
-        lim,
-    ):
+        ax: Axes,
+        axis: Literal["x", "y"],
+        label: str,
+        labelsize: Num,
+        ticksize: Num,
+        rotation: Num,
+        locator: float | None,
+        max_tick_value: float | None,
+        fmt: AxisFormat,
+        lim: list[Num] | tuple[Num, Num] | None,
+    ) -> None:
         if axis == "x":
             set_label = ax.set_xlabel
             get_ticks = ax.get_xticks
@@ -159,7 +164,7 @@ def plot_correlation_figure(
             )
         hb = ax.hexbin(A, B, gridsize=hexbin_gridsize, cmap=hexbin_cmap)
     else:
-        ax.scatter(A, B, c=dots_color, s=dots_size)
+        ax.scatter(A, B, c=dots_color, s=dots_size, edgecolors=dots_edgecolor)
     ax.plot(x_seq, y_pred, line_color, lw=1)
 
     if ci:
@@ -208,16 +213,17 @@ def plot_correlation_figure(
     )
 
     # 标注r值或rho值
-    if stats_method == "spearman":
+    method = str(stats_method).strip().lower()
+    if method == "spearman":
         s, p = stats.spearmanr(A, B)
         label = r"$\rho$"
-    elif stats_method == "pearson":
+    elif method == "pearson":
         s, p = stats.pearsonr(A, B)
         label = "r"
     else:
-        print(f"没有统计方法 {stats_method}，请检查拼写。更换为默认的 spearman 方法。")
-        s, p = stats.spearmanr(A, B)
-        label = r"$\rho$"
+        raise ValueError(
+            f"不支持的 stats_method: {stats_method!r}。请使用 'spearman' 或 'pearson'。"
+        )
 
     if show_p_value:
         asterisk = f" p={p:.3f}"
