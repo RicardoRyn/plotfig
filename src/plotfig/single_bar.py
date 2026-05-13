@@ -52,6 +52,7 @@ def _add_scatter(
     color,
     dots_size,
     dots_alpha,
+    dots_marker,
 ):
     """添加散点"""
     ax.scatter(
@@ -62,6 +63,7 @@ def _add_scatter(
         edgecolors="white",
         linewidths=1,
         alpha=dots_alpha,
+        marker=dots_marker,
     )
 
 
@@ -246,9 +248,10 @@ def plot_one_group_bar_figure(
     show_dots: bool = True,
     dots_color: list[list[str]] | None = None,
     dots_alpha: Num = 0.5,
+    dots_size: Num = 35,
+    dots_markers: list[str] | None = None,
     width: Num = 0.5,
     color_alpha: Num = 1,
-    dots_size: Num = 35,
     errorbar_type: str = "sd",
     errorbar_mode: Literal["both", "upper"] = "both",
     errorbar_color: str = "k",
@@ -308,12 +311,14 @@ def plot_one_group_bar_figure(
             散点的颜色列表. Defaults to None.
         dots_alpha (Num, optional):
             散点的透明度. Defaults to 0.5.
+        dots_size (Num, optional):
+            散点的大小. Defaults to 35.
+        dots_markers (list[str] | None, optional):
+            指定每个散点的标记形状，字符串格式与 matplotlib 的 marker 参数完全一致（如 ["o", "s", "^"]）. Defaults to None.
         width (Num, optional):
             柱状图的宽度. Defaults to 0.5.
         color_alpha (Num, optional):
             柱状图颜色的透明度. Defaults to 1.
-        dots_size (Num, optional):
-            散点的大小. Defaults to 35.
         errorbar_type (str, optional):
             误差条类型，可选 "sd"(标准差) 或 "se"(标准误). Defaults to "sd".
         errorbar_mode (Literal["both", "upper"], optional):
@@ -476,7 +481,10 @@ def plot_one_group_bar_figure(
 
     # 绘制散点
     if show_dots:
+        if dots_markers is None:
+            dots_markers = ["o"] * len(data)
         for i, d in enumerate(data):
+            dots_marker = dots_markers[i]
             if dots_color is None:
                 _add_scatter(
                     ax,
@@ -485,10 +493,17 @@ def plot_one_group_bar_figure(
                     ["gray"] * len(d),
                     dots_size,
                     dots_alpha,
+                    dots_marker,
                 )
             else:
                 _add_scatter(
-                    ax, scatter_positions[i], d, dots_color[i], dots_size, dots_alpha
+                    ax,
+                    scatter_positions[i],
+                    d,
+                    dots_color[i],
+                    dots_size,
+                    dots_alpha,
+                    dots_marker,
                 )
 
     # 美化
@@ -559,6 +574,7 @@ def plot_one_group_violin_figure(
     show_dots: bool = True,
     dots_size: Num = 15,
     dots_alpha: Num = 0.5,
+    dots_markers: list[str] | None = None,
     title_name: str = "",
     title_fontsize: Num = 12,
     title_pad: Num = 10,
@@ -609,11 +625,13 @@ def plot_one_group_violin_figure(
         colors_end (list[str] | None, optional):
             渐变色的结束颜色列表. Defaults to None.
         show_dots (bool, optional):
-            是否显示散点. Defaults to False.
+            是否显示散点. Defaults to True.
         dots_size (Num, optional):
-            散点的大小. Defaults to 35.
+            散点的大小. Defaults to 15.
         dots_alpha (Num, optional):
             散点的透明度. Defaults to 0.5.
+        dots_markers (list[str] | None, optional):
+            指定每个散点的标记形状，字符串格式与 matplotlib 的 marker 参数完全一致（如 ["o", "s", "^"]）. Defaults to None.
         title_name (str, optional):
             图表标题. Defaults to "".
         title_fontsize (Num, optional):
@@ -808,8 +826,19 @@ def plot_one_group_violin_figure(
         # 创建随机数生成器
         rng = np.random.default_rng(seed=42)
         scatter_positions = [rng.normal(i, 0.1, len(d)) for i, d in enumerate(data)]
+        if dots_markers is None:
+            dots_markers = ["o"] * len(data)
         for i, d in enumerate(data):
-            _add_scatter(ax, scatter_positions[i], d, colors[i], dots_size, dots_alpha)
+            dots_marker = dots_markers[i]
+            _add_scatter(
+                ax,
+                scatter_positions[i],
+                d,
+                colors[i],
+                dots_size,
+                dots_alpha,
+                dots_marker,
+            )
 
     # 美化
     ax.spines[["top", "right"]].set_visible(False)
