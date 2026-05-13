@@ -14,4 +14,4 @@ IFLOW.md
 *.bak
 .vscode/
 
-notebooks/example_data/
+notebooks/*
