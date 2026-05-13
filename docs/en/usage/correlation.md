@@ -76,6 +76,12 @@ data2 = data1 + np.random.normal(1,50, 100)
 # data2 adds noise on top of data1.
 # Serious people know that data1 and data2 are correlated, so does plotfig know?
 
+fig, ax = plt.subplots()
+
+dots_color = ["blue"] * 10 + ["orange"] * 20 + ["green"] * 30 + ["red"] * 40
+dots_edgecolor = ["red"] * 10 + ["blue"] * 20 + ["orange"] * 30 + ["green"] * 40
+dots_size = [10] * 10 + [50] * 20 + [90] * 30 + [130] * 40
+
 ax = plot_correlation_figure(
     data1,
     data2,
