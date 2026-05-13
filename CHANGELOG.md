@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.20.0](https://github.com/RicardoRyn/plotfig/compare/v1.19.0...v1.20.0) (2026-05-13)
+
+
+### Features ✨
+
+* **correlation:** improve type hints and add dots_edgecolor parameter ([4e3707c](https://github.com/RicardoRyn/plotfig/commit/4e3707c7c3cca8a03298eed8edf61b012dead7e0)), closes [#78](https://github.com/RicardoRyn/plotfig/issues/78)
+* **single_bar/violin:** add support for custom scatter dot markers ([80145c5](https://github.com/RicardoRyn/plotfig/commit/80145c567b427939e63fea3044231aaf236c8b50)), closes [#76](https://github.com/RicardoRyn/plotfig/issues/76)
+
 ## [1.19.0](https://github.com/RicardoRyn/plotfig/compare/v1.18.1...v1.19.0) (2026-05-10)
 
 
