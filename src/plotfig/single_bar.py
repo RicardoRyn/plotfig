@@ -603,7 +603,7 @@ def plot_one_group_violin_figure(
     one_decimal_place: bool = False,
     percentage: bool = False,
 ) -> Axes:
-    """绘制单组小提琴图，可选散点叠加、渐变填色和统计显著性标注。
+    """绘制单组小提琴图，可选散点叠加、渐变填色和统计显著性标注。具有白色均值点和白色中位线。
 
     Args:
         data (np.ndarray | Sequence[Sequence[Num] | np.ndarray]):
