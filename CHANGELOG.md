@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.21.0](https://github.com/RicardoRyn/plotfig/compare/v1.20.0...v1.21.0) (2026-05-20)
+
+
+### Features ✨
+
+* **single_bar:** add box plot function ([c29009c](https://github.com/RicardoRyn/plotfig/commit/c29009cee4b82423672f1fa086f1a83b2d672008))
+
 ## [1.20.0](https://github.com/RicardoRyn/plotfig/compare/v1.19.0...v1.20.0) (2026-05-13)
 
 
