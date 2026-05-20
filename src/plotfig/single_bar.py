@@ -25,6 +25,7 @@ TestMethodSpec: TypeAlias = Sequence[str]
 __all__ = [
     "plot_one_group_bar_figure",
     "plot_one_group_violin_figure",
+    "plot_one_group_box_figure",
 ]
 
 
@@ -552,6 +553,457 @@ def plot_one_group_bar_figure(
             popmean,
             ax,
             all_values,
+            statistical_line_color,
+            asterisk_fontsize,
+            asterisk_color,
+            y_base,
+            interval,
+        )
+    return ax
+
+
+def plot_one_group_box_figure(
+    data: np.ndarray | Sequence[Sequence[Num] | np.ndarray],
+    ax: Axes | None = None,
+    labels_name: list[str] | None = None,
+    colors: list[str] | None = None,
+    color_alpha: Num = 1,
+    gradient_color: bool = False,
+    colors_start: list[str] | None = None,
+    colors_end: list[str] | None = None,
+    show_mean: bool = False,
+    mean_marker_size: Num = 6,
+    show_fliers: bool = True,
+    flier_marker: str = "o",
+    flier_size: Num = 20,
+    flier_alpha: Num = 0.5,
+    show_dots: bool = True,
+    dots_color: list[list[str]] | None = None,
+    dots_alpha: Num = 0.5,
+    dots_size: Num = 35,
+    dots_markers: list[str] | None = None,
+    width: Num = 0.5,
+    whisker_range: float = 1.5,
+    box_linewidth: Num = 1.2,
+    median_linewidth: Num = 1.5,
+    title_name: str = "",
+    title_fontsize: Num = 12,
+    title_pad: Num = 10,
+    x_label_name: str = "",
+    x_label_ha: Literal["center", "right", "left"] = "center",
+    x_label_fontsize: Num = 12,
+    x_tick_fontsize: Num = 12,
+    x_tick_rotation: Num = 0,
+    y_label_name: str = "",
+    y_label_fontsize: Num = 12,
+    y_tick_fontsize: Num = 8,
+    y_tick_rotation: Num = 0,
+    y_lim: tuple[float, float] | None = None,
+    statistic: bool = False,
+    test_method: TestMethodSpec | None = None,
+    p_list: Sequence[Num] | None = None,
+    popmean: Num = 0,
+    statistical_line_color: str = "0.5",
+    asterisk_fontsize: Num = 10,
+    asterisk_color: str = "k",
+    y_base: float | None = None,
+    interval: float | None = None,
+    ax_bottom_is_0: bool = False,
+    y_max_tick_is_1: bool = False,
+    math_text: bool = True,
+    one_decimal_place: bool = False,
+    percentage: bool = False,
+) -> Axes:
+    """绘制单组箱型图，展示四分位线、中位线，包含散点和统计显著性标记。
+
+    Args:
+        data (np.ndarray | Sequence[Sequence[Num] | np.ndarray]):
+            输入数据，可以是二维numpy数组或嵌套序列，每个子序列代表一个箱型图的数据点
+        ax (Axes | None, optional):
+            matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
+        labels_name (list[str] | None, optional):
+            箱型图的标签名称列表. Defaults to None.
+        colors (list[str] | None, optional):
+            箱型图的颜色列表. Defaults to None.
+        color_alpha (Num, optional):
+            箱型图颜色的透明度. Defaults to 1.
+        gradient_color (bool, optional):
+            是否使用渐变颜色填充箱型图. Defaults to False.
+        colors_start (list[str] | None, optional):
+            渐变色的起始颜色列表. Defaults to None.
+        colors_end (list[str] | None, optional):
+            渐变色的结束颜色列表. Defaults to None.
+        show_mean (bool, optional):
+            是否显示均值标记（菱形）. Defaults to False.
+        mean_marker_size (Num, optional):
+            均值标记（菱形）的大小. Defaults to 6.
+        show_fliers (bool, optional):
+            是否显示离群值点. Defaults to True.
+        flier_marker (str, optional):
+            离群值标记形状. Defaults to "o".
+        flier_size (Num, optional):
+            离群值标记大小. Defaults to 20.
+        flier_alpha (Num, optional):
+            离群值标记透明度. Defaults to 0.5.
+        show_dots (bool, optional):
+            是否显示散点. Defaults to True.
+        dots_color (list[list[str]] | None, optional):
+            散点的颜色列表. Defaults to None.
+        dots_alpha (Num, optional):
+            散点的透明度. Defaults to 0.5.
+        dots_size (Num, optional):
+            散点的大小. Defaults to 35.
+        dots_markers (list[str] | None, optional):
+            指定每个散点的标记形状，字符串格式与 matplotlib 的 marker 参数完全一致（如 ["o", "s", "^"]）. Defaults to None.
+        width (Num, optional):
+            箱型图的宽度. Defaults to 0.5.
+        whisker_range (float, optional):
+            须线的范围，以IQR的倍数表示（常用 1.5 或 3.0）. Defaults to 1.5.
+        box_linewidth (Num, optional):
+            箱体边框线宽. Defaults to 1.2.
+        median_linewidth (Num, optional):
+            中位线线宽. Defaults to 1.5.
+        title_name (str, optional):
+            图表标题. Defaults to "".
+        title_fontsize (Num, optional):
+            标题字体大小. Defaults to 12.
+        title_pad (Num, optional):
+            标题与图表的间距. Defaults to 10.
+        x_label_name (str, optional):
+            X轴标签名称. Defaults to "".
+        x_label_ha (Literal["center", "right", "left"], optional):
+            X轴标签的水平对齐方式，可选 "center"、"right" 或 "left". Defaults to "center".
+        x_label_fontsize (Num, optional):
+            X轴标签字体大小. Defaults to 12.
+        x_tick_fontsize (Num, optional):
+            X轴刻度字体大小. Defaults to 12.
+        x_tick_rotation (Num, optional):
+            X轴刻度旋转角度. Defaults to 0.
+        y_label_name (str, optional):
+            Y轴标签名称. Defaults to "".
+        y_label_fontsize (Num, optional):
+            Y轴标签字体大小. Defaults to 12.
+        y_tick_fontsize (Num, optional):
+            Y轴刻度字体大小. Defaults to 8.
+        y_tick_rotation (Num, optional):
+            Y轴刻度旋转角度. Defaults to 0.
+        y_lim (tuple[float, float] | None, optional):
+            Y轴的范围限制. Defaults to None.
+        statistic (bool, optional):
+            是否进行统计显著性分析. Defaults to False.
+        test_method (list[str], optional):
+            统计检验方法列表，仅支持两种形式：
+            1. 长度为1：`["ttest_ind"]`、`["ttest_rel"]`、`["ttest_1samp"]`、
+                `["mannwhitneyu"]` 或 `["external"]`。
+            2. 长度为2：必须包含 `ttest_1samp`，另一个元素为
+                `ttest_ind`、`ttest_rel`、`mannwhitneyu` 或 `external` 之一。
+            Defaults to ["ttest_ind"].
+        p_list (Sequence[Num] | None, optional):
+            预计算的p值列表，用于显著性标记. Defaults to None.
+        popmean (Num, optional):
+            单样本t检验的假设均值. Defaults to 0.
+        statistical_line_color (str, optional):
+            显著性标记线的颜色. Defaults to "0.5".
+        asterisk_fontsize (Num, optional):
+            显著性星号的字体大小. Defaults to 10.
+        asterisk_color (str, optional):
+            显著性星号的颜色. Defaults to "k".
+        y_base (float | None, optional):
+            显著性连线的起始Y轴位置（高度）。如果为None，则使用内部算法自动计算一个合适的位置。Defaults to None.
+        interval (float | None, optional):
+            相邻显著性连线之间的垂直距离（Y轴增量）。如果为None，则使用内部算法根据图表范围和比较对数自动计算。Defaults to None.
+        ax_bottom_is_0 (bool, optional):
+            Y轴是否从0开始. Defaults to False.
+        y_max_tick_is_1 (bool, optional):
+            Y轴最大刻度是否限制为1. Defaults to False.
+        math_text (bool, optional):
+            是否将Y轴显示为科学计数法格式. Defaults to True.
+        one_decimal_place (bool, optional):
+            Y轴刻度是否只保留一位小数. Defaults to False.
+        percentage (bool, optional):
+            是否将Y轴显示为百分比格式. Defaults to False.
+
+    Raises:
+        ValueError: 当data数据格式无效时抛出
+
+    Returns:
+        Axes: 返回matplotlib的坐标轴对象
+    """
+    if not _is_valid_data(data):
+        raise ValueError("无效的 data")
+    ax = ax or plt.gca()
+    labels_name = labels_name or [str(i) for i in range(len(data))]
+    colors = colors or ["gray"] * len(data)
+    test_method = test_method or ["ttest_ind"]
+    # 统一参数型
+    width = float(width)
+    color_alpha = float(color_alpha)
+    dots_size = float(dots_size)
+    title_fontsize = float(title_fontsize)
+    title_pad = float(title_pad)
+    x_label_fontsize = float(x_label_fontsize)
+    x_tick_fontsize = float(x_tick_fontsize)
+    x_tick_rotation = float(x_tick_rotation)
+    y_label_fontsize = float(y_label_fontsize)
+    y_tick_fontsize = float(y_tick_fontsize)
+    y_tick_rotation = float(y_tick_rotation)
+    popmean = float(popmean)
+    asterisk_fontsize = float(asterisk_fontsize)
+    whisker_range = float(whisker_range)
+
+    x_positions = np.arange(len(labels_name))
+
+    def _compute_box_stats(d):
+        """计算箱型图统计数据，同时返回每个数据点是否为离群值的布尔标签"""
+        d = np.asarray(d)
+        q1 = np.percentile(d, 25)
+        q3 = np.percentile(d, 75)
+        median = np.median(d)
+        iqr = q3 - q1
+        lower_whisker = q1 - whisker_range * iqr
+        upper_whisker = q3 + whisker_range * iqr
+        # 实际须线端点：数据中最接近须线边界的值
+        lower_whisker_end = np.min(d[d >= lower_whisker]) if np.any(d >= lower_whisker) else np.min(d)
+        upper_whisker_end = np.max(d[d <= upper_whisker]) if np.any(d <= upper_whisker) else np.max(d)
+        is_flier = (d < lower_whisker) | (d > upper_whisker)
+        return q1, q3, median, iqr, lower_whisker_end, upper_whisker_end, is_flier
+
+    # 收集所有数据用于y轴范围
+    all_values_flat = np.concatenate([np.asarray(x).ravel() for x in data])
+
+    # 预计算所有组的箱型图统计（含离群值标签），供后续散点过滤使用
+    box_stats = [_compute_box_stats(d) for d in data]
+
+    # 绘制每个箱型图
+    for i, d in enumerate(data):
+        q1, q3, median, iqr, low_w, up_w, is_flier = box_stats[i]
+        fliers = np.asarray(d)[is_flier]
+
+        if gradient_color:
+            if colors_start is None:
+                colors_start = ["#e38a48"] * len(data)
+            if colors_end is None:
+                colors_end = ["#4573a5"] * len(data)
+            c1 = colors_start[i]
+            c2 = colors_end[i]
+        else:
+            c1 = c2 = colors[i]
+
+        # --- 绘制箱体（梯度或纯色） ---
+        box_left = i - width / 2
+        box_right = i + width / 2
+
+        if gradient_color:
+            # 横向渐变图像
+            grad_width = 200
+            grad_height = 300
+            gradient_arr = np.linspace(0, 1, grad_width)
+            cmap = LinearSegmentedColormap.from_list("grad_cmap", [c1, "white", c2])
+            gradient_rgb = plt.get_cmap(cmap)(gradient_arr)[..., :3]
+            gradient_img = np.tile(gradient_rgb, (grad_height, 1, 1))
+
+            im = ax.imshow(
+                gradient_img,
+                extent=[box_left, box_right, q1, q3],
+                origin="lower",
+                aspect="auto",
+                zorder=1,
+            )
+            # 箱体边框
+            ax.add_patch(
+                Rectangle(
+                    (box_left, q1),
+                    width,
+                    q3 - q1,
+                    facecolor="none",
+                    edgecolor="black",
+                    linewidth=box_linewidth,
+                    zorder=2,
+                )
+            )
+            im.set_clip_path(
+                Rectangle(
+                    (box_left, q1),
+                    width,
+                    q3 - q1,
+                    transform=ax.transData,
+                )
+            )
+        else:
+            ax.add_patch(
+                Rectangle(
+                    (box_left, q1),
+                    width,
+                    q3 - q1,
+                    facecolor=c1,
+                    alpha=color_alpha,
+                    edgecolor="black",
+                    linewidth=box_linewidth,
+                    zorder=1,
+                )
+            )
+
+        # --- 中位线 ---
+        ax.plot(
+            [box_left, box_right],
+            [median, median],
+            color="black",
+            linewidth=median_linewidth,
+            zorder=3,
+        )
+
+        # --- 须线 ---
+        # 下须线
+        ax.plot(
+            [i, i],
+            [low_w, q1],
+            color="black",
+            linewidth=box_linewidth,
+            zorder=2,
+        )
+        # 下须线横线
+        ax.plot(
+            [i - width / 4, i + width / 4],
+            [low_w, low_w],
+            color="black",
+            linewidth=box_linewidth,
+            zorder=2,
+        )
+        # 上须线
+        ax.plot(
+            [i, i],
+            [q3, up_w],
+            color="black",
+            linewidth=box_linewidth,
+            zorder=2,
+        )
+        # 上须线横线
+        ax.plot(
+            [i - width / 4, i + width / 4],
+            [up_w, up_w],
+            color="black",
+            linewidth=box_linewidth,
+            zorder=2,
+        )
+
+        # --- 均值标记 ---
+        if show_mean:
+            mean_val = np.mean(d)
+            ax.plot(
+                i,
+                mean_val,
+                "D",
+                color="white",
+                markersize=mean_marker_size,
+                markeredgecolor="black",
+                markeredgewidth=1,
+                zorder=4,
+            )
+
+        # --- 离群值 ---
+        if show_fliers and len(fliers) > 0:
+            rng = np.random.default_rng(seed=42)
+            flier_x = rng.normal(i, width / 10, len(fliers))
+            ax.scatter(
+                flier_x,
+                fliers,
+                marker=flier_marker,
+                s=flier_size,
+                facecolors="none",
+                edgecolors="black",
+                alpha=flier_alpha,
+                linewidths=0.8,
+                zorder=2,
+            )
+
+    # --- 绘制散点 ---
+    if show_dots:
+        rng = np.random.default_rng(seed=42)
+        if dots_markers is None:
+            dots_markers = ["o"] * len(data)
+        for i, d in enumerate(data):
+            d_arr = np.asarray(d)
+            _, _, _, _, _, _, is_flier = box_stats[i]
+
+            # 若用户同时要求显示离群值，则散点只画非离群值部分，避免重复绘制
+            if show_fliers:
+                mask = ~is_flier
+                if not np.any(mask):
+                    continue  # 全部是离群值，无需画散点
+                d_arr = d_arr[mask]
+            else:
+                mask = slice(None)  # 全选
+
+            scatter_x = rng.normal(i, 0.1, len(d_arr))
+            dots_marker = dots_markers[i]
+            if dots_color is None:
+                _add_scatter(
+                    ax,
+                    scatter_x,
+                    d_arr,
+                    ["gray"] * len(d_arr),
+                    dots_size,
+                    dots_alpha,
+                    dots_marker,
+                )
+            else:
+                # 同步过滤自定义颜色列表，保持颜色与数据点一一对应
+                filtered_colors = np.asarray(dots_color[i])[mask]
+                _add_scatter(
+                    ax,
+                    scatter_x,
+                    d_arr,
+                    filtered_colors.tolist(),
+                    dots_size,
+                    dots_alpha,
+                    dots_marker,
+                )
+
+    # --- 美化 ---
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.set_title(
+        title_name,
+        fontsize=title_fontsize,
+        pad=float(title_pad),
+    )
+    # x轴
+    ax.set_xlim(np.min(x_positions) - 0.5, np.max(x_positions) + 0.5)
+    ax.set_xlabel(x_label_name, fontsize=x_label_fontsize)
+    ax.set_xticks(x_positions)
+    ax.set_xticklabels(
+        labels_name,
+        fontsize=x_tick_fontsize,
+        rotation=x_tick_rotation,
+        ha=x_label_ha,
+        rotation_mode="anchor",
+    )
+    # y轴
+    ax.tick_params(
+        axis="y",
+        labelsize=y_tick_fontsize,
+        rotation=y_tick_rotation,
+    )
+    ax.set_ylabel(y_label_name, fontsize=y_label_fontsize)
+    set_yaxis(
+        ax,
+        all_values_flat,
+        y_lim=y_lim,
+        ax_bottom_is_0=ax_bottom_is_0,
+        y_max_tick_is_1=y_max_tick_is_1,
+        math_text=math_text,
+        one_decimal_place=one_decimal_place,
+        percentage=percentage,
+    )
+
+    # --- 添加统计显著性标记 ---
+    if statistic:
+        _statistics(
+            data,
+            test_method,
+            p_list,
+            popmean,
+            ax,
+            all_values_flat,
             statistical_line_color,
             asterisk_fontsize,
             asterisk_color,

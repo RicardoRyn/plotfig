@@ -15,6 +15,7 @@ from .multi_bars import (
 )
 from .single_bar import (
     plot_one_group_bar_figure,
+    plot_one_group_box_figure,
     plot_one_group_violin_figure,
 )
 from .utils import (
@@ -28,6 +29,7 @@ from .utils import (
 __all__ = [
     # bar
     "plot_one_group_bar_figure",
+    "plot_one_group_box_figure",
     "plot_one_group_violin_figure",
     "plot_multi_group_bar_figure",
     # correlation

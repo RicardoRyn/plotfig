@@ -10,8 +10,7 @@ wheels/
 .venv
 
 site/
-IFLOW.md
 *.bak
 .vscode/
-
 notebooks/*
+tests/test.py
