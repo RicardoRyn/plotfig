@@ -42,7 +42,7 @@ data = {"lh_V1": 1, "rh_MT": 1.5}
 ax = plot_brain_surface_figure(data, species="human", atlas="glasser")
 ```
 
-![png](../assets/usage/brain_surface_files/brain_surface_4_0.png)
+![png](brain_surface_files/brain_surface_4_0.png)
 
 ```python
 from plotfig import plot_brain_surface_figure
@@ -61,7 +61,7 @@ ax2 = plot_brain_surface_figure(
 )
 ```
 
-![png](../assets/usage/brain_surface_files/brain_surface_5_0.png)
+![png](brain_surface_files/brain_surface_5_0.png)
 
 ## Different Surface Files
 
@@ -89,7 +89,7 @@ ax4 = plot_brain_surface_figure(plot_data, surf="sphere", ax=axes[1,0], title_na
 ax5 = plot_brain_surface_figure(plot_data, surf="flat", ax=axes[1,1], title_name="flat")
 ```
 
-![png](../assets/usage/brain_surface_files/brain_surface_8_0.png)
+![png](brain_surface_files/brain_surface_8_0.png)
 
 For chimpanzees, the following surface files are provided:
 
@@ -108,7 +108,7 @@ ax1 = plot_brain_surface_figure(plot_data, species="chimpanzee", atlas="bna", su
 ax3 = plot_brain_surface_figure(plot_data, species="chimpanzee", atlas="bna", surf="midthickness", ax=axes[1], title_name="midthickness")
 ```
 
-![png](../assets/usage/brain_surface_files/brain_surface_10_0.png)
+![png](brain_surface_files/brain_surface_10_0.png)
 
 For macaques, the following surface files are provided:
 
@@ -135,7 +135,7 @@ ax5 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", su
 ax6 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", surf="flat", ax=axes[1,2], title_name="flat")
 ```
 
-![png](../assets/usage/brain_surface_files/brain_surface_12_0.png)
+![png](brain_surface_files/brain_surface_12_0.png)
 
 ## More Settings
 
@@ -159,4 +159,4 @@ ax = plot_brain_surface_figure(
 )
 ```
 
-![png](../assets/usage/brain_surface_files/brain_surface_15_0.png)
+![png](brain_surface_files/brain_surface_15_0.png)

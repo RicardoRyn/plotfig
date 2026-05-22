@@ -10,7 +10,6 @@
 1. 人 Glasser (HCP-MMP) 图集[^1]。[图集 CSV 文件](../assets/atlas_csv/human_glasser.csv)。
 1. 人 BNA 图集[^2]。[图集 CSV 文件](../assets/atlas_csv/human_bna.csv)。
 1. 黑猩猩 BNA 图集[^3]。[图集 CSV 文件](../assets/atlas_csv/chimpanzee_bna.csv)。
-1. 猕猴 CHARM 4-level [^4]。[图集 CSV 文件](../assets/atlas_csv/macaque_charm5.csv)。
 1. 猕猴 CHARM 5-level [^4]。[图集 CSV 文件](../assets/atlas_csv/macaque_charm5.csv)。
 1. 猕猴 CHARM 6-level [^4]。[图集 CSV 文件](../assets/atlas_csv/macaque_charm6.csv)。
 1. 猕猴 BNA 图集[^5]。[图集 CSV 文件](../assets/atlas_csv/macaque_bna.csv)。
@@ -45,7 +44,7 @@ ax = plot_brain_surface_figure(data, species="human", atlas="glasser")
 
 
     
-![png](../assets/usage/brain_surface_files/brain_surface_4_0.png)
+![png](brain_surface_files/brain_surface_4_0.png)
     
 
 
@@ -69,7 +68,7 @@ ax2 = plot_brain_surface_figure(
 
 
     
-![png](../assets/usage/brain_surface_files/brain_surface_5_0.png)
+![png](brain_surface_files/brain_surface_5_0.png)
     
 
 
@@ -102,7 +101,7 @@ ax5 = plot_brain_surface_figure(plot_data, surf="flat", ax=axes[1,1], title_name
 
 
     
-![png](../assets/usage/brain_surface_files/brain_surface_8_0.png)
+![png](brain_surface_files/brain_surface_8_0.png)
     
 
 
@@ -126,7 +125,7 @@ ax3 = plot_brain_surface_figure(plot_data, species="chimpanzee", atlas="bna", su
 
 
     
-![png](../assets/usage/brain_surface_files/brain_surface_10_0.png)
+![png](brain_surface_files/brain_surface_10_0.png)
     
 
 
@@ -158,7 +157,7 @@ ax6 = plot_brain_surface_figure(plot_data, species="macaque", atlas="charm5", su
 
 
     
-![png](../assets/usage/brain_surface_files/brain_surface_12_0.png)
+![png](brain_surface_files/brain_surface_12_0.png)
     
 
 
@@ -187,6 +186,6 @@ ax = plot_brain_surface_figure(
 
 
     
-![png](../assets/usage/brain_surface_files/brain_surface_15_0.png)
+![png](brain_surface_files/brain_surface_15_0.png)
     
 

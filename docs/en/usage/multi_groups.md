@@ -29,7 +29,7 @@ group2_bar3 = np.random.normal(3, 1, 10)
 ax = plot_multi_group_bar_figure([[group1_bar1, group1_bar2, group1_bar3], [group2_bar1, group2_bar2, group2_bar3]])
 ```
 
-![png](../assets/usage/multi_groups_files/multi_groups_3_0.png)
+![png](multi_groups_files/multi_groups_3_0.png)
 
 ## Plot Beautification
 
@@ -69,7 +69,7 @@ ax = plot_multi_group_bar_figure(
 )
 ```
 
-![png](../assets/usage/multi_groups_files/multi_groups_6_0.png)
+![png](multi_groups_files/multi_groups_6_0.png)
 
 ## Statistics
 
@@ -111,4 +111,4 @@ ax = plot_multi_group_bar_figure(
 )
 ```
 
-![png](../assets/usage/multi_groups_files/multi_groups_9_0.png)
+![png](multi_groups_files/multi_groups_9_0.png)

@@ -32,7 +32,7 @@ ax = plot_multi_group_bar_figure([[group1_bar1, group1_bar2, group1_bar3], [grou
 
 
     
-![png](../assets/usage/multi_groups_files/multi_groups_3_0.png)
+![png](multi_groups_files/multi_groups_3_0.png)
     
 
 
@@ -77,7 +77,7 @@ ax = plot_multi_group_bar_figure(
 
 
     
-![png](../assets/usage/multi_groups_files/multi_groups_6_0.png)
+![png](multi_groups_files/multi_groups_6_0.png)
     
 
 
@@ -124,6 +124,6 @@ ax = plot_multi_group_bar_figure(
 
 
     
-![png](../assets/usage/multi_groups_files/multi_groups_9_0.png)
+![png](multi_groups_files/multi_groups_9_0.png)
     
 

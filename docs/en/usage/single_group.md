@@ -1,4 +1,4 @@
-# Single Group Bar Chart
+﻿# Single Group Bar Chart
 
 ## Quick Plot
 
@@ -24,7 +24,7 @@ ax = plot_one_group_bar_figure([data1, data2, data3])
 
 
     
-![png](../assets/usage/single_group_files/single_group_3_0.png)
+![png](single_group_files/single_group_5_0.png)
     
 
 
@@ -52,7 +52,7 @@ ax2 = plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes[1])
 
 
     
-![png](../assets/usage/single_group_files/single_group_6_0.png)
+![png](single_group_files/single_group_6_0.png)
     
 
 
@@ -85,7 +85,7 @@ ax4 = plot_one_group_bar_figure([ax4_bar1, ax4_bar2], ax=axes[1,1], labels_name=
 
 
     
-![png](../assets/usage/single_group_files/single_group_8_0.png)
+![png](single_group_files/single_group_8_0.png)
     
 
 
@@ -133,7 +133,7 @@ ax = plot_one_group_bar_figure(
 
 
     
-![png](../assets/usage/single_group_files/single_group_12_0.png)
+![png](single_group_files/single_group_12_1.png)
     
 
 
@@ -173,8 +173,10 @@ ax = plot_one_group_bar_figure(
 
 
     
-    
+     
 
+![png](single_group_files/single_group_14_0.png)
+     
 
 ### About the X Axis
 
@@ -214,7 +216,7 @@ ax2 = plot_one_group_bar_figure(
 
 
     
-![png](../assets/usage/single_group_files/single_group_17_0.png)
+![png](single_group_files/single_group_17_0.png)
     
 
 
@@ -254,7 +256,7 @@ ax2 = plot_one_group_bar_figure(
 
 
     
-![png](../assets/usage/single_group_files/single_group_20_0.png)
+![png](single_group_files/single_group_20_0.png)
     
 
 
@@ -291,7 +293,7 @@ ax2 = plot_one_group_bar_figure(
 
 
     
-![png](../assets/usage/single_group_files/single_group_22_0.png)
+![png](single_group_files/single_group_22_0.png)
     
 
 
@@ -328,7 +330,7 @@ ax2 = plot_one_group_bar_figure(
 
 
     
-![png](../assets/usage/single_group_files/single_group_24_0.png)
+![png](single_group_files/single_group_24_0.png)
     
 
 
@@ -382,7 +384,7 @@ ax4 = plot_one_group_bar_figure(
 
 
     
-![png](../assets/usage/single_group_files/single_group_26_0.png)
+![png](single_group_files/single_group_26_0.png)
     
 
 
@@ -424,7 +426,7 @@ ax2 = plot_one_group_bar_figure(
 
 
     
-![png](../assets/usage/single_group_files/single_group_28_0.png)
+![png](single_group_files/single_group_28_0.png)
     
 
 
@@ -467,7 +469,7 @@ ax2 = plot_one_group_bar_figure(
 
 
     
-![png](../assets/usage/single_group_files/single_group_31_0.png)
+![png](single_group_files/single_group_31_0.png)
     
 
 
@@ -541,7 +543,7 @@ ax4 = plot_one_group_bar_figure(
 
 
     
-![png](../assets/usage/single_group_files/single_group_34_0.png)
+![png](single_group_files/single_group_34_0.png)
     
 
 
@@ -585,7 +587,7 @@ ax = plot_one_group_bar_figure(
 
 
     
-![png](../assets/usage/single_group_files/single_group_36_0.png)
+![png](single_group_files/single_group_36_0.png)
     
 
 
@@ -659,11 +661,62 @@ ax4 = plot_one_group_bar_figure(
 
 
     
-![png](../assets/usage/single_group_files/single_group_38_0.png)
+![png](single_group_files/single_group_38_0.png)
     
 
 
-# Single Group Violin Plot
+## Single Group Box Plot and Violin Plot
+
+A box plot is a standard statistical chart for displaying the characteristics of data distribution. It intuitively presents the median, interquartile range (IQR), and outlier range through the "box" and "whiskers."
+
+In a box plot, the upper and lower boundaries of the box represent the third quartile (Q3) and first quartile (Q1), respectively. The white line inside the box marks the median (with an optional diamond for the mean), and the upper and lower whiskers extend to the furthest data points within the non-outlier range. Points beyond the whiskers are plotted individually as outliers.
+
+Box plots focus on robust statistics without relying on distributional assumptions, making them suitable for comparing central tendency and dispersion across multiple groups — especially with large sample sizes or when outliers are present.
+
+In plotfig, the function for drawing box plots is `plot_one_group_box_figure`. Most of its parameters are similar to `plot_one_group_bar_figure`; below is a partial demonstration.
+
+For complete parameter descriptions, see the API documentation for [`plot_one_group_box_figure`](../api/#plotfig.single_bar.plot_one_group_box_figure).
+
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from plotfig import plot_one_group_box_figure
+
+human_color = "#e38a48"
+chimp_color = "#919191"
+macaque_color = "#4573a5"
+
+np.random.seed(42)
+
+human_chimp = 0.1 + np.random.normal(0, 0.1, 30)
+human_macaque = 0.4 + np.random.normal(0, 0.1, 30)
+chimp_macaque = 0.6 + np.random.normal(0, 0.1, 30)
+
+fig, ax = plt.subplots(figsize=(5,5))
+
+ax = plot_one_group_box_figure(
+    [human_chimp, human_macaque, chimp_macaque],
+    ax=ax,
+    labels_name=["Human-Chimp", "Human-Macaque", "Chimp-Macaque"],
+    x_tick_fontsize=8,
+    y_label_name="Pearson Correlation",
+    width=0.9,
+    show_dots=True,
+    dots_size=10,
+    gradient_color=True,
+    colors_start= [human_color, human_color, chimp_color],
+    colors_end= [chimp_color, macaque_color, macaque_color],
+    statistic=True,
+    test_method=["mannwhitneyu"]
+)
+```
+
+
+    
+![png](single_group_files/single_group_41_0.png)
+    
+
 
 A violin plot is a visualization tool that combines characteristics of a box plot and a density plot, used to show data distributions.
 It not only shows statistical information such as mean (white diamond), median (white line), and quartiles (black rectangle),
@@ -675,7 +728,7 @@ When data are unevenly distributed and non-parametric methods are used, violin p
 In plotfig, the function for drawing violin plots is `plot_one_group_violin_figure`.
 Most of its parameters are similar to `plot_one_group_bar_figure`; below is a partial demonstration.
 
-For complete parameter descriptions, see the API documentation for [`plot_one_group_violin_figure`](../api/index.md/#plotfig.bar.plot_one_group_violin_figure).
+For complete parameter descriptions, see the API documentation for [`plot_one_group_violin_figure`](../api/#plotfig.single_bar.plot_one_group_violin_figure).
 
 
 ```python
@@ -713,6 +766,6 @@ ax = plot_one_group_violin_figure(
 
 
     
-![png](../assets/usage/single_group_files/single_group_41_0.png)
+![png](single_group_files/single_group_43_0.png)
     
 

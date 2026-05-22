@@ -13,14 +13,6 @@
 例如，我们有3组数据（分别有9个样本、10个样本、11个样本）通过柱状图展示它们之间的差异。
 
 
-## 多子图
-
-
-借助 `matplotlib`，我们可以在外部预先创建 `figure` 和 `axes`，从而灵活绘制多个子图，实现更复杂的图形布局。
-关于更高级的子图排版方式，详见[matplotlib中的教程](https://matplotlib.org/stable/users/explain/axes/mosaic.html)。
-
-
-
 ```python
 import numpy as np
 from plotfig import plot_one_group_bar_figure
@@ -38,6 +30,12 @@ ax = plot_one_group_bar_figure([data1, data2, data3])
 ![png](single_group_files/single_group_5_0.png)
     
 
+
+## 多子图
+
+
+借助 `matplotlib`，我们可以在外部预先创建 `figure` 和 `axes`，从而灵活绘制多个子图，实现更复杂的图形布局。
+关于更高级的子图排版方式，详见[matplotlib中的教程](https://matplotlib.org/stable/users/explain/axes/mosaic.html)。
 
 
 ```python
@@ -64,7 +62,6 @@ ax2 = plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes[1])
 
 
 更多 `axes` 。
-
 
 
 ```python
@@ -108,7 +105,7 @@ ax4 = plot_one_group_bar_figure([ax4_bar1, ax4_bar2], ax=axes[1,1], labels_name=
 `plotfig` 提供了丰富的选项用于自定义图形样式。
 下面展示的是 `plot_one_group_bar_figure` 函数中部分常用参数的示例用法。
 
-完整参数说明请参阅 [`plot_one_group_bar_figure`](../api/index.md/#plotfig.bar.plot_one_group_bar_figure) 的 API 文档。
+完整参数说明请参阅 [`plot_one_group_bar_figure`](../api/#plotfig.single_bar.plot_one_group_bar_figure) 的 API 文档。
 
 
 
@@ -706,7 +703,7 @@ ax4 = plot_one_group_bar_figure(
     
 
 
-# 单组箱型图与单组小提琴图
+## 单组箱型图与单组小提琴图
 
 
 箱线图（box plot）是一种展示数据分布特征的标准统计图表。它通过“箱子”和“须线”直观呈现数据的中位数、四分位数区间（IQR）以及异常值范围。
@@ -717,7 +714,7 @@ ax4 = plot_one_group_bar_figure(
 
 在 `plotfig` 中，绘制箱线图的函数名为 `plot_one_group_box_figure`。其大部分参数与 `plot_one_group_bar_figure` 相似，以下是部分演示。
 
-完整参数说明请参阅 [`plot_one_group_box_figure`](../api/#plotfig.bar.plot_one_group_box_figure) 的 API 文档。
+完整参数说明请参阅 [`plot_one_group_box_figure`](../api/#plotfig.single_bar.plot_one_group_box_figure) 的 API 文档。
 
 
 ```python
@@ -741,6 +738,7 @@ ax = plot_one_group_box_figure(
     [human_chimp, human_macaque, chimp_macaque],
     ax=ax,
     labels_name=["Human-Chimp", "Human-Macaque", "Chimp-Macaque"],
+    x_tick_fontsize=8,
     y_label_name="Pearson Correlation",
     width=0.9,
     show_dots=True,
@@ -771,7 +769,7 @@ ax = plot_one_group_box_figure(
 在 `plotfig` 中，绘制小提琴图的函数名为 `plot_one_group_violin_figure`。
 其大部分参数与 `plot_one_group_bar_figure` 相似，以下是部分演示。
 
-完整参数说明请参阅 [`plot_one_group_violin_figure`](../api/#plotfig.bar.plot_one_group_violin_figure) 的 API 文档。
+完整参数说明请参阅 [`plot_one_group_violin_figure`](../api/#plotfig.single_bar.plot_one_group_violin_figure) 的 API 文档。
 
 
 
@@ -796,6 +794,7 @@ ax = plot_one_group_violin_figure(
     [human_chimp, human_macaque, chimp_macaque],
     ax=ax,
     labels_name=["Human-Chimp", "Human-Macaque", "Chimp-Macaque"],
+    x_tick_fontsize=8,
     y_label_name="Pearson Correlation",
     width=0.9,
     show_dots=True,

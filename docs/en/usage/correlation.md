@@ -25,7 +25,7 @@ data2 = data1 + np.random.normal(1,50, 100)
 ax = plot_correlation_figure(data1,data2)
 ```
 
-![png](../assets/usage/correlation_files/correlation_4_0.png)
+![png](correlation_files/correlation_4_0.png)
 
 ## Hexbin Plot
 
@@ -59,11 +59,11 @@ hb = plot_correlation_figure(
 cb = fig.colorbar(hb, ax=ax2, label='counts')
 ```
 
-![png](../assets/usage/correlation_files/correlation_7_0.png)
+![png](correlation_files/correlation_7_0.png)
 
 ## Parameter Settings
 
-For all parameters, see the API documentation for [`plot_correlation_figure`](../api/#plotfig.correlation).
+For all parameters, see the API documentation for [`plot_correlation_figure`](../api/#plotfig.correlation.plot_correlation_figure).
 
 ```python
 import numpy as np
@@ -101,4 +101,4 @@ ax = plot_correlation_figure(
 )
 ```
 
-![png](../assets/usage/correlation_files/correlation_10_0.png)
+![png](correlation_files/correlation_10_0.png)

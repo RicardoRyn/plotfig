@@ -7,6 +7,7 @@
 
 全部参数见 [`plot_brain_connection_figure`](../api/#plotfig.brain_connection.plot_brain_connection_figure) 的 API 文档。
 
+
 ```python
 from plotfig import plot_brain_connection_figure, gen_symmetric_matrix
 
@@ -37,7 +38,7 @@ fig = plot_brain_connection_figure(
 
 ## 结果展示
 
-![output](../assets/usage/brain_connectivity_files/output.gif)
+![output](brain_connectivity_files/output.gif)
 
 html文件可以在浏览器中交互。可以手动截图，也可以使用以下命令来批量生成多视角生成图片。
 
@@ -58,7 +59,7 @@ save_brain_connection_frames(
 ```
 
     100%|██████████| 36/36 [01:55<00:00,  3.19s/it]
-    2025-11-24 11:02:55.867 | INFO     | plotfig.brain_connection:save_brain_connection_frames:323 - 保存了 36 张图片在 ./example_data/brain_connection_figures
+    [32m2025-11-24 11:02:55.867[0m | [1mINFO    [0m | [36mplotfig.brain_connection[0m:[36msave_brain_connection_frames[0m:[36m323[0m - [1m保存了 36 张图片在 ./example_data/brain_connection_figures[0m
     
 
 plotfig 提供了将图片序列整合生成 GIF 动画的工具函数。
@@ -75,5 +76,5 @@ create_gif_from_images(
 
 ```
 
-    2025-11-24 11:07:46.885 | INFO     | plotfig.brain_connection:create_gif_from_images:417 - GIF 已保存到: example_data\brain_connection_figures\outpug.gif
+    [32m2025-11-24 11:07:46.885[0m | [1mINFO    [0m | [36mplotfig.brain_connection[0m:[36mcreate_gif_from_images[0m:[36m417[0m - [1mGIF 已保存到: example_data\brain_connection_figures\outpug.gif[0m
     

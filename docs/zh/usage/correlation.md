@@ -28,7 +28,7 @@ ax = plot_correlation_figure(data1,data2)
 
 
     
-![png](../assets/usage/correlation_files/correlation_4_0.png)
+![png](correlation_files/correlation_4_0.png)
     
 
 
@@ -67,13 +67,13 @@ cb = fig.colorbar(hb, ax=ax2, label='counts')
 
 
     
-![png](../assets/usage/correlation_files/correlation_7_0.png)
+![png](correlation_files/correlation_7_0.png)
     
 
 
 ## 参数设置
 
-全部参数见[`plot_correlation_figure`](../api/#plotfig.correlation)的 API 文档。
+全部参数见[`plot_correlation_figure`](../api/#plotfig.correlation.plot_correlation_figure)的 API 文档。
 
 
 ```python
@@ -114,6 +114,6 @@ ax = plot_correlation_figure(
 
 
     
-![png](../assets/usage/correlation_files/correlation_10_0.png)
+![png](correlation_files/correlation_10_0.png)
     
 
