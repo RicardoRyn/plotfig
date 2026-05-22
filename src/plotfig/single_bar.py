@@ -1024,7 +1024,8 @@ def plot_one_group_violin_figure(
     colors_start: list[str] | None = None,
     colors_end: list[str] | None = None,
     show_dots: bool = True,
-    dots_size: Num = 15,
+    dots_color: list[list[str]] | None = None,
+    dots_size: Num = 35,
     dots_alpha: Num = 0.5,
     dots_markers: list[str] | None = None,
     title_name: str = "",
@@ -1032,11 +1033,11 @@ def plot_one_group_violin_figure(
     title_pad: Num = 10,
     x_label_name: str = "",
     x_label_ha: Literal["center", "right", "left"] = "center",
-    x_label_fontsize: Num = 10,
-    x_tick_fontsize: Num = 8,
+    x_label_fontsize: Num = 12,
+    x_tick_fontsize: Num = 12,
     x_tick_rotation: Num = 0,
     y_label_name: str = "",
-    y_label_fontsize: Num = 10,
+    y_label_fontsize: Num = 12,
     y_tick_fontsize: Num = 8,
     y_tick_rotation: Num = 0,
     y_lim: tuple[float, float] | None = None,
@@ -1078,8 +1079,10 @@ def plot_one_group_violin_figure(
             渐变色的结束颜色列表. Defaults to None.
         show_dots (bool, optional):
             是否显示散点. Defaults to True.
+        dots_color (list[list[str]] | None, optional):
+            散点的颜色列表. Defaults to None.
         dots_size (Num, optional):
-            散点的大小. Defaults to 15.
+            散点的大小. Defaults to 35.
         dots_alpha (Num, optional):
             散点的透明度. Defaults to 0.5.
         dots_markers (list[str] | None, optional):
@@ -1095,15 +1098,15 @@ def plot_one_group_violin_figure(
         x_label_ha (Literal["center", "right", "left"], optional):
             X轴标签的水平对齐方式，可选 "center"、"right" 或 "left". Defaults to "center".
         x_label_fontsize (Num, optional):
-            X轴标签字体大小. Defaults to 10.
+            X轴标签字体大小. Defaults to 12.
         x_tick_fontsize (Num, optional):
-            X轴刻度字体大小. Defaults to 8.
+            X轴刻度字体大小. Defaults to 12.
         x_tick_rotation (Num, optional):
             X轴刻度旋转角度. Defaults to 0.
         y_label_name (str, optional):
             Y轴标签名称. Defaults to "".
         y_label_fontsize (Num, optional):
-            Y轴标签字体大小. Defaults to 10.
+            Y轴标签字体大小. Defaults to 12.
         y_tick_fontsize (Num, optional):
             Y轴刻度字体大小. Defaults to 8.
         y_tick_rotation (Num, optional):
@@ -1282,15 +1285,26 @@ def plot_one_group_violin_figure(
             dots_markers = ["o"] * len(data)
         for i, d in enumerate(data):
             dots_marker = dots_markers[i]
-            _add_scatter(
-                ax,
-                scatter_positions[i],
-                d,
-                colors[i],
-                dots_size,
-                dots_alpha,
-                dots_marker,
-            )
+            if dots_color is None:
+                _add_scatter(
+                    ax,
+                    scatter_positions[i],
+                    d,
+                    ["gray"] * len(d),
+                    dots_size,
+                    dots_alpha,
+                    dots_marker,
+                )
+            else:
+                _add_scatter(
+                    ax,
+                    scatter_positions[i],
+                    d,
+                    dots_color[i],
+                    dots_size,
+                    dots_alpha,
+                    dots_marker,
+                )
 
     # 美化
     ax.spines[["top", "right"]].set_visible(False)
