@@ -1,0 +1,26 @@
+name: Sync to Multiple Remotes
+
+on: [push, delete, create]
+
+jobs:
+  sync-codeberg:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync to Codeberg
+        uses: wearerequired/git-mirror-action@v1
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SYNC_RSA_PRIVATE_KEY }}
+        with:
+          source-repo: https://github.com/RicardoRyn/plotfig.git
+          destination-repo: git@codeberg.org:RicardoRyn/plotfig.git
+
+  sync-gitee:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync to Gitee
+        uses: wearerequired/git-mirror-action@v1
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SYNC_RSA_PRIVATE_KEY }}
+        with:
+          source-repo: https://github.com/RicardoRyn/plotfig.git
+          destination-repo: git@gitee.com:RicardoRyn/plotfig.git

@@ -1,4 +1,4 @@
-name: Sync To Gitee
+name: Sync out of github
 
 on: [push, delete, create]
 
@@ -6,13 +6,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Sync to Gitee
+      - name: Sync to codeberg
         uses: wearerequired/git-mirror-action@master
         env:
-          # 注意在 Settings->Secrets 配置 GITEE_RSA_PRIVATE_KEY
-          SSH_PRIVATE_KEY: ${{ secrets.GITEE_RSA_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SYNC_RSA_PRIVATE_KEY }}
         with:
-          # 注意替换为你的 GitHub 源仓库地址
-          source-repo: git@github.com:RicardoRyn/Plot_figure.git
-          # 注意替换为你的 Gitee 目标仓库地址
-          destination-repo: git@gitee.com:RicardoRyn/Plot_figure.git
+          source-repo: git@github.com:RicardoRyn/plotfig.git
+          destination-repo: git@codeberg.org:RicardoRyn/plotfig.git
+      - name: Sync to gitee
+        uses: wearerequired/git-mirror-action@master
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SYNC_RSA_PRIVATE_KEY }}
+        with:
+          source-repo: git@github.com:RicardoRyn/plotfig.git
+          destination-repo: git@gitee.com:RicardoRyn/plotfig.git
