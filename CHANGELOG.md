@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.21.1](https://github.com/RicardoRyn/plotfig/compare/v1.21.0...v1.21.1) (2026-05-22)
+
+
+### Code Refactoring ♻️
+
+* **violin:** add dots_color and change default parameter for scatter points ([967ec00](https://github.com/RicardoRyn/plotfig/commit/967ec00585b965ad0e8db4ffb63b44715a1f40f0))
+
 ## [1.21.0](https://github.com/RicardoRyn/plotfig/compare/v1.20.0...v1.21.0) (2026-05-20)
 
 
