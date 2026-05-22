@@ -94,6 +94,10 @@ alternate = [
 icon = "fontawesome/brands/github"
 link = "https://github.com/RicardoRyn"
 
+[[project.extra.social]]
+icon = "fontawesome/brands/gitee"
+link = "https://gitee.com/RicardoRyn"
+
 [project.plugins.mkdocstrings.handlers.python]
 inventories = ["https://docs.python.org/3/objects.inv"]
 paths = ["src"]
