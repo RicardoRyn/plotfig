@@ -1,6 +1,8 @@
 # 单组柱状图
 
+
 ## 快速出图
+
 
 柱状图（bar chart）是一种常用的图形工具，用于展示不同类别之间的数值对比。
 它通过一组垂直或水平的矩形条来表示各类别的值，条的高度（或长度）对应数据的大小。
@@ -9,6 +11,14 @@
 `plotfig` 基于强大的 `matplotlib` 开发，简化了画图流程，使得多组数据的对比更加直观。
 
 例如，我们有3组数据（分别有9个样本、10个样本、11个样本）通过柱状图展示它们之间的差异。
+
+
+## 多子图
+
+
+借助 `matplotlib`，我们可以在外部预先创建 `figure` 和 `axes`，从而灵活绘制多个子图，实现更复杂的图形布局。
+关于更高级的子图排版方式，详见[matplotlib中的教程](https://matplotlib.org/stable/users/explain/axes/mosaic.html)。
+
 
 
 ```python
@@ -20,18 +30,14 @@ data2 = np.random.normal(2, 1, 10)
 data3 = np.random.normal(3, 1, 11)
 
 ax = plot_one_group_bar_figure([data1, data2, data3])
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_3_0.png)
+![png](single_group_files/single_group_5_0.png)
     
 
-
-## 多子图
-
-借助 `matplotlib`，我们可以在外部预先创建 `figure` 和 `axes`，从而灵活绘制多个子图，实现更复杂的图形布局。
-关于更高级的子图排版方式，详见[matplotlib中的教程](https://matplotlib.org/stable/users/explain/axes/mosaic.html)。
 
 
 ```python
@@ -48,15 +54,17 @@ fig, axes = plt.subplots(1, 2, figsize=(6, 3))
 
 ax1 = plot_one_group_bar_figure([ax1_bar1, ax1_bar2], ax=axes[0])
 ax2 = plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes[1])
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_6_0.png)
+![png](single_group_files/single_group_6_0.png)
     
 
 
 更多 `axes` 。
+
 
 
 ```python
@@ -81,23 +89,27 @@ ax1 = plot_one_group_bar_figure([ax1_bar1, ax1_bar2], ax=axes[0,0], labels_name=
 ax2 = plot_one_group_bar_figure([ax2_bar1, ax2_bar2], ax=axes[0,1], labels_name=["C", "D"])
 ax3 = plot_one_group_bar_figure([ax3_bar1, ax3_bar2], ax=axes[1,0], labels_name=["E", "F"])
 ax4 = plot_one_group_bar_figure([ax4_bar1, ax4_bar2], ax=axes[1,1], labels_name=["G", "H"])
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_8_0.png)
+![png](single_group_files/single_group_8_0.png)
     
 
 
 ## 图的美化
 
+
 ### 参数设置
+
 
 我们可以在外部创建 `fig` 对象，以便灵活控制图像大小。
 `plotfig` 提供了丰富的选项用于自定义图形样式。
 下面展示的是 `plot_one_group_bar_figure` 函数中部分常用参数的示例用法。
 
-完整参数说明请参阅 [`plot_one_group_bar_figure`](../api/#plotfig.single_bar.plot_one_group_bar_figure) 的 API 文档。
+完整参数说明请参阅 [`plot_one_group_bar_figure`](../api/index.md/#plotfig.bar.plot_one_group_bar_figure) 的 API 文档。
+
 
 
 ```python
@@ -129,11 +141,16 @@ ax = plot_one_group_bar_figure(
     errorbar_mode="upper",
     errorbar_capsize=10,
 )
+
 ```
+
+    E:\git_repositories\plotfig\src\plotfig\single_bar.py:59: UserWarning: You passed a edgecolor/edgecolors ('white') for an unfilled marker ('x').  Matplotlib is ignoring the edgecolor in favor of the facecolor.  This behavior may change in the future.
+      ax.scatter(
+    
 
 
     
-![png](../assets/usage/single_group_files/single_group_12_0.png)
+![png](single_group_files/single_group_12_1.png)
     
 
 
@@ -169,17 +186,20 @@ ax = plot_one_group_bar_figure(
     colors_start=[human_color, human_color, chimp_color],
     colors_end=[chimp_color, macaque_color, macaque_color],
 )
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_14_0.png)
+![png](single_group_files/single_group_14_0.png)
     
 
 
 ### 关于x轴
 
+
 当 x 轴标签较长时，可以通过旋转角度来避免重叠，提升可读性。
+
 
 
 ```python
@@ -211,18 +231,21 @@ ax2 = plot_one_group_bar_figure(
     x_tick_rotation=10,
     x_label_ha="center",
 )
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_17_0.png)
+![png](single_group_files/single_group_17_0.png)
     
 
 
 ### 关于y轴
 
+
 `plot_one_group_bar_figure` 默认会自动计算最高点与最低点之间的距离，并将其设置为 y 轴长度的 0.618（即黄金比例），以优化视觉效果。
 如果希望手动设置 y 轴范围，可以使用 `y_lim` 参数来自定义。
+
 
 
 ```python
@@ -251,15 +274,17 @@ ax2 = plot_one_group_bar_figure(
     title_name="Custom y-axis limit",
     y_lim=(2, 6)
 )
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_20_0.png)
+![png](single_group_files/single_group_20_0.png)
     
 
 
 有时我们希望将 ax 的底端固定为 0，但不确定最大刻度的具体数值，可以使用 `ax_bottom_is_0` 来设置 ax 底端固定为0。
+
 
 
 ```python
@@ -288,15 +313,17 @@ ax2 = plot_one_group_bar_figure(
     title_name="No negative values",
     ax_bottom_is_0=True,
 )
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_22_0.png)
+![png](single_group_files/single_group_22_0.png)
     
 
 
 有时我们希望将 y 轴的刻度最大值限制为 1，例如当 y 轴表示经过 Fisher z 转换的相关系数时，可以设置`y_max_tick_to_one`来固定 y 轴的刻度最大值为1。
+
 
 
 ```python
@@ -325,15 +352,17 @@ ax2 = plot_one_group_bar_figure(
     title_name="y-axis max tick is 1",
     y_max_tick_is_1=True,
 )
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_24_0.png)
+![png](single_group_files/single_group_24_0.png)
     
 
 
 有时我们可能希望更改 y 轴的显示格式，例如使用科学计数法来呈现数值，可以使用 `math_text` 参数来设置。
+
 
 
 ```python
@@ -379,11 +408,12 @@ ax4 = plot_one_group_bar_figure(
     title_name="No scientific notation",
     math_text=False,
 )
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_26_0.png)
+![png](single_group_files/single_group_26_0.png)
     
 
 
@@ -392,6 +422,7 @@ ax4 = plot_one_group_bar_figure(
 !!! warning
     `percentage` 格式会与 `math_text` 冲突。
     而`math_text` 默认打开，需显式关闭。
+
 
 
 ```python
@@ -421,17 +452,20 @@ ax2 = plot_one_group_bar_figure(
     math_text=False,
     percentage=True,
 )
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_28_0.png)
+![png](single_group_files/single_group_28_0.png)
     
 
 
 ### 关于散点
 
+
 `plot_one_group_bar_figure` 允许为每个散点分配颜色，可用于区分不同来源的数据。
+
 
 
 ```python
@@ -464,15 +498,17 @@ ax2 = plot_one_group_bar_figure(
     title_name="Scatter points\nwith different colors",
     dots_color=dots_color2,
 )
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_31_0.png)
+![png](single_group_files/single_group_31_0.png)
     
 
 
 ## 统计
+
 
 `plot_one_group_bar_figure` 可快速实现柱间统计比较。当前支持以下统计方法：
 
@@ -483,6 +519,7 @@ ax2 = plot_one_group_bar_figure(
 5. 外部统计检验 （`external`）
 
 使用时需先通过 `statistic` 选项启用统计功能，并在 `test_method` 中指定方法名。
+
 
 
 ```python
@@ -538,11 +575,12 @@ ax4 = plot_one_group_bar_figure(
     statistic=True, 
     test_method=["mannwhitneyu"]
 )
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_34_0.png)
+![png](single_group_files/single_group_34_0.png)
     
 
 
@@ -555,6 +593,7 @@ ax4 = plot_one_group_bar_figure(
     - 1 → 2、1 → 3、…、1 → n  
     - 2 → 3、2 → 4、…、2 → n  
     - 依此类推
+
 
 
 ```python
@@ -582,11 +621,12 @@ ax = plot_one_group_bar_figure(
     test_method=["external"],
     p_list=p_list,
 )
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_36_0.png)
+![png](single_group_files/single_group_36_0.png)
     
 
 
@@ -597,6 +637,7 @@ ax = plot_one_group_bar_figure(
 4. 外部统计检验 （`external`）
 
 即在同一张子图中执行2种检验。
+
 
 
 ```python
@@ -656,15 +697,69 @@ ax4 = plot_one_group_bar_figure(
     p_list=[0.05],
     popmean=0,
 )
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_38_0.png)
+![png](single_group_files/single_group_38_0.png)
     
 
 
-# 单组小提琴图
+# 单组箱型图与单组小提琴图
+
+
+箱线图（box plot）是一种展示数据分布特征的标准统计图表。它通过“箱子”和“须线”直观呈现数据的中位数、四分位数区间（IQR）以及异常值范围。
+
+箱线图中，箱体上、下边界分别代表第三四分位数（Q3）和第一四分位数（Q1），箱内白线标记中位数（可选菱形标记均值），上、下须线延伸至非异常值范围内的最远数据点，超出须线则单独绘制为异常值（点）。
+
+箱线图更侧重于稳健统计量的呈现，不依赖分布假设，适用于对比多组数据的中心趋势和离散程度，尤其适合样本量较大或存在异常值的情形。
+
+在 `plotfig` 中，绘制箱线图的函数名为 `plot_one_group_box_figure`。其大部分参数与 `plot_one_group_bar_figure` 相似，以下是部分演示。
+
+完整参数说明请参阅 [`plot_one_group_box_figure`](../api/#plotfig.bar.plot_one_group_box_figure) 的 API 文档。
+
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from plotfig import plot_one_group_box_figure
+
+human_color = "#e38a48"
+chimp_color = "#919191"
+macaque_color = "#4573a5"
+
+np.random.seed(42)
+
+human_chimp = 0.1 + np.random.normal(0, 0.1, 30)
+human_macaque = 0.4 + np.random.normal(0, 0.1, 30)
+chimp_macaque = 0.6 + np.random.normal(0, 0.1, 30)
+
+fig, ax = plt.subplots(figsize=(5,5))
+
+ax = plot_one_group_box_figure(
+    [human_chimp, human_macaque, chimp_macaque],
+    ax=ax,
+    labels_name=["Human-Chimp", "Human-Macaque", "Chimp-Macaque"],
+    y_label_name="Pearson Correlation",
+    width=0.9,
+    show_dots=True,
+    dots_size=10,
+    gradient_color=True,
+    colors_start= [human_color, human_color, chimp_color],
+    colors_end= [chimp_color, macaque_color, macaque_color],
+    statistic=True,
+    test_method=["mannwhitneyu"]
+)
+
+
+```
+
+
+    
+![png](single_group_files/single_group_41_0.png)
+    
+
 
 小提琴图（violin plot）是一种结合箱线图（box plot）和核密度估计图（density plot）特点的可视化工具，用于展示数据的分布情况。
 它不仅显示数据的均值（白色菱形）、中位数（白线）、四分位数等统计信息（黑色矩形），
@@ -673,10 +768,11 @@ ax4 = plot_one_group_bar_figure(
 相比传统箱线图，小提琴图能更全面揭示数据的多峰性、偏态等特征，适合比较多个组别的分布差异。
 当数据分布不均匀，且采用非参数统计方法时，使用小琴图展示往往更为合适。
 
-在 plotfig 中，绘制小提琴图的函数名为 `plot_one_group_violin_figure`。
+在 `plotfig` 中，绘制小提琴图的函数名为 `plot_one_group_violin_figure`。
 其大部分参数与 `plot_one_group_bar_figure` 相似，以下是部分演示。
 
-完整参数说明请参阅 [`plot_one_group_violin_figure`](../api/index.md/#plotfig.bar.plot_one_group_violin_figure) 的 API 文档。
+完整参数说明请参阅 [`plot_one_group_violin_figure`](../api/#plotfig.bar.plot_one_group_violin_figure) 的 API 文档。
+
 
 
 ```python
@@ -710,10 +806,11 @@ ax = plot_one_group_violin_figure(
     statistic=True,
     test_method=["mannwhitneyu"]
 )
+
 ```
 
 
     
-![png](../assets/usage/single_group_files/single_group_41_0.png)
+![png](single_group_files/single_group_43_0.png)
     
 
