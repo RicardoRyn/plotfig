@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.21.2](https://github.com/RicardoRyn/plotfig/compare/v1.21.1...v1.21.2) (2026-05-27)
+
+
+### Code Refactoring ♻️
+
+* **types:** replace Num type alias with explicit int | float ([cb8a179](https://github.com/RicardoRyn/plotfig/commit/cb8a17951759ffee232e50b6ddf76c48d5af8c66))
+
 ## [1.21.1](https://github.com/RicardoRyn/plotfig/compare/v1.21.0...v1.21.1) (2026-05-22)
 
 
