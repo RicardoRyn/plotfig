@@ -13,7 +13,6 @@ from .utils.bar import (
 
 warnings.simplefilter("always")
 
-Num = int | float | np.integer | np.floating
 
 __all__ = [
     "plot_multi_group_bar_figure",
@@ -72,14 +71,14 @@ def plot_multi_group_bar_figure(
     ax: Axes | None = None,
     group_labels: list[str] | None = None,
     bar_labels: list[str] | None = None,
-    bar_width: Num = 0.2,
-    bar_gap: Num = 0.1,
+    bar_width: float = 0.2,
+    bar_gap: float = 0.1,
     bar_color: list[str] | None = None,
     errorbar_type: str = "sd",
     dots_color: str = "gray",
     dots_size: int = 35,
     legend: bool = True,
-    legend_position: tuple[Num, Num] = (1.2, 1),
+    legend_position: tuple[float, float] = (1.2, 1),
     title_name: str = "",
     title_fontsize=12,
     title_pad=10,
@@ -95,7 +94,7 @@ def plot_multi_group_bar_figure(
     y_lim: tuple[float, float] | None = None,
     statistic: bool = False,
     test_method: str = "external",
-    p_list: Sequence[Sequence[Num]] | None = None,
+    p_list: Sequence[Sequence[float]] | None = None,
     line_color="0.5",
     asterisk_fontsize=10,
     asterisk_color="k",
@@ -120,14 +119,14 @@ def plot_multi_group_bar_figure(
         ax (Axes | None): matplotlib 的 Axes 对象。如果为 None，使用当前活动的 Axes。
         group_labels (list[str] | None): 每个组的标签。如果为 None，自动生成 "Group 1", "Group 2" 等。
         bar_labels (list[str] | None): 每个柱子的标签，用于图例。如果为 None，自动生成 "Bar 1", "Bar 2" 等。
-        bar_width (Num): 柱子的宽度。默认为 0.2。
-        bar_gap (Num): 同一组内柱子之间的间隔。默认为 0.1。
+        bar_width (float): 柱子的宽度。默认为 0.2。
+        bar_gap (float): 同一组内柱子之间的间隔。默认为 0.1。
         bar_color (list[str] | None): 每个柱子的颜色列表。如果为 None，所有柱子使用灰色。
         errorbar_type (str): 误差线类型，'sd' 表示标准差，'se' 表示标准误。默认为 'sd'。
         dots_color (str): 散点的颜色。默认为 'gray'。
         dots_size (int): 散点的大小。默认为 35。
         legend (bool): 是否显示图例。默认为 True。
-        legend_position (tuple[Num, Num]): 图例位置，使用 bbox_to_anchor 坐标。默认为 (1.2, 1)。
+        legend_position (tuple[float, float]): 图例位置，使用 bbox_to_anchor 坐标。默认为 (1.2, 1)。
         title_name (str): 图表标题。默认为空字符串。
         title_fontsize (int): 标题字体大小。默认为 12。
         title_pad (int): 标题与图表的间距。默认为 10。
@@ -144,7 +143,7 @@ def plot_multi_group_bar_figure(
             如果为 None，根据数据自动计算。
         statistic (bool): 是否添加统计显著性标注。默认为 False。
         test_method (str): 统计检验方法。当前仅支持 'external'（使用外部提供的 p 值）。
-        p_list (list[list[Num]] | None): 外部提供的 p 值列表。
+        p_list (list[list[float]] | None): 外部提供的 p 值列表。
             结构为 [组1的p值列表, 组2的p值列表, ...]，每个组的 p 值列表对应该组内所有两两比较。
             当 statistic=True 且 test_method='external' 时必须提供。
         line_color (str): 显著性标注连线的颜色。默认为 '0.5'（中灰色）。

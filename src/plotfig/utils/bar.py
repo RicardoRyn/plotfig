@@ -6,8 +6,6 @@ from matplotlib.axes import Axes
 from matplotlib.ticker import FormatStrFormatter, FuncFormatter, ScalarFormatter
 from numpy.typing import ArrayLike
 
-Num = int | float | np.integer | np.floating
-
 
 def compute_summary(data: ArrayLike) -> tuple[float, float, float]:
     """计算数据的统计摘要信息，包括均值、标准差和标准误。

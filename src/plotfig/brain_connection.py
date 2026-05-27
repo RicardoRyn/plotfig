@@ -18,8 +18,6 @@ from tqdm import tqdm
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-Num = int | float
-
 __all__ = [
     "plot_brain_connection_figure",
     "save_brain_connection_frames",
@@ -208,11 +206,11 @@ def plot_brain_connection_figure(
     niigz_file: str | Path,
     output_file: str | Path | None = None,
     show_all_nodes: bool = False,
-    nodes_size: Sequence[Num] | npt.NDArray | None = None,
+    nodes_size: Sequence[int | float] | npt.NDArray | None = None,
     nodes_name: list[str] | None = None,
     nodes_color: list[str] | None = None,
     scale_method: Literal["", "width", "color", "width_color", "color_width"] = "",
-    line_width: Num = 10,
+    line_width: int | float = 10,
     line_color: str = "red",
 ) -> go.Figure:
     """绘制大脑连接图，保存在指定的html文件中。
@@ -231,7 +229,7 @@ def plot_brain_connection_figure(
             输出HTML文件路径。如果未指定，则使用当前时间戳生成文件名。默认为None
         show_all_nodes (bool, optional):
             是否显示所有脑区节点。如果为False，则只显示有连接的节点。默认为False
-        nodes_size (Sequence[Num] | npt.NDArray | None, optional):
+        nodes_size (Sequence[int | float] | npt.NDArray | None, optional):
             每个节点的大小，长度应与脑区数量一致。默认为None，即所有节点大小为5
         nodes_name (list[str] | None, optional):
             每个节点的名称标签，长度应与脑区数量一致。默认为None，即不显示名称
@@ -244,7 +242,7 @@ def plot_brain_connection_figure(
             - "color" : 根据连接强度调整颜色(使用蓝白红颜色映射)，线宽固定
             - "width_color" or "color_width" : 同时根据连接强度调整线宽和颜色
             默认为 ""
-        line_width (Num, optional):
+        line_width (int | float, optional):
             连接线的基本宽度。当scale_method包含"width"时，此值作为最大宽度参考。默认为10
         line_color (str, optional):
             连接线的基本颜色。当scale_method不包含"color"时生效。默认为"#ff0000"(红色)

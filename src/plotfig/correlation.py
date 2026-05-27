@@ -13,7 +13,7 @@ from matplotlib.ticker import (
 )
 from scipy import stats
 
-Num: TypeAlias = int | float | np.integer | np.floating
+
 StatsMethod: TypeAlias = Literal["spearman", "pearson"]
 AxisFormat: TypeAlias = Literal["normal", "sci", "1f", "percent"]
 
@@ -21,8 +21,8 @@ __all__ = ["plot_correlation_figure"]
 
 
 def plot_correlation_figure(
-    data1: Sequence[Num] | np.ndarray,
-    data2: Sequence[Num] | np.ndarray,
+    data1: Sequence[float] | np.ndarray,
+    data2: Sequence[float] | np.ndarray,
     ax: Axes | None = None,
     stats_method: StatsMethod = "spearman",
     ci: bool = False,
@@ -53,15 +53,15 @@ def plot_correlation_figure(
     hexbin: bool = False,
     hexbin_cmap: Colormap | None = None,
     hexbin_gridsize: int = 50,
-    xlim: list[Num] | tuple[Num, Num] | None = None,
-    ylim: list[Num] | tuple[Num, Num] | None = None,
+    xlim: tuple[float, float] | None = None,
+    ylim: tuple[float, float] | None = None,
 ) -> Axes | PolyCollection:
     """
     绘制两个数据集之间的相关性图，支持线性回归、置信区间和统计方法（Spearman 或 Pearson）。
 
     Args:
-        data1 (Sequence[Num] | np.ndarray): 第一个数据集。
-        data2 (Sequence[Num] | np.ndarray): 第二个数据集。
+        data1 (Sequence[float] | np.ndarray): 第一个数据集。
+        data2 (Sequence[float] | np.ndarray): 第二个数据集。
         ax (Axes | None, optional): matplotlib 的 Axes 对象。默认为 None（使用当前 Axes）。
         stats_method (StatsMethod, optional): 相关性统计方法，支持 "spearman" 和 "pearson"。默认为 "spearman"。
         ci (bool, optional): 是否绘制置信区间带。默认为 False。
@@ -92,8 +92,8 @@ def plot_correlation_figure(
         hexbin (bool, optional): 是否使用六边形箱图。默认为 False。
         hexbin_cmap (Colormap | None, optional): 六边形箱图的颜色映射。默认为 None。
         hexbin_gridsize (int, optional): 六边形箱图网格大小。默认为 50。
-        xlim (list[Num] | tuple[Num, Num] | None, optional): X 轴范围限制。默认为 None。
-        ylim (list[Num] | tuple[Num, Num] | None, optional): Y 轴范围限制。默认为 None。
+        xlim (tuple[float, float] | None, optional): X 轴范围限制。默认为 None。
+        ylim (tuple[float, float] | None, optional): Y 轴范围限制。默认为 None。
 
     Returns:
         Axes | PolyCollection: 默认返回 Axes；当 hexbin=True 时返回 hexbin 对象。
@@ -103,13 +103,13 @@ def plot_correlation_figure(
         ax: Axes,
         axis: Literal["x", "y"],
         label: str,
-        labelsize: Num,
-        ticksize: Num,
-        rotation: Num,
+        labelsize: float,
+        ticksize: float,
+        rotation: float,
         locator: float | None,
         max_tick_value: float | None,
         fmt: AxisFormat,
-        lim: list[Num] | tuple[Num, Num] | None,
+        lim: tuple[float, float] | None,
     ) -> None:
         if axis == "x":
             set_label = ax.set_xlabel
@@ -153,7 +153,7 @@ def plot_correlation_figure(
     A = np.asarray(data1)
     B = np.asarray(data2)
 
-    slope, intercept, r_value, p_value, _ = stats.linregress(A, B)
+    slope, intercept, _, _, _ = stats.linregress(A, B)
     x_seq = np.linspace(A.min(), A.max(), 100)
     y_pred = slope * x_seq + intercept
 

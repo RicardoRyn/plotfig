@@ -14,4 +14,4 @@ site/
 .vscode/
 notebooks/*
 tests/test.py
-.deepseek/*
+.codegraph/*

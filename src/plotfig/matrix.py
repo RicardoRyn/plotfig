@@ -5,8 +5,6 @@ import numpy as np
 from matplotlib.axes import Axes
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-Num = int | float
-
 __all__ = ["plot_matrix_figure"]
 
 
@@ -16,21 +14,21 @@ def plot_matrix_figure(
     row_labels_name: Sequence[str] | None = None,
     col_labels_name: Sequence[str] | None = None,
     cmap: str = "bwr",
-    vmin: Num | None = None,
-    vmax: Num | None = None,
+    vmin: int | float | None = None,
+    vmax: int | float | None = None,
     aspect: str = "equal",
     colorbar: bool = True,
     colorbar_label_name: str = "",
-    colorbar_pad: Num = 0.1,
-    colorbar_label_fontsize: Num = 10,
-    colorbar_tick_fontsize: Num = 10,
-    colorbar_tick_rotation: Num = 0,
-    row_labels_fontsize: Num = 10,
-    col_labels_fontsize: Num = 10,
-    x_rotation: Num = 60,
+    colorbar_pad: int | float = 0.1,
+    colorbar_label_fontsize: int | float = 10,
+    colorbar_tick_fontsize: int | float = 10,
+    colorbar_tick_rotation: int | float = 0,
+    row_labels_fontsize: int | float = 10,
+    col_labels_fontsize: int | float = 10,
+    x_rotation: int | float = 60,
     title_name: str = "",
-    title_fontsize: Num = 15,
-    title_pad: Num = 20,
+    title_fontsize: int | float = 15,
+    title_pad: int | float = 20,
     diag_border: bool = False,
     xlabel: str | None = None,
     ylabel: str | None = None,
@@ -45,21 +43,21 @@ def plot_matrix_figure(
         row_labels_name (Sequence[str] | None): 行标签列表。
         col_labels_name (Sequence[str] | None): 列标签列表。
         cmap (str): 矩阵使用的颜色映射。
-        vmin (Num | None): 颜色缩放的最小值，默认使用 data.min()。
-        vmax (Num | None): 颜色缩放的最大值，默认使用 data.max()。
+        vmin (int | float | None): 颜色缩放的最小值，默认使用 data.min()。
+        vmax (int | float | None): 颜色缩放的最大值，默认使用 data.max()。
         aspect (str): 图像的纵横比，通常为 "equal" 或 "auto"。
         colorbar (bool): 是否显示颜色条。
         colorbar_label_name (str): 颜色条的标签。
-        colorbar_pad (Num): 颜色条与矩阵之间的间距。
-        colorbar_label_fontsize (Num): 颜色条标签的字体大小。
-        colorbar_tick_fontsize (Num): 颜色条刻度的字体大小。
-        colorbar_tick_rotation (Num): 颜色条刻度标签的旋转角度。
-        row_labels_fontsize (Num): 行标签的字体大小。
-        col_labels_fontsize (Num): 列标签的字体大小。
-        x_rotation (Num): x 轴（列）标签的旋转角度。
-        title_name (Num): 图表标题。
-        title_fontsize (Num): 标题的字体大小。
-        title_pad (Num): 标题上方的间距。
+        colorbar_pad (int | float): 颜色条与矩阵之间的间距。
+        colorbar_label_fontsize (int | float): 颜色条标签的字体大小。
+        colorbar_tick_fontsize (int | float): 颜色条刻度的字体大小。
+        colorbar_tick_rotation (int | float): 颜色条刻度标签的旋转角度。
+        row_labels_fontsize (int | float): 行标签的字体大小。
+        col_labels_fontsize (int | float): 列标签的字体大小。
+        x_rotation (int | float): x 轴（列）标签的旋转角度。
+        title_name (str): 图表标题。
+        title_fontsize (int | float): 标题的字体大小。
+        title_pad (int | float): 标题上方的间距。
         diag_border (bool): 是否绘制对角线单元格边框。
         xlabel (str | None): X轴的整体标签名称。
         ylabel (str | None): Y轴的整体标签名称。

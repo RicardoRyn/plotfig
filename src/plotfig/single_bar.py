@@ -16,7 +16,6 @@ from .utils.bar import (
 
 warnings.simplefilter("always")
 
-Num = int | float | np.integer | np.floating
 TestMethod: TypeAlias = Literal[
     "ttest_ind", "ttest_rel", "ttest_1samp", "mannwhitneyu", "external"
 ]
@@ -76,9 +75,9 @@ def _draw_errorbars(
     *,
     errorbar_mode: Literal["both", "upper"],
     errorbar_color: str,
-    errorbar_elinewidth: Num,
-    errorbar_capsize: Num,
-    errorbar_capthick: Num,
+    errorbar_elinewidth: float,
+    errorbar_capsize: float,
+    errorbar_capthick: float,
 ) -> None:
     if errorbar_mode == "upper":
         lower_err = [0] * len(x_positions)
@@ -238,7 +237,7 @@ def _statistics(
 
 
 def plot_one_group_bar_figure(
-    data: np.ndarray | Sequence[Sequence[Num] | np.ndarray],
+    data: np.ndarray | Sequence[Sequence[float] | np.ndarray],
     ax: Axes | None = None,
     labels_name: list[str] | None = None,
     colors: list[str] | None = None,
@@ -248,36 +247,36 @@ def plot_one_group_bar_figure(
     colors_end: list[str] | None = None,
     show_dots: bool = True,
     dots_color: list[list[str]] | None = None,
-    dots_alpha: Num = 0.5,
-    dots_size: Num = 35,
+    dots_alpha: float = 0.5,
+    dots_size: float = 35,
     dots_markers: list[str] | None = None,
-    width: Num = 0.5,
-    color_alpha: Num = 1,
+    width: float = 0.5,
+    color_alpha: float = 1,
     errorbar_type: str = "sd",
     errorbar_mode: Literal["both", "upper"] = "both",
     errorbar_color: str = "k",
-    errorbar_elinewidth: Num = 1,
-    errorbar_capsize: Num = 3,
-    errorbar_capthick: Num = 1,
+    errorbar_elinewidth: float = 1,
+    errorbar_capsize: float = 3,
+    errorbar_capthick: float = 1,
     title_name: str = "",
-    title_fontsize: Num = 12,
-    title_pad: Num = 10,
+    title_fontsize: float = 12,
+    title_pad: float = 10,
     x_label_name: str = "",
     x_label_ha: Literal["center", "right", "left"] = "center",
-    x_label_fontsize: Num = 12,
-    x_tick_fontsize: Num = 12,
-    x_tick_rotation: Num = 0,
+    x_label_fontsize: float = 12,
+    x_tick_fontsize: float = 12,
+    x_tick_rotation: float = 0,
     y_label_name: str = "",
-    y_label_fontsize: Num = 12,
-    y_tick_fontsize: Num = 8,
-    y_tick_rotation: Num = 0,
+    y_label_fontsize: float = 12,
+    y_tick_fontsize: float = 8,
+    y_tick_rotation: float = 0,
     y_lim: tuple[float, float] | None = None,
     statistic: bool = False,
     test_method: TestMethodSpec | None = None,
-    p_list: Sequence[Num] | None = None,
-    popmean: Num = 0,
+    p_list: Sequence[float] | None = None,
+    popmean: float = 0,
     statistical_line_color: str = "0.5",
-    asterisk_fontsize: Num = 10,
+    asterisk_fontsize: float = 10,
     asterisk_color: str = "k",
     y_base: float | None = None,
     interval: float | None = None,
@@ -290,7 +289,7 @@ def plot_one_group_bar_figure(
     """绘制单组柱状图，包含散点、误差条和统计显著性标记。
 
     Args:
-        data (np.ndarray | Sequence[Sequence[Num] | np.ndarray]):
+        data (np.ndarray | Sequence[Sequence[float] | np.ndarray]):
             输入数据，可以是二维numpy数组或嵌套序列，每个子序列代表一个柱状图的数据点
         ax (Axes | None, optional):
             matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
@@ -310,15 +309,15 @@ def plot_one_group_bar_figure(
             是否显示散点. Defaults to True.
         dots_color (list[list[str]] | None, optional):
             散点的颜色列表. Defaults to None.
-        dots_alpha (Num, optional):
+        dots_alpha (float, optional):
             散点的透明度. Defaults to 0.5.
-        dots_size (Num, optional):
+        dots_size (float, optional):
             散点的大小. Defaults to 35.
         dots_markers (list[str] | None, optional):
             指定每个散点的标记形状，字符串格式与 matplotlib 的 marker 参数完全一致（如 ["o", "s", "^"]）. Defaults to None.
-        width (Num, optional):
+        width (float, optional):
             柱状图的宽度. Defaults to 0.5.
-        color_alpha (Num, optional):
+        color_alpha (float, optional):
             柱状图颜色的透明度. Defaults to 1.
         errorbar_type (str, optional):
             误差条类型，可选 "sd"(标准差) 或 "se"(标准误). Defaults to "sd".
@@ -326,35 +325,35 @@ def plot_one_group_bar_figure(
             误差条模式，"both" 显示上下误差条，"upper" 只显示上误差条。Defaults to "both".
         errorbar_color (str, optional):
             误差条颜色. Defaults to "k".
-        errorbar_capsize (Num, optional):
+        errorbar_capsize (float, optional):
             误差帽的长度. Defaults to 3.
-        errorbar_capthick (Num, optional):
+        errorbar_capthick (float, optional):
             误差帽线条粗细. Defaults to 1.
-        errorbar_elinewidth (Num, optional):
+        errorbar_elinewidth (float, optional):
             误差线宽度. Defaults to 1.
         title_name (str, optional):
             图表标题. Defaults to "".
-        title_fontsize (Num, optional):
+        title_fontsize (float, optional):
             标题字体大小. Defaults to 12.
-        title_pad (Num, optional):
+        title_pad (float, optional):
             标题与图表的间距. Defaults to 10.
         x_label_name (str, optional):
             X轴标签名称. Defaults to "".
         x_label_ha (Literal["center", "right", "left"], optional):
             X轴标签的水平对齐方式，可选 "center"、"right" 或 "left". Defaults to "center".
-        x_label_fontsize (Num, optional):
+        x_label_fontsize (float, optional):
             X轴标签字体大小. Defaults to 12.
-        x_tick_fontsize (Num, optional):
+        x_tick_fontsize (float, optional):
             X轴刻度字体大小. Defaults to 12.
-        x_tick_rotation (Num, optional):
+        x_tick_rotation (float, optional):
             X轴刻度旋转角度. Defaults to 0.
         y_label_name (str, optional):
             Y轴标签名称. Defaults to "".
-        y_label_fontsize (Num, optional):
+        y_label_fontsize (float, optional):
             Y轴标签字体大小. Defaults to 12.
-        y_tick_fontsize (Num, optional):
+        y_tick_fontsize (float, optional):
             Y轴刻度字体大小. Defaults to 8.
-        y_tick_rotation (Num, optional):
+        y_tick_rotation (float, optional):
             Y轴刻度旋转角度. Defaults to 0.
         y_lim (tuple[float, float] | None, optional):
             Y轴的范围限制. Defaults to None.
@@ -367,13 +366,13 @@ def plot_one_group_bar_figure(
             2. 长度为2：必须包含 `ttest_1samp`，另一个元素为
                 `ttest_ind`、`ttest_rel`、`mannwhitneyu` 或 `external` 之一。
             Defaults to ["ttest_ind"].
-        p_list (Sequence[Num] | None, optional):
+        p_list (Sequence[float] | None, optional):
             预计算的p值列表，用于显著性标记. Defaults to None.
-        popmean (Num, optional):
+        popmean (float, optional):
             单样本t检验的假设均值. Defaults to 0.
         statistical_line_color (str, optional):
             显著性标记线的颜色. Defaults to "0.5".
-        asterisk_fontsize (Num, optional):
+        asterisk_fontsize (float, optional):
             显著性星号的字体大小. Defaults to 10.
         asterisk_color (str, optional):
             显著性星号的颜色. Defaults to "k".
@@ -563,48 +562,48 @@ def plot_one_group_bar_figure(
 
 
 def plot_one_group_box_figure(
-    data: np.ndarray | Sequence[Sequence[Num] | np.ndarray],
+    data: np.ndarray | Sequence[Sequence[float] | np.ndarray],
     ax: Axes | None = None,
     labels_name: list[str] | None = None,
     colors: list[str] | None = None,
-    color_alpha: Num = 1,
+    color_alpha: float = 1,
     gradient_color: bool = False,
     colors_start: list[str] | None = None,
     colors_end: list[str] | None = None,
     show_mean: bool = False,
-    mean_marker_size: Num = 6,
+    mean_marker_size: float = 6,
     show_fliers: bool = True,
     flier_marker: str = "o",
-    flier_size: Num = 20,
-    flier_alpha: Num = 0.5,
+    flier_size: float = 20,
+    flier_alpha: float = 0.5,
     show_dots: bool = True,
     dots_color: list[list[str]] | None = None,
-    dots_alpha: Num = 0.5,
-    dots_size: Num = 35,
+    dots_alpha: float = 0.5,
+    dots_size: float = 35,
     dots_markers: list[str] | None = None,
-    width: Num = 0.5,
+    width: float = 0.5,
     whisker_range: float = 1.5,
-    box_linewidth: Num = 1.2,
-    median_linewidth: Num = 1.5,
+    box_linewidth: float = 1.2,
+    median_linewidth: float = 1.5,
     title_name: str = "",
-    title_fontsize: Num = 12,
-    title_pad: Num = 10,
+    title_fontsize: float = 12,
+    title_pad: float = 10,
     x_label_name: str = "",
     x_label_ha: Literal["center", "right", "left"] = "center",
-    x_label_fontsize: Num = 12,
-    x_tick_fontsize: Num = 12,
-    x_tick_rotation: Num = 0,
+    x_label_fontsize: float = 12,
+    x_tick_fontsize: float = 12,
+    x_tick_rotation: float = 0,
     y_label_name: str = "",
-    y_label_fontsize: Num = 12,
-    y_tick_fontsize: Num = 8,
-    y_tick_rotation: Num = 0,
+    y_label_fontsize: float = 12,
+    y_tick_fontsize: float = 8,
+    y_tick_rotation: float = 0,
     y_lim: tuple[float, float] | None = None,
     statistic: bool = False,
     test_method: TestMethodSpec | None = None,
-    p_list: Sequence[Num] | None = None,
-    popmean: Num = 0,
+    p_list: Sequence[float] | None = None,
+    popmean: float = 0,
     statistical_line_color: str = "0.5",
-    asterisk_fontsize: Num = 10,
+    asterisk_fontsize: float = 10,
     asterisk_color: str = "k",
     y_base: float | None = None,
     interval: float | None = None,
@@ -617,7 +616,7 @@ def plot_one_group_box_figure(
     """绘制单组箱型图，展示四分位线、中位线，包含散点和统计显著性标记。
 
     Args:
-        data (np.ndarray | Sequence[Sequence[Num] | np.ndarray]):
+        data (np.ndarray | Sequence[Sequence[float] | np.ndarray]):
             输入数据，可以是二维numpy数组或嵌套序列，每个子序列代表一个箱型图的数据点
         ax (Axes | None, optional):
             matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
@@ -625,7 +624,7 @@ def plot_one_group_box_figure(
             箱型图的标签名称列表. Defaults to None.
         colors (list[str] | None, optional):
             箱型图的颜色列表. Defaults to None.
-        color_alpha (Num, optional):
+        color_alpha (float, optional):
             箱型图颜色的透明度. Defaults to 1.
         gradient_color (bool, optional):
             是否使用渐变颜色填充箱型图. Defaults to False.
@@ -635,57 +634,57 @@ def plot_one_group_box_figure(
             渐变色的结束颜色列表. Defaults to None.
         show_mean (bool, optional):
             是否显示均值标记（菱形）. Defaults to False.
-        mean_marker_size (Num, optional):
+        mean_marker_size (float, optional):
             均值标记（菱形）的大小. Defaults to 6.
         show_fliers (bool, optional):
             是否显示离群值点. Defaults to True.
         flier_marker (str, optional):
             离群值标记形状. Defaults to "o".
-        flier_size (Num, optional):
+        flier_size (float, optional):
             离群值标记大小. Defaults to 20.
-        flier_alpha (Num, optional):
+        flier_alpha (float, optional):
             离群值标记透明度. Defaults to 0.5.
         show_dots (bool, optional):
             是否显示散点. Defaults to True.
         dots_color (list[list[str]] | None, optional):
             散点的颜色列表. Defaults to None.
-        dots_alpha (Num, optional):
+        dots_alpha (float, optional):
             散点的透明度. Defaults to 0.5.
-        dots_size (Num, optional):
+        dots_size (float, optional):
             散点的大小. Defaults to 35.
         dots_markers (list[str] | None, optional):
             指定每个散点的标记形状，字符串格式与 matplotlib 的 marker 参数完全一致（如 ["o", "s", "^"]）. Defaults to None.
-        width (Num, optional):
+        width (float, optional):
             箱型图的宽度. Defaults to 0.5.
         whisker_range (float, optional):
             须线的范围，以IQR的倍数表示（常用 1.5 或 3.0）. Defaults to 1.5.
-        box_linewidth (Num, optional):
+        box_linewidth (float, optional):
             箱体边框线宽. Defaults to 1.2.
-        median_linewidth (Num, optional):
+        median_linewidth (float, optional):
             中位线线宽. Defaults to 1.5.
         title_name (str, optional):
             图表标题. Defaults to "".
-        title_fontsize (Num, optional):
+        title_fontsize (float, optional):
             标题字体大小. Defaults to 12.
-        title_pad (Num, optional):
+        title_pad (float, optional):
             标题与图表的间距. Defaults to 10.
         x_label_name (str, optional):
             X轴标签名称. Defaults to "".
         x_label_ha (Literal["center", "right", "left"], optional):
             X轴标签的水平对齐方式，可选 "center"、"right" 或 "left". Defaults to "center".
-        x_label_fontsize (Num, optional):
+        x_label_fontsize (float, optional):
             X轴标签字体大小. Defaults to 12.
-        x_tick_fontsize (Num, optional):
+        x_tick_fontsize (float, optional):
             X轴刻度字体大小. Defaults to 12.
-        x_tick_rotation (Num, optional):
+        x_tick_rotation (float, optional):
             X轴刻度旋转角度. Defaults to 0.
         y_label_name (str, optional):
             Y轴标签名称. Defaults to "".
-        y_label_fontsize (Num, optional):
+        y_label_fontsize (float, optional):
             Y轴标签字体大小. Defaults to 12.
-        y_tick_fontsize (Num, optional):
+        y_tick_fontsize (float, optional):
             Y轴刻度字体大小. Defaults to 8.
-        y_tick_rotation (Num, optional):
+        y_tick_rotation (float, optional):
             Y轴刻度旋转角度. Defaults to 0.
         y_lim (tuple[float, float] | None, optional):
             Y轴的范围限制. Defaults to None.
@@ -698,13 +697,13 @@ def plot_one_group_box_figure(
             2. 长度为2：必须包含 `ttest_1samp`，另一个元素为
                 `ttest_ind`、`ttest_rel`、`mannwhitneyu` 或 `external` 之一。
             Defaults to ["ttest_ind"].
-        p_list (Sequence[Num] | None, optional):
+        p_list (Sequence[float] | None, optional):
             预计算的p值列表，用于显著性标记. Defaults to None.
-        popmean (Num, optional):
+        popmean (float, optional):
             单样本t检验的假设均值. Defaults to 0.
         statistical_line_color (str, optional):
             显著性标记线的颜色. Defaults to "0.5".
-        asterisk_fontsize (Num, optional):
+        asterisk_fontsize (float, optional):
             显著性星号的字体大小. Defaults to 10.
         asterisk_color (str, optional):
             显著性星号的颜色. Defaults to "k".
@@ -763,8 +762,12 @@ def plot_one_group_box_figure(
         lower_whisker = q1 - whisker_range * iqr
         upper_whisker = q3 + whisker_range * iqr
         # 实际须线端点：数据中最接近须线边界的值
-        lower_whisker_end = np.min(d[d >= lower_whisker]) if np.any(d >= lower_whisker) else np.min(d)
-        upper_whisker_end = np.max(d[d <= upper_whisker]) if np.any(d <= upper_whisker) else np.max(d)
+        lower_whisker_end = (
+            np.min(d[d >= lower_whisker]) if np.any(d >= lower_whisker) else np.min(d)
+        )
+        upper_whisker_end = (
+            np.max(d[d <= upper_whisker]) if np.any(d <= upper_whisker) else np.max(d)
+        )
         is_flier = (d < lower_whisker) | (d > upper_whisker)
         return q1, q3, median, iqr, lower_whisker_end, upper_whisker_end, is_flier
 
@@ -776,7 +779,7 @@ def plot_one_group_box_figure(
 
     # 绘制每个箱型图
     for i, d in enumerate(data):
-        q1, q3, median, iqr, low_w, up_w, is_flier = box_stats[i]
+        q1, q3, median, _, low_w, up_w, is_flier = box_stats[i]
         fliers = np.asarray(d)[is_flier]
 
         if gradient_color:
@@ -804,7 +807,7 @@ def plot_one_group_box_figure(
 
             im = ax.imshow(
                 gradient_img,
-                extent=[box_left, box_right, q1, q3],
+                extent=(float(box_left), float(box_right), float(q1), float(q3)),
                 origin="lower",
                 aspect="auto",
                 zorder=1,
@@ -812,33 +815,33 @@ def plot_one_group_box_figure(
             # 箱体边框
             ax.add_patch(
                 Rectangle(
-                    (box_left, q1),
+                    (float(box_left), float(q1)),
                     width,
-                    q3 - q1,
+                    float(q3 - q1),
                     facecolor="none",
                     edgecolor="black",
-                    linewidth=box_linewidth,
+                    linewidth=float(box_linewidth),
                     zorder=2,
                 )
             )
             im.set_clip_path(
                 Rectangle(
-                    (box_left, q1),
+                    (float(box_left), float(q1)),
                     width,
-                    q3 - q1,
+                    float(q3 - q1),
                     transform=ax.transData,
                 )
             )
         else:
             ax.add_patch(
                 Rectangle(
-                    (box_left, q1),
+                    (float(box_left), float(q1)),
                     width,
-                    q3 - q1,
+                    float(q3 - q1),
                     facecolor=c1,
                     alpha=color_alpha,
                     edgecolor="black",
-                    linewidth=box_linewidth,
+                    linewidth=float(box_linewidth),
                     zorder=1,
                 )
             )
@@ -1014,39 +1017,39 @@ def plot_one_group_box_figure(
 
 
 def plot_one_group_violin_figure(
-    data: np.ndarray | Sequence[Sequence[Num] | np.ndarray],
+    data: np.ndarray | Sequence[Sequence[float] | np.ndarray],
     ax: Axes | None = None,
     labels_name: list[str] | None = None,
-    width: Num = 0.8,
+    width: float = 0.8,
     colors: list[str] | None = None,
-    color_alpha: Num = 1,
+    color_alpha: float = 1,
     gradient_color: bool = False,
     colors_start: list[str] | None = None,
     colors_end: list[str] | None = None,
     show_dots: bool = True,
     dots_color: list[list[str]] | None = None,
-    dots_size: Num = 35,
-    dots_alpha: Num = 0.5,
+    dots_size: float = 35,
+    dots_alpha: float = 0.5,
     dots_markers: list[str] | None = None,
     title_name: str = "",
-    title_fontsize: Num = 12,
-    title_pad: Num = 10,
+    title_fontsize: float = 12,
+    title_pad: float = 10,
     x_label_name: str = "",
     x_label_ha: Literal["center", "right", "left"] = "center",
-    x_label_fontsize: Num = 12,
-    x_tick_fontsize: Num = 12,
-    x_tick_rotation: Num = 0,
+    x_label_fontsize: float = 12,
+    x_tick_fontsize: float = 12,
+    x_tick_rotation: float = 0,
     y_label_name: str = "",
-    y_label_fontsize: Num = 12,
-    y_tick_fontsize: Num = 8,
-    y_tick_rotation: Num = 0,
+    y_label_fontsize: float = 12,
+    y_tick_fontsize: float = 8,
+    y_tick_rotation: float = 0,
     y_lim: tuple[float, float] | None = None,
     statistic: bool = False,
     test_method: TestMethodSpec | None = None,
-    popmean: Num = 0,
-    p_list: Sequence[Num] | None = None,
+    popmean: float = 0,
+    p_list: Sequence[float] | None = None,
     statistical_line_color: str = "0.5",
-    asterisk_fontsize: Num = 10,
+    asterisk_fontsize: float = 10,
     asterisk_color: str = "k",
     y_base: float | None = None,
     interval: float | None = None,
@@ -1059,17 +1062,17 @@ def plot_one_group_violin_figure(
     """绘制单组小提琴图，可选散点叠加、渐变填色和统计显著性标注。具有白色均值点和白色中位线。
 
     Args:
-        data (np.ndarray | Sequence[Sequence[Num] | np.ndarray]):
+        data (np.ndarray | Sequence[Sequence[float] | np.ndarray]):
             输入数据，可以是二维numpy数组或嵌套序列，每个子序列代表一个小提琴的数据点
         ax (Axes | None, optional):
             matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
         labels_name (list[str] | None, optional):
             小提琴图的标签名称列表. Defaults to None.
-        width (Num, optional):
+        width (float, optional):
             小提琴图的宽度. Defaults to 0.8.
         colors (list[str] | None, optional):
             小提琴图的颜色列表. Defaults to None.
-        color_alpha (Num, optional):
+        color_alpha (float, optional):
             小提琴图颜色的透明度. Defaults to 1.
         gradient_color (bool, optional):
             是否使用渐变颜色填充小提琴图. Defaults to False.
@@ -1081,35 +1084,35 @@ def plot_one_group_violin_figure(
             是否显示散点. Defaults to True.
         dots_color (list[list[str]] | None, optional):
             散点的颜色列表. Defaults to None.
-        dots_size (Num, optional):
+        dots_size (float, optional):
             散点的大小. Defaults to 35.
-        dots_alpha (Num, optional):
+        dots_alpha (float, optional):
             散点的透明度. Defaults to 0.5.
         dots_markers (list[str] | None, optional):
             指定每个散点的标记形状，字符串格式与 matplotlib 的 marker 参数完全一致（如 ["o", "s", "^"]）. Defaults to None.
         title_name (str, optional):
             图表标题. Defaults to "".
-        title_fontsize (Num, optional):
+        title_fontsize (float, optional):
             标题字体大小. Defaults to 12.
-        title_pad (Num, optional):
+        title_pad (float, optional):
             标题与图表的间距. Defaults to 10.
         x_label_name (str, optional):
             X轴标签名称. Defaults to "".
         x_label_ha (Literal["center", "right", "left"], optional):
             X轴标签的水平对齐方式，可选 "center"、"right" 或 "left". Defaults to "center".
-        x_label_fontsize (Num, optional):
+        x_label_fontsize (float, optional):
             X轴标签字体大小. Defaults to 12.
-        x_tick_fontsize (Num, optional):
+        x_tick_fontsize (float, optional):
             X轴刻度字体大小. Defaults to 12.
-        x_tick_rotation (Num, optional):
+        x_tick_rotation (float, optional):
             X轴刻度旋转角度. Defaults to 0.
         y_label_name (str, optional):
             Y轴标签名称. Defaults to "".
-        y_label_fontsize (Num, optional):
+        y_label_fontsize (float, optional):
             Y轴标签字体大小. Defaults to 12.
-        y_tick_fontsize (Num, optional):
+        y_tick_fontsize (float, optional):
             Y轴刻度字体大小. Defaults to 8.
-        y_tick_rotation (Num, optional):
+        y_tick_rotation (float, optional):
             Y轴刻度旋转角度. Defaults to 0.
         y_lim (tuple[float, float] | None, optional):
             Y轴的范围限制. Defaults to None.
@@ -1122,13 +1125,13 @@ def plot_one_group_violin_figure(
             2. 长度为2：必须包含 `ttest_1samp`，另一个元素为
                 `ttest_ind`、`ttest_rel`、`mannwhitneyu` 或 `external` 之一。
             Defaults to ["ttest_ind"].
-        popmean (Num, optional):
+        popmean (float, optional):
             单样本t检验的假设均值. Defaults to 0.
-        p_list (Sequence[Num] | None, optional):
+        p_list (Sequence[float] | None, optional):
             预计算的p值列表，用于显著性标记. Defaults to None.
         statistical_line_color (str, optional):
             显著性标记线的颜色. Defaults to "0.5".
-        asterisk_fontsize (Num, optional):
+        asterisk_fontsize (float, optional):
             显著性星号的字体大小. Defaults to 10.
         asterisk_color (str, optional):
             显著性星号的颜色. Defaults to "k".
@@ -1206,7 +1209,12 @@ def plot_one_group_violin_figure(
         # 显示图像并裁剪成violin形状
         im = ax.imshow(
             gradient_img,
-            extent=[pos - width / 2, pos + width / 2, y.min(), y.max()],
+            extent=(
+                float(pos - width / 2),
+                float(pos + width / 2),
+                float(y.min()),
+                float(y.max()),
+            ),
             origin="lower",
             aspect="auto",
             zorder=1,
