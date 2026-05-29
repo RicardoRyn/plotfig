@@ -323,10 +323,10 @@ def save_brain_connection_frames(
 def batch_crop_images(
     directory_path: Path,
     suffix: str = "_cropped",
-    left_frac: float = 0.25,
     top_frac: float = 0.25,
-    right_frac: float = 0.25,
     bottom_frac: float = 0.25,
+    left_frac: float = 0.25,
+    right_frac: float = 0.25,
 ):
     """
     批量裁剪指定目录下的图像文件。
@@ -334,10 +334,10 @@ def batch_crop_images(
     Args:
         directory_path (Path): 图像文件所在的目录路径。
         suffix (str, optional): 新文件名后缀。默认为 "_cropped"。
-        left_frac (float, optional): 左侧裁剪比例（0-1）。默认为 0.2。
         top_frac (float, optional): 上侧裁剪比例（0-1）。默认为 0.15。
-        right_frac (float, optional): 右侧裁剪比例（0-1）。默认为 0.2。
         bottom_frac (float, optional): 下侧裁剪比例（0-1）。默认为 0.15。
+        left_frac (float, optional): 左侧裁剪比例（0-1）。默认为 0.2。
+        right_frac (float, optional): 右侧裁剪比例（0-1）。默认为 0.2。
 
     Notes:
         支持常见图像格式 (PNG, JPG, JPEG, BMP, TIFF)。
