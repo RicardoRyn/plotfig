@@ -16,11 +16,11 @@ A Python visualization library designed for cognitive neuroscience research, pro
 
 ## Features
 
-- 📊 **Multiple Chart Types**: Bar charts, matrix plots, correlation plots, circos plots, brain surface plots, brain connectivity plots
-- 🎨 **Professional Research Style**: Built-in color schemes that meet academic publication standards
-- 📈 **Automatic Significance Testing**: Built-in statistical methods with automatic significance annotations
-- 🔬 **Designed for Neuroscience**: Supports common primate brain atlases and brain network visualization
-- 🚀 **Easy to Use**: Simple API for quick getting started
+- **Multiple Chart Types**: Bar charts, matrix plots, correlation plots, circos plots, brain surface plots, brain connectivity plots
+- **Professional Research Style**: Built-in color schemes that meet academic publication standards
+- **Automatic Significance Testing**: Built-in statistical methods with automatic significance annotations
+- **Designed for Neuroscience**: Supports common primate brain atlases and brain network visualization
+- **Easy to Use**: Simple API for quick getting started
 
 ## Quick Start
 

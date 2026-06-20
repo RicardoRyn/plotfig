@@ -14,10 +14,10 @@ copyright = """
 Copyright &copy; 2026 Ricardo Ryn
 """
 nav = [
-    { "🧭 Introduction" = "index.md" },
-    { "📦 Installation" = "installation.md" },
-    { "🔄 Changelog" = "changelog.md" },
-    { "🚀 Usage" = [
+    { "Introduction" = "index.md" },
+    { "Installation" = "installation.md" },
+    { "Changelog" = "changelog.md" },
+    { "Usage" = [
       "usage/single_group.md",
       "usage/multi_groups.md",
       "usage/matrix.md",
@@ -26,7 +26,7 @@ nav = [
       "usage/brain_surface.md",
       "usage/brain_connectivity.md"
     ]},
-    { "🔌 API" = "api/index.md" }
+    { "API" = "api/index.md" }
 ]
 
 [project.theme]

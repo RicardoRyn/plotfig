@@ -16,3 +16,4 @@ notebooks/*
 tests/test.py
 .codegraph/*
 .understand-anything/*
+.codegraph/*
