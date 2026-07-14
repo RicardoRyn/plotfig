@@ -263,6 +263,9 @@ def plot_one_group_bar_figure(
     title_pad: float = 10,
     x_label_name: str = "",
     x_label_ha: Literal["center", "right", "left"] = "center",
+    x_label_va: Literal[
+        "center", "top", "bottom", "baseline", "center_baseline"
+    ] = "center",
     x_label_fontsize: float = 12,
     x_tick_fontsize: float = 12,
     x_tick_rotation: float = 0,
@@ -341,6 +344,8 @@ def plot_one_group_bar_figure(
             X轴标签名称. Defaults to "".
         x_label_ha (Literal["center", "right", "left"], optional):
             X轴标签的水平对齐方式，可选 "center"、"right" 或 "left". Defaults to "center".
+        x_label_va (Literal["center", "top", "bottom", "baseline", "center_baseline"], optional):
+            X轴标签的垂直对齐方式，可选 "center"、 "top"、 "bottom"、 "baseline" 或 "center_baseline". Defaults to "center".
         x_label_fontsize (float, optional):
             X轴标签字体大小. Defaults to 12.
         x_tick_fontsize (float, optional):
@@ -522,6 +527,7 @@ def plot_one_group_bar_figure(
         fontsize=x_tick_fontsize,
         rotation=x_tick_rotation,
         ha=x_label_ha,
+        va=x_label_va,
         rotation_mode="anchor",
     )
     # y轴
@@ -590,6 +596,9 @@ def plot_one_group_box_figure(
     title_pad: float = 10,
     x_label_name: str = "",
     x_label_ha: Literal["center", "right", "left"] = "center",
+    x_label_va: Literal[
+        "center", "top", "bottom", "baseline", "center_baseline"
+    ] = "center",
     x_label_fontsize: float = 12,
     x_tick_fontsize: float = 12,
     x_tick_rotation: float = 0,
@@ -672,6 +681,8 @@ def plot_one_group_box_figure(
             X轴标签名称. Defaults to "".
         x_label_ha (Literal["center", "right", "left"], optional):
             X轴标签的水平对齐方式，可选 "center"、"right" 或 "left". Defaults to "center".
+        x_label_va (Literal["center", "top", "bottom", "baseline", "center_baseline"], optional):
+            X轴标签的垂直对齐方式，可选 "center"、 "top"、 "bottom"、 "baseline" 或 "center_baseline". Defaults to "center".
         x_label_fontsize (float, optional):
             X轴标签字体大小. Defaults to 12.
         x_tick_fontsize (float, optional):
@@ -978,6 +989,7 @@ def plot_one_group_box_figure(
         fontsize=x_tick_fontsize,
         rotation=x_tick_rotation,
         ha=x_label_ha,
+        va=x_label_va,
         rotation_mode="anchor",
     )
     # y轴
@@ -1036,6 +1048,9 @@ def plot_one_group_violin_figure(
     title_pad: float = 10,
     x_label_name: str = "",
     x_label_ha: Literal["center", "right", "left"] = "center",
+    x_label_va: Literal[
+        "center", "top", "bottom", "baseline", "center_baseline"
+    ] = "center",
     x_label_fontsize: float = 12,
     x_tick_fontsize: float = 12,
     x_tick_rotation: float = 0,
@@ -1100,6 +1115,8 @@ def plot_one_group_violin_figure(
             X轴标签名称. Defaults to "".
         x_label_ha (Literal["center", "right", "left"], optional):
             X轴标签的水平对齐方式，可选 "center"、"right" 或 "left". Defaults to "center".
+        x_label_va (Literal["center", "top", "bottom", "baseline", "center_baseline"], optional):
+            X轴标签的垂直对齐方式，可选 "center"、 "top"、 "bottom"、 "baseline" 或 "center_baseline". Defaults to "center".
         x_label_fontsize (float, optional):
             X轴标签字体大小. Defaults to 12.
         x_tick_fontsize (float, optional):
@@ -1326,6 +1343,7 @@ def plot_one_group_violin_figure(
         fontsize=x_tick_fontsize,
         rotation=x_tick_rotation,
         ha=x_label_ha,
+        va=x_label_va,
         rotation_mode="anchor",
     )
     # y轴
