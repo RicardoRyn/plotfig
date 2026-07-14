@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.0](https://github.com/RicardoRyn/plotfig/compare/v1.21.2...v1.22.0) (2026-07-14)
+
+
+### Features ✨
+
+* **single_bar:** add x_label_va parameter for vertical alignment ([5ff48a7](https://github.com/RicardoRyn/plotfig/commit/5ff48a79e5b4b1763f2c6d721257c58387c30002))
+
 ## [1.21.2](https://github.com/RicardoRyn/plotfig/compare/v1.21.1...v1.21.2) (2026-05-27)
 
 
