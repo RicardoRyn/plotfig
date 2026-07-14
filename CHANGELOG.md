@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.1](https://github.com/RicardoRyn/plotfig/compare/v1.22.0...v1.22.1) (2026-07-14)
+
+
+### Bug Fixes 🔧
+
+* **plotfig:** update x_label_va default to 'top' ([779a907](https://github.com/RicardoRyn/plotfig/commit/779a907ca2c3d89f3496ac0b20425b6386d9c39b))
+
 ## [1.22.0](https://github.com/RicardoRyn/plotfig/compare/v1.21.2...v1.22.0) (2026-07-14)
 
 
