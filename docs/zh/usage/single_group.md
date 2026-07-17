@@ -31,11 +31,11 @@ ax = plot_one_group_bar_figure([data1, data2, data3])
     
 
 
-## 多子图
+## 多坐标系
 
 
-借助 `matplotlib`，我们可以在外部预先创建 `figure` 和 `axes`，从而灵活绘制多个子图，实现更复杂的图形布局。
-关于更高级的子图排版方式，详见[matplotlib中的教程](https://matplotlib.org/stable/users/explain/axes/mosaic.html)。
+借助 `matplotlib`，我们可以在外部预先创建 `figure` 和 `axes`，从而灵活绘制多个坐标系，实现更复杂的图形布局。
+关于更高级的坐标系排版方式，详见[matplotlib中的教程](https://matplotlib.org/stable/users/explain/axes/mosaic.html)。
 
 
 ```python
@@ -633,7 +633,7 @@ ax = plot_one_group_bar_figure(
 3. Mann-Whitney U 检验（`mannwhitneyu`）
 4. 外部统计检验 （`external`）
 
-即在同一张子图中执行2种检验。
+即在同一张坐标系中执行2种检验。
 
 
 
