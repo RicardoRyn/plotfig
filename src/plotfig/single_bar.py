@@ -240,6 +240,8 @@ def plot_one_group_bar_figure(
     data: np.ndarray | Sequence[Sequence[float] | np.ndarray],
     ax: Axes | None = None,
     labels_name: list[str] | None = None,
+    labels_fontsize: float = 12,
+    labels_rotation: float = 0,
     colors: list[str] | None = None,
     edgecolor: str | None = None,
     gradient_color: bool = False,
@@ -267,8 +269,6 @@ def plot_one_group_bar_figure(
         "center", "top", "bottom", "baseline", "center_baseline"
     ] = "top",
     x_label_fontsize: float = 12,
-    x_tick_fontsize: float = 12,
-    x_tick_rotation: float = 0,
     y_label_name: str = "",
     y_label_fontsize: float = 12,
     y_tick_fontsize: float = 8,
@@ -298,6 +298,10 @@ def plot_one_group_bar_figure(
             matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
         labels_name (list[str] | None, optional):
             柱状图的标签名称列表. Defaults to None.
+        labels_fontsize (float, optional):
+            X轴刻度字体大小. Defaults to 12.
+        labels_rotation (float, optional):
+            X轴刻度旋转角度. Defaults to 0.
         colors (list[str] | None, optional):
             柱状图的颜色列表. Defaults to None.
         edgecolor (str | None, optional):
@@ -348,10 +352,6 @@ def plot_one_group_bar_figure(
             X轴标签的垂直对齐方式，可选 "center"、 "top"、 "bottom"、 "baseline" 或 "center_baseline". Defaults to "top".
         x_label_fontsize (float, optional):
             X轴标签字体大小. Defaults to 12.
-        x_tick_fontsize (float, optional):
-            X轴刻度字体大小. Defaults to 12.
-        x_tick_rotation (float, optional):
-            X轴刻度旋转角度. Defaults to 0.
         y_label_name (str, optional):
             Y轴标签名称. Defaults to "".
         y_label_fontsize (float, optional):
@@ -417,8 +417,8 @@ def plot_one_group_bar_figure(
     title_fontsize = float(title_fontsize)
     title_pad = float(title_pad)
     x_label_fontsize = float(x_label_fontsize)
-    x_tick_fontsize = float(x_tick_fontsize)
-    x_tick_rotation = float(x_tick_rotation)
+    labels_fontsize = float(labels_fontsize)
+    labels_rotation = float(labels_rotation)
     y_label_fontsize = float(y_label_fontsize)
     y_tick_fontsize = float(y_tick_fontsize)
     y_tick_rotation = float(y_tick_rotation)
@@ -524,8 +524,8 @@ def plot_one_group_bar_figure(
     ax.set_xticks(x_positions)
     ax.set_xticklabels(
         labels_name,
-        fontsize=x_tick_fontsize,
-        rotation=x_tick_rotation,
+        fontsize=labels_fontsize,
+        rotation=labels_rotation,
         ha=x_label_ha,
         va=x_label_va,
         rotation_mode="anchor",
@@ -571,6 +571,8 @@ def plot_one_group_box_figure(
     data: np.ndarray | Sequence[Sequence[float] | np.ndarray],
     ax: Axes | None = None,
     labels_name: list[str] | None = None,
+    labels_fontsize: float = 12,
+    labels_rotation: float = 0,
     colors: list[str] | None = None,
     color_alpha: float = 1,
     gradient_color: bool = False,
@@ -600,8 +602,6 @@ def plot_one_group_box_figure(
         "center", "top", "bottom", "baseline", "center_baseline"
     ] = "top",
     x_label_fontsize: float = 12,
-    x_tick_fontsize: float = 12,
-    x_tick_rotation: float = 0,
     y_label_name: str = "",
     y_label_fontsize: float = 12,
     y_tick_fontsize: float = 8,
@@ -631,6 +631,10 @@ def plot_one_group_box_figure(
             matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
         labels_name (list[str] | None, optional):
             箱型图的标签名称列表. Defaults to None.
+        labels_fontsize (float, optional):
+            X轴刻度字体大小. Defaults to 12.
+        labels_rotation (float, optional):
+            X轴刻度旋转角度. Defaults to 0.
         colors (list[str] | None, optional):
             箱型图的颜色列表. Defaults to None.
         color_alpha (float, optional):
@@ -685,10 +689,6 @@ def plot_one_group_box_figure(
             X轴标签的垂直对齐方式，可选 "center"、 "top"、 "bottom"、 "baseline" 或 "center_baseline". Defaults to "top".
         x_label_fontsize (float, optional):
             X轴标签字体大小. Defaults to 12.
-        x_tick_fontsize (float, optional):
-            X轴刻度字体大小. Defaults to 12.
-        x_tick_rotation (float, optional):
-            X轴刻度旋转角度. Defaults to 0.
         y_label_name (str, optional):
             Y轴标签名称. Defaults to "".
         y_label_fontsize (float, optional):
@@ -752,8 +752,8 @@ def plot_one_group_box_figure(
     title_fontsize = float(title_fontsize)
     title_pad = float(title_pad)
     x_label_fontsize = float(x_label_fontsize)
-    x_tick_fontsize = float(x_tick_fontsize)
-    x_tick_rotation = float(x_tick_rotation)
+    labels_fontsize = float(labels_fontsize)
+    labels_rotation = float(labels_rotation)
     y_label_fontsize = float(y_label_fontsize)
     y_tick_fontsize = float(y_tick_fontsize)
     y_tick_rotation = float(y_tick_rotation)
@@ -986,8 +986,8 @@ def plot_one_group_box_figure(
     ax.set_xticks(x_positions)
     ax.set_xticklabels(
         labels_name,
-        fontsize=x_tick_fontsize,
-        rotation=x_tick_rotation,
+        fontsize=labels_fontsize,
+        rotation=labels_rotation,
         ha=x_label_ha,
         va=x_label_va,
         rotation_mode="anchor",
@@ -1032,6 +1032,8 @@ def plot_one_group_violin_figure(
     data: np.ndarray | Sequence[Sequence[float] | np.ndarray],
     ax: Axes | None = None,
     labels_name: list[str] | None = None,
+    labels_fontsize: float = 12,
+    labels_rotation: float = 0,
     width: float = 0.8,
     colors: list[str] | None = None,
     color_alpha: float = 1,
@@ -1052,8 +1054,6 @@ def plot_one_group_violin_figure(
         "center", "top", "bottom", "baseline", "center_baseline"
     ] = "top",
     x_label_fontsize: float = 12,
-    x_tick_fontsize: float = 12,
-    x_tick_rotation: float = 0,
     y_label_name: str = "",
     y_label_fontsize: float = 12,
     y_tick_fontsize: float = 8,
@@ -1083,6 +1083,10 @@ def plot_one_group_violin_figure(
             matplotlib的坐标轴对象，如果为None则使用当前坐标轴. Defaults to None.
         labels_name (list[str] | None, optional):
             小提琴图的标签名称列表. Defaults to None.
+        labels_fontsize (float, optional):
+            X轴刻度字体大小. Defaults to 12.
+        labels_rotation (float, optional):
+            X轴刻度旋转角度. Defaults to 0.
         width (float, optional):
             小提琴图的宽度. Defaults to 0.8.
         colors (list[str] | None, optional):
@@ -1119,10 +1123,6 @@ def plot_one_group_violin_figure(
             X轴标签的垂直对齐方式，可选 "center"、 "top"、 "bottom"、 "baseline" 或 "center_baseline". Defaults to "top".
         x_label_fontsize (float, optional):
             X轴标签字体大小. Defaults to 12.
-        x_tick_fontsize (float, optional):
-            X轴刻度字体大小. Defaults to 12.
-        x_tick_rotation (float, optional):
-            X轴刻度旋转角度. Defaults to 0.
         y_label_name (str, optional):
             Y轴标签名称. Defaults to "".
         y_label_fontsize (float, optional):
@@ -1187,8 +1187,8 @@ def plot_one_group_violin_figure(
     title_fontsize = float(title_fontsize)
     title_pad = float(title_pad)
     x_label_fontsize = float(x_label_fontsize)
-    x_tick_fontsize = float(x_tick_fontsize)
-    x_tick_rotation = float(x_tick_rotation)
+    labels_fontsize = float(labels_fontsize)
+    labels_rotation = float(labels_rotation)
     y_label_fontsize = float(y_label_fontsize)
     y_tick_fontsize = float(y_tick_fontsize)
     y_tick_rotation = float(y_tick_rotation)
@@ -1340,8 +1340,8 @@ def plot_one_group_violin_figure(
     ax.set_xticks(np.arange(len(data)))
     ax.set_xticklabels(
         labels_name,
-        fontsize=x_tick_fontsize,
-        rotation=x_tick_rotation,
+        fontsize=labels_fontsize,
+        rotation=labels_rotation,
         ha=x_label_ha,
         va=x_label_va,
         rotation_mode="anchor",
