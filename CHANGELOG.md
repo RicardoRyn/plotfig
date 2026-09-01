@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/RicardoRyn/plotfig/compare/v1.22.1...v2.0.0) (2026-09-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* **single_bar:** x_tick_fontsize and x_tick_rotation parameters are removed; use labels_fontsize and labels_rotation instead.
+
+### Code Refactoring ♻️
+
+* **single_bar:** rename x_tick params ([fed3bfa](https://github.com/RicardoRyn/plotfig/commit/fed3bfaa28b67bf6fd089f3f4af5fb05a2cf6cbb))
+
 ## [1.22.1](https://github.com/RicardoRyn/plotfig/compare/v1.22.0...v1.22.1) (2026-07-14)
 
 
