@@ -133,6 +133,11 @@ def annotate_significance(
     star_offset: float,
     fontsize: int | float,
     color: str,
+    p_threshold: float = 0.05,
+    near_threshold: float | None = None,
+    near_symbol: str = "#",
+    near_fontsize: int | float = 7,
+    near_color: str = "k",
 ) -> None:
     """在图表上添加统计显著性标注（星号和连线）。
 
@@ -141,9 +146,10 @@ def annotate_significance(
     2. 单样本模式：直接在数据点上方标注显著性星号
 
     显著性星号规则：
-    - * : 0.001 < p ≤ 0.01
+    - * : 0.01 < p ≤ p_threshold
     - ** : 0.001 < p ≤ 0.01
     - *** : p ≤ 0.001
+    - near_symbol : p_threshold < p ≤ near_threshold（接近显著，需指定 near_threshold）
 
     Args:
         ax (Axes): matplotlib 的 Axes 对象，用于绘制标注。
@@ -157,6 +163,12 @@ def annotate_significance(
         star_offset (float): 星号相对于连线的垂直偏移量。
         fontsize (int | float): 星号的字体大小。
         color (str): 星号的颜色。
+        p_threshold (float): 显著性阈值，p 值小于等于该值显示星号。默认 0.05。
+        near_threshold (float | None): 接近显著的 p 值上限，p 值在 (p_threshold, near_threshold]
+            区间内显示接近显著符号。为 None 时不显示接近显著，默认 None。
+        near_symbol (str): 接近显著时显示的符号，默认 "#"。
+        near_fontsize (int | float): 接近显著符号的字体大小，默认 7。
+        near_color (str): 接近显著符号的颜色，默认 "k"。
 
     Notes:
         - 组间比较模式会自动堆叠多个比较，每个比较占据一个 interval 的高度
@@ -172,10 +184,22 @@ def annotate_significance(
         >>> # 单样本模式
         >>> comparisons = [(0, 0.02), (1, 0.005)]
         >>> annotate_significance(ax, comparisons, 5.0, 0.5, 'black', 0.1, 12, 'red')
+        >>> # 接近显著模式
+        >>> comparisons = [(0, 1, 0.06)]
+        >>> annotate_significance(
+        ...     ax, comparisons, 5.0, 0.5, 'black', 0.1, 12, 'red',
+        ...     near_threshold=0.08, near_symbol="#",
+        ...     near_fontsize=12, near_color="blue",
+        ... )
     """
 
-    def _stars(pval, i, y, color, fontsize):
-        stars = "*" if pval > 0.01 else "**" if pval > 0.001 else "***"
+    def _stars(pval, i, y, color, fontsize, near):
+        if near:
+            stars = near_symbol
+            color = near_color
+            fontsize = near_fontsize
+        else:
+            stars = "*" if pval > 0.01 else "**" if pval > 0.001 else "***"
         ax.text(
             i,
             y,
@@ -197,9 +221,23 @@ def annotate_significance(
                     color=line_color, width=0.5, headwidth=0.1, headlength=0.1
                 ),
             )
-            _stars(pval, (i + j) / 2, y + star_offset, color, fontsize)
+            _stars(
+                pval,
+                (i + j) / 2,
+                y + star_offset,
+                color,
+                fontsize,
+                near_threshold is not None and p_threshold < pval <= near_threshold,
+            )
     elif len(comparisons[0]) == 2:
         for i_pval in comparisons:
             i, pval = i_pval[0], i_pval[1]
             y = y_base
-            _stars(pval, i, y + star_offset, color, fontsize)
+            _stars(
+                pval,
+                i,
+                y + star_offset,
+                color,
+                fontsize,
+                near_threshold is not None and p_threshold < pval <= near_threshold,
+            )

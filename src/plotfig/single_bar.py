@@ -139,9 +139,13 @@ def _perform_stat_test(
     return stat, p
 
 
-def _determine_test_modle(data, method, p_list=None, popmean=0):
+def _determine_test_modle(
+    data, method, p_list=None, popmean=0, p_threshold=0.05, near_threshold=None
+):
     comparisons = []
     idx = 0
+    # 纳入显著性标记的 p 值上限：若设置了接近显著阈值，则扩大到该阈值；否则仅保留显著
+    cutoff = near_threshold if near_threshold is not None else p_threshold
     if method != "ttest_1samp":
         for i in range(len(data)):
             for j in range(i + 1, len(data)):
@@ -154,12 +158,12 @@ def _determine_test_modle(data, method, p_list=None, popmean=0):
                     _, p = _perform_stat_test(
                         data1=data[i], data2=data[j], method=method
                     )
-                if p <= 0.05:
+                if p <= cutoff:
                     comparisons.append((i, j, p))
     else:
         for i in range(len(data)):
             _, p = _perform_stat_test(data1=data[i], popmean=popmean, method=method)
-            if p <= 0.05:
+            if p <= cutoff:
                 comparisons.append((i, p))
     return comparisons
 
@@ -176,6 +180,11 @@ def _statistics(
     asterisk_color,
     y_base,
     interval,
+    p_threshold=0.05,
+    near_threshold=None,
+    near_symbol="#",
+    near_fontsize=7,
+    near_color="k",
 ):
     if isinstance(test_method, list):
         if len(test_method) > 2 or (
@@ -186,7 +195,9 @@ def _statistics(
             )
 
         for method in test_method:
-            comparisons = _determine_test_modle(data, method, p_list, popmean)
+            comparisons = _determine_test_modle(
+                data, method, p_list, popmean, p_threshold, near_threshold
+            )
             if not comparisons:
                 return
 
@@ -209,6 +220,11 @@ def _statistics(
                 star_offset=interval / 5,
                 fontsize=asterisk_fontsize,
                 color=color,
+                p_threshold=p_threshold,
+                near_threshold=near_threshold,
+                near_symbol=near_symbol,
+                near_fontsize=near_fontsize,
+                near_color=near_color,
             )
     else:
         warnings.warn(
@@ -216,7 +232,9 @@ def _statistics(
             DeprecationWarning,
             stacklevel=1,
         )
-        comparisons = _determine_test_modle(data, test_method, p_list, popmean)
+        comparisons = _determine_test_modle(
+            data, test_method, p_list, popmean, p_threshold, near_threshold
+        )
         if not comparisons:
             return
 
@@ -233,6 +251,11 @@ def _statistics(
             star_offset=interval / 5,
             fontsize=asterisk_fontsize,
             color=asterisk_color,
+            p_threshold=p_threshold,
+            near_threshold=near_threshold,
+            near_symbol=near_symbol,
+            near_fontsize=near_fontsize,
+            near_color=near_color,
         )
 
 
@@ -281,6 +304,11 @@ def plot_one_group_bar_figure(
     statistical_line_color: str = "0.5",
     asterisk_fontsize: float = 10,
     asterisk_color: str = "k",
+    p_threshold: float = 0.05,
+    near_threshold: float | None = None,
+    near_symbol: str = "#",
+    near_fontsize: float = 7,
+    near_color: str = "k",
     y_base: float | None = None,
     interval: float | None = None,
     ax_bottom_is_0: bool = False,
@@ -381,6 +409,17 @@ def plot_one_group_bar_figure(
             显著性星号的字体大小. Defaults to 10.
         asterisk_color (str, optional):
             显著性星号的颜色. Defaults to "k".
+        p_threshold (float, optional):
+            显著性阈值，p 值小于等于该值显示星号. Defaults to 0.05.
+        near_threshold (float | None, optional):
+            接近显著的 p 值上限，p 值在 (p_threshold, near_threshold] 区间内显示接近显著符号。
+            为 None 时不显示接近显著. Defaults to None.
+        near_symbol (str, optional):
+            接近显著时显示的符号. Defaults to "#".
+        near_fontsize (float, optional):
+            接近显著符号的字体大小. Defaults to 7.
+        near_color (str, optional):
+            接近显著符号的颜色. Defaults to "k".
         y_base (float | None, optional):
             显著性连线的起始Y轴位置（高度）。如果为None，则使用内部算法自动计算一个合适的位置。Defaults to None.
         interval (float | None, optional):
@@ -424,6 +463,10 @@ def plot_one_group_bar_figure(
     y_tick_rotation = float(y_tick_rotation)
     popmean = float(popmean)
     asterisk_fontsize = float(asterisk_fontsize)
+    p_threshold = float(p_threshold)
+    near_fontsize = float(near_fontsize)
+    if near_threshold is not None:
+        near_threshold = float(near_threshold)
 
     x_positions = np.arange(len(labels_name))
     means, sds, ses = [], [], []
@@ -563,6 +606,11 @@ def plot_one_group_bar_figure(
             asterisk_color,
             y_base,
             interval,
+            p_threshold,
+            near_threshold,
+            near_symbol,
+            near_fontsize,
+            near_color,
         )
     return ax
 
@@ -614,6 +662,11 @@ def plot_one_group_box_figure(
     statistical_line_color: str = "0.5",
     asterisk_fontsize: float = 10,
     asterisk_color: str = "k",
+    p_threshold: float = 0.05,
+    near_threshold: float | None = None,
+    near_symbol: str = "#",
+    near_fontsize: float = 7,
+    near_color: str = "k",
     y_base: float | None = None,
     interval: float | None = None,
     ax_bottom_is_0: bool = False,
@@ -718,6 +771,17 @@ def plot_one_group_box_figure(
             显著性星号的字体大小. Defaults to 10.
         asterisk_color (str, optional):
             显著性星号的颜色. Defaults to "k".
+        p_threshold (float, optional):
+            显著性阈值，p 值小于等于该值显示星号. Defaults to 0.05.
+        near_threshold (float | None, optional):
+            接近显著的 p 值上限，p 值在 (p_threshold, near_threshold] 区间内显示接近显著符号。
+            为 None 时不显示接近显著. Defaults to None.
+        near_symbol (str, optional):
+            接近显著时显示的符号. Defaults to "#".
+        near_fontsize (float, optional):
+            接近显著符号的字体大小. Defaults to 7.
+        near_color (str, optional):
+            接近显著符号的颜色. Defaults to "k".
         y_base (float | None, optional):
             显著性连线的起始Y轴位置（高度）。如果为None，则使用内部算法自动计算一个合适的位置。Defaults to None.
         interval (float | None, optional):
@@ -759,6 +823,10 @@ def plot_one_group_box_figure(
     y_tick_rotation = float(y_tick_rotation)
     popmean = float(popmean)
     asterisk_fontsize = float(asterisk_fontsize)
+    p_threshold = float(p_threshold)
+    near_fontsize = float(near_fontsize)
+    if near_threshold is not None:
+        near_threshold = float(near_threshold)
     whisker_range = float(whisker_range)
 
     x_positions = np.arange(len(labels_name))
@@ -1024,6 +1092,11 @@ def plot_one_group_box_figure(
             asterisk_color,
             y_base,
             interval,
+            p_threshold,
+            near_threshold,
+            near_symbol,
+            near_fontsize,
+            near_color,
         )
     return ax
 
@@ -1066,6 +1139,11 @@ def plot_one_group_violin_figure(
     statistical_line_color: str = "0.5",
     asterisk_fontsize: float = 10,
     asterisk_color: str = "k",
+    p_threshold: float = 0.05,
+    near_threshold: float | None = None,
+    near_symbol: str = "#",
+    near_fontsize: float = 7,
+    near_color: str = "k",
     y_base: float | None = None,
     interval: float | None = None,
     ax_bottom_is_0: bool = False,
@@ -1152,6 +1230,17 @@ def plot_one_group_violin_figure(
             显著性星号的字体大小. Defaults to 10.
         asterisk_color (str, optional):
             显著性星号的颜色. Defaults to "k".
+        p_threshold (float, optional):
+            显著性阈值，p 值小于等于该值显示星号. Defaults to 0.05.
+        near_threshold (float | None, optional):
+            接近显著的 p 值上限，p 值在 (p_threshold, near_threshold] 区间内显示接近显著符号。
+            为 None 时不显示接近显著. Defaults to None.
+        near_symbol (str, optional):
+            接近显著时显示的符号. Defaults to "#".
+        near_fontsize (float, optional):
+            接近显著符号的字体大小. Defaults to 7.
+        near_color (str, optional):
+            接近显著符号的颜色. Defaults to "k".
         y_base (float | None, optional):
             显著性连线的起始Y轴位置（高度）。如果为None，则使用内部算法自动计算一个合适的位置。Defaults to None.
         interval (float | None, optional):
@@ -1194,6 +1283,10 @@ def plot_one_group_violin_figure(
     y_tick_rotation = float(y_tick_rotation)
     popmean = float(popmean)
     asterisk_fontsize = float(asterisk_fontsize)
+    p_threshold = float(p_threshold)
+    near_fontsize = float(near_fontsize)
+    if near_threshold is not None:
+        near_threshold = float(near_threshold)
 
     def _draw_gradient_violin(ax, data, pos, width, c1, c2, color_alpha):
         # KDE估计
@@ -1379,6 +1472,11 @@ def plot_one_group_violin_figure(
             asterisk_color,
             y_base,
             interval,
+            p_threshold,
+            near_threshold,
+            near_symbol,
+            near_fontsize,
+            near_color,
         )
 
     return ax
