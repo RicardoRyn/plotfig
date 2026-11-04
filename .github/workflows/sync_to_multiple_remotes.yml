@@ -24,3 +24,14 @@ jobs:
         with:
           source-repo: https://github.com/RicardoRyn/plotfig.git
           destination-repo: git@gitee.com:RicardoRyn/plotfig.git
+
+  sync-tangled:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync to Tangled
+        uses: wearerequired/git-mirror-action@v1
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SYNC_RSA_PRIVATE_KEY }}
+        with:
+          source-repo: https://github.com/RicardoRyn/nvim.git
+          destination-repo: git@tangled.org:did:plc:sghvwjeo3dclyvxcvzcktmyq
