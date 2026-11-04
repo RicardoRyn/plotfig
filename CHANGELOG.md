@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/RicardoRyn/plotfig/compare/v2.0.0...v2.1.0) (2026-11-04)
+
+
+### Features ✨
+
+* **plotfig:** support near-significant markers ([46011d2](https://github.com/RicardoRyn/plotfig/commit/46011d200298c7682abeeac6e2ad219ff0cee92d))
+
 ## [2.0.0](https://github.com/RicardoRyn/plotfig/compare/v1.22.1...v2.0.0) (2026-09-01)
 
 
