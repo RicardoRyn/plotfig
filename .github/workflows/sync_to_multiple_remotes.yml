@@ -33,5 +33,5 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SYNC_RSA_PRIVATE_KEY }}
         with:
-          source-repo: https://github.com/RicardoRyn/nvim.git
-          destination-repo: git@tangled.org:did:plc:sghvwjeo3dclyvxcvzcktmyq
+          source-repo: https://github.com/RicardoRyn/plotfig.git
+          destination-repo: git@tangled.org:did:plc:gvgzf77r7ayy5o27qyseurvr
